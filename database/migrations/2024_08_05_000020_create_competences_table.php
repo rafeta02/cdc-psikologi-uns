@@ -11,6 +11,7 @@ class CreateCompetencesTable extends Migration
         Schema::create('competences', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('slug')->nullable();
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
