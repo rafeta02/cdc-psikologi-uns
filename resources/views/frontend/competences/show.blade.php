@@ -28,6 +28,14 @@
                                 </tr>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.competence.fields.slug') }}
+                                    </th>
+                                    <td>
+                                        {{ $competence->slug }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.competence.fields.description') }}
                                     </th>
                                     <td>

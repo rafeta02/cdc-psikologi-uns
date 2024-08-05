@@ -21,6 +21,10 @@ class StoreVacancyRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'slug' => [
+                'string',
+                'nullable',
+            ],
             'open_date' => [
                 'date_format:' . config('panel.date_format'),
                 'nullable',

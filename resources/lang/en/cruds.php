@@ -331,6 +331,8 @@ return [
             'deleted_at_helper'         => ' ',
             'location'                  => 'Location',
             'location_helper'           => 'Latitude;Longitude',
+            'slug'                      => 'Slug',
+            'slug_helper'               => ' ',
         ],
     ],
     'tracer' => [
@@ -515,6 +517,8 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+            'slug'               => 'Slug',
+            'slug_helper'        => ' ',
         ],
     ],
     'competenceItem' => [
@@ -949,6 +953,8 @@ return [
             'deleted_at_helper'         => ' ',
             'created_by'                => 'Created By',
             'created_by_helper'         => ' ',
+            'slug'                      => 'Slug',
+            'slug_helper'               => ' ',
         ],
     ],
     'prestasiMaba' => [

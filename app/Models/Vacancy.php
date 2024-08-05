@@ -35,6 +35,7 @@ class Vacancy extends Model implements HasMedia
 
     protected $fillable = [
         'name',
+        'slug',
         'company_id',
         'description',
         'type',
