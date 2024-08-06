@@ -118,7 +118,7 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
   function SimpleUploadAdapter(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = function(loader) {
       return {
@@ -178,6 +178,52 @@
       }
     );
   }
+
+    $('#tags').select2({
+        tags: true,
+        multiple: true,
+        createTag: function(params) {
+            var term = $.trim(params.term);
+            if (term === '') {
+                return null;
+            }
+            return {
+                id: term,
+                text: term,
+                newOption: true
+            };
+        }
+    });
+
+    $('#tags').on('select2:select', function(e) {
+        var data = e.params.data;
+        console.log(data);
+        if (data.newOption) {
+            $('#loadingSpinner').show(); // Show the loading spinner
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("admin.article-tags.storeSelect") }}',
+                data: {
+                    text: data.text,
+                    _token: '{{ csrf_token() }}' // CSRF token for Laravel
+                },
+                success: function(response) {
+                    $('#tags').find('[value="' + data.id + '"]').remove();
+                    // Create a new option
+                    var newOption = new Option(response.text, response.id, true, true);
+                    // Append the new option to the Select2 element
+                    $('#tags').append(newOption).trigger('change');
+                    // Select the new option
+                    $('#tags').val($('#tags').val().concat(response.id)).trigger('change');
+                    $('#loadingSpinner').hide(); // Hide the loading spinner on success
+                },
+                error: function(xhr) {
+                    console.error('AJAX POST error:', xhr.responseText); // Log the error to the console
+                    $('#loadingSpinner').hide(); // Hide the loading spinner on error
+                }
+            });
+        }
+    });
 });
 </script>
 

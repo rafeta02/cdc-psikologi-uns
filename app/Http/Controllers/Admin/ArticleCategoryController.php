@@ -12,6 +12,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class ArticleCategoryController extends Controller
 {
@@ -69,6 +70,8 @@ class ArticleCategoryController extends Controller
     {
         $articleCategory = ArticleCategory::create($request->all());
 
+        Alert::success('Success', 'Article Category created successfully.');
+
         return redirect()->route('admin.article-categories.index');
     }
 
@@ -82,6 +85,8 @@ class ArticleCategoryController extends Controller
     public function update(UpdateArticleCategoryRequest $request, ArticleCategory $articleCategory)
     {
         $articleCategory->update($request->all());
+
+        Alert::success('Success', 'Article Category updated successfully.');
 
         return redirect()->route('admin.article-categories.index');
     }

@@ -6,10 +6,10 @@
             <a class="btn btn-success" href="{{ route('admin.regencies.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.regency.title_singular') }}
             </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
-                {{ trans('global.app_csvImport') }}
+            <button class="btn btn-primary" data-toggle="modal" data-target="#importModal">
+                Import
             </button>
-            @include('csvImport.modal', ['model' => 'Regency', 'route' => 'admin.regencies.parseCsvImport'])
+            @include('csvImport.import_modal', ['model' => 'Regency', 'route' => 'admin.regencies.import'])
         </div>
     </div>
 @endcan
@@ -104,7 +104,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

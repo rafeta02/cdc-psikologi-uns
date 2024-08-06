@@ -6,10 +6,10 @@
             <a class="btn btn-success" href="{{ route('admin.companies.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.company.title_singular') }}
             </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+            {{-- <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
                 {{ trans('global.app_csvImport') }}
             </button>
-            @include('csvImport.modal', ['model' => 'Company', 'route' => 'admin.companies.parseCsvImport'])
+            @include('csvImport.modal', ['model' => 'Company', 'route' => 'admin.companies.parseCsvImport']) --}}
         </div>
     </div>
 @endcan
@@ -55,7 +55,7 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('company_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
@@ -95,13 +95,13 @@
     aaSorting: [],
     ajax: "{{ route('admin.companies.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'name', name: 'name' },
-{ data: 'address', name: 'address' },
-{ data: 'telephone', name: 'telephone' },
-{ data: 'scale', name: 'scale' },
-{ data: 'industry_name', name: 'industry.name' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'name', name: 'name', class : 'text-center' },
+        { data: 'address', name: 'address' },
+        { data: 'telephone', name: 'telephone' },
+        { data: 'scale', name: 'scale', class : 'text-center' },
+        { data: 'industry_name', name: 'industry.name', class : 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -112,7 +112,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

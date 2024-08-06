@@ -101,8 +101,8 @@
                 <span class="help-block">{{ trans('cruds.company.fields.ownership_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="industry_id">{{ trans('cruds.company.fields.industry') }}</label>
-                <select class="form-control select2 {{ $errors->has('industry') ? 'is-invalid' : '' }}" name="industry_id" id="industry_id">
+                <label for="industry_id"  class="required">{{ trans('cruds.company.fields.industry') }}</label>
+                <select class="form-control select2 {{ $errors->has('industry') ? 'is-invalid' : '' }}" name="industry_id" id="industry_id" required>
                     @foreach($industries as $id => $entry)
                         <option value="{{ $id }}" {{ old('industry_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
@@ -135,7 +135,7 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
   function SimpleUploadAdapter(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = function(loader) {
       return {
@@ -195,6 +195,46 @@
       }
     );
   }
+
+    $('#industry_id').select2({
+        tags: true,
+        createTag: function(params) {
+            var term = $.trim(params.term);
+            if (term === '') {
+                return null;
+            }
+            return {
+                id: term,
+                text: term,
+                newOption: true
+            };
+        }
+    });
+
+    $('#industry_id').on('select2:select', function(e) {
+        var data = e.params.data;
+        if (data.newOption) {
+            $('#loadingSpinner').show(); // Show the loading spinner
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("admin.industries.storeSelect") }}',
+                data: {
+                    text: data.text,
+                    _token: '{{ csrf_token() }}' // CSRF token for Laravel
+                },
+                success: function(response) {
+                    var newOption = new Option(response.text, response.id, false, false);
+                    $('#industry_id').append(newOption).trigger('change');
+                    $('#industry_id').val(response.id).trigger('change');
+                    $('#loadingSpinner').hide(); // Hide the loading spinner on success
+                },
+                error: function(xhr) {
+                    console.error('AJAX POST error:', xhr.responseText); // Log the error to the console
+                    $('#loadingSpinner').hide(); // Hide the loading spinner on error
+                }
+            });
+        }
+    });
 });
 </script>
 

@@ -8,6 +8,7 @@ use App\Http\Requests\MassDestroyProvinceRequest;
 use App\Http\Requests\StoreProvinceRequest;
 use App\Http\Requests\UpdateProvinceRequest;
 use App\Models\Province;
+use App\Models\Regency;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,4 +113,54 @@ class ProvinceController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function getProvincesWithRegencies(Request $request)
+    {
+        $query = $request->input('q');
+
+        // Fetch regencies with their provinces
+        $regencies = Regency::where('name', 'like', '%' . $query . '%')
+            ->with('province')
+            ->get();
+
+        // Group regencies by province
+        $results = [];
+        foreach ($regencies as $regency) {
+            $provinceName = $regency->province->name;
+            if (!isset($results[$provinceName])) {
+                $results[$provinceName] = [];
+            }
+            $results[$provinceName][] = [
+                'id' => $regency->id,
+                'text' => $regency->name
+            ];
+        }
+
+        // Format the result as Select2 expects
+        $formattedResults = [];
+        foreach ($results as $province => $regencies) {
+            $formattedResults[] = [
+                'text' => $province,
+                'children' => $regencies
+            ];
+        }
+
+        return response()->json($formattedResults);
+    }
+
+    public function getProvinces(Request $request)
+    {
+        $query = $request->input('q');
+
+        $provinces = Province::where('name', 'like', '%' . $query . '%')
+            ->orWhereHas('regencies', function($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%');
+            })
+            ->with('regencies')
+            ->get();
+
+        return response()->json($regencies);
+    }
+
+
 }

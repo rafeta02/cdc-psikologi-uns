@@ -6,10 +6,10 @@
             <a class="btn btn-success" href="{{ route('admin.posts.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.post.title_singular') }}
             </a>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+            {{-- <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
                 {{ trans('global.app_csvImport') }}
             </button>
-            @include('csvImport.modal', ['model' => 'Post', 'route' => 'admin.posts.parseCsvImport'])
+            @include('csvImport.modal', ['model' => 'Post', 'route' => 'admin.posts.parseCsvImport']) --}}
         </div>
     </div>
 @endcan
@@ -27,9 +27,6 @@
                     </th>
                     <th>
                         {{ trans('cruds.post.fields.title') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.post.fields.meta_title') }}
                     </th>
                     <th>
                         {{ trans('cruds.post.fields.category') }}
@@ -98,14 +95,13 @@
     aaSorting: [],
     ajax: "{{ route('admin.posts.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'title', name: 'title' },
-{ data: 'meta_title', name: 'meta_title' },
-{ data: 'category', name: 'categories.name' },
-{ data: 'tag', name: 'tags.name' },
-{ data: 'status', name: 'status' },
-{ data: 'created_at', name: 'created_at' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'title', name: 'title', class : 'text-center'},
+        { data: 'category', name: 'categories.name', class : 'text-center' },
+        { data: 'tag', name: 'tags.name', class : 'text-center' },
+        { data: 'status', name: 'status', class : 'text-center' },
+        { data: 'created_at', name: 'created_at', class : 'text-right'  },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center'}
     ],
     orderCellsTop: true,
     order: [[ 6, 'desc' ]],
@@ -116,7 +112,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
+use Carbon\Carbon;
 
 class VacancyController extends Controller
 {
@@ -58,7 +60,17 @@ class VacancyController extends Controller
             });
 
             $table->editColumn('type', function ($row) {
-                return $row->type ? Vacancy::TYPE_SELECT[$row->type] : '';
+                if ($row->type == 'fulltime') {
+                    return '<span class="badge badge-success">Fulltime</span>';
+                } elseif ($row->type == 'parttime') {
+                    return '<span class="badge badge-warning">Parttime</span>';
+                } else {
+                    return '<span class="badge badge-danger">Intern</span>';
+                }
+            });
+
+            $table->editColumn('close_date', function ($row) {
+                return $row->close_date ? Carbon::parse($row->close_date)->format('j F Y') : '';
             });
 
             $table->addColumn('industry_name', function ($row) {
@@ -66,10 +78,10 @@ class VacancyController extends Controller
             });
 
             $table->addColumn('location_name', function ($row) {
-                return $row->location ? $row->location->name : '';
+                return $row->location ? $row->location->name.' - '. $row->location->province->name : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'company', 'industry', 'location']);
+            $table->rawColumns(['actions', 'placeholder', 'company', 'industry', 'location', 'type']);
 
             return $table->make(true);
         }
@@ -91,19 +103,24 @@ class VacancyController extends Controller
 
         $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'industries', 'locations', 'positions'));
+        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'industries', 'positions'));
     }
 
     public function store(StoreVacancyRequest $request)
     {
+        $company = Company::find($request->company_id);
+
+        $request->request->add(['industry_id' => $company->industry_id]);
+        $request->request->add(['created_by_id' => auth()->user()->id]);
+
         $vacancy = Vacancy::create($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $vacancy->id]);
         }
+
+        Alert::success('Success', 'Vacancy created successfully.');
 
         return redirect()->route('admin.vacancies.index');
     }
@@ -120,20 +137,21 @@ class VacancyController extends Controller
 
         $positions = Position::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
         $vacancy->load('company', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
-        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'industries', 'locations', 'positions', 'vacancy'));
+        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'positions', 'vacancy'));
     }
 
     public function update(UpdateVacancyRequest $request, Vacancy $vacancy)
     {
+        $company = Company::find($request->company_id);
+        $request->request->add(['industry_id' => $company->industry_id]);
+
         $vacancy->update($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
+
+        Alert::success('Success', 'Vacancy updated successfully.');
 
         return redirect()->route('admin.vacancies.index');
     }

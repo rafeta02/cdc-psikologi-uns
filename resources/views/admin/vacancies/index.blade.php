@@ -94,14 +94,14 @@
     aaSorting: [],
     ajax: "{{ route('admin.vacancies.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'name', name: 'name' },
-{ data: 'company_name', name: 'company.name' },
-{ data: 'type', name: 'type' },
-{ data: 'close_date', name: 'close_date' },
-{ data: 'industry_name', name: 'industry.name' },
-{ data: 'location_name', name: 'location.name' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'name', name: 'name', class: 'text-center' },
+        { data: 'company_name', name: 'company.name', class: 'text-center' },
+        { data: 'type', name: 'type', class: 'text-center' },
+        { data: 'close_date', name: 'close_date', class: 'text-center' },
+        { data: 'industry_name', name: 'industry.name', class: 'text-center' },
+        { data: 'location_name', name: 'location.name', class: 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 2, 'desc' ]],
@@ -112,7 +112,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

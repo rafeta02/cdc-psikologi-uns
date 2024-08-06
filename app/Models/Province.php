@@ -32,4 +32,9 @@ class Province extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function regencies()
+    {
+        return $this->hasMany(Regency::class);
+    }
 }

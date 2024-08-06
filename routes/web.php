@@ -31,6 +31,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('article-tags/destroy', 'ArticleTagController@massDestroy')->name('article-tags.massDestroy');
     Route::post('article-tags/parse-csv-import', 'ArticleTagController@parseCsvImport')->name('article-tags.parseCsvImport');
     Route::post('article-tags/process-csv-import', 'ArticleTagController@processCsvImport')->name('article-tags.processCsvImport');
+    Route::get('article-tags/search-select', 'ArticleTagController@searchSelect')->name('article-tags.searchSelect');
+    Route::post('article-tags/store-select', 'ArticleTagController@storeSelect')->name('article-tags.storeSelect');
     Route::resource('article-tags', 'ArticleTagController');
 
     // Post
@@ -51,6 +53,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('positions/destroy', 'PositionController@massDestroy')->name('positions.massDestroy');
     Route::post('positions/parse-csv-import', 'PositionController@parseCsvImport')->name('positions.parseCsvImport');
     Route::post('positions/process-csv-import', 'PositionController@processCsvImport')->name('positions.processCsvImport');
+    Route::post('positions/store-select', 'PositionController@storeSelect')->name('positions.storeSelect');
     Route::resource('positions', 'PositionController');
 
     // Department
@@ -63,18 +66,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('industries/destroy', 'IndustryController@massDestroy')->name('industries.massDestroy');
     Route::post('industries/parse-csv-import', 'IndustryController@parseCsvImport')->name('industries.parseCsvImport');
     Route::post('industries/process-csv-import', 'IndustryController@processCsvImport')->name('industries.processCsvImport');
+    Route::get('industries/search-select', 'IndustryController@searchSelect')->name('industries.searchSelect');
+    Route::post('industries/store-select', 'IndustryController@storeSelect')->name('industries.storeSelect');
     Route::resource('industries', 'IndustryController');
 
     // Province
     Route::delete('provinces/destroy', 'ProvinceController@massDestroy')->name('provinces.massDestroy');
     Route::post('provinces/parse-csv-import', 'ProvinceController@parseCsvImport')->name('provinces.parseCsvImport');
     Route::post('provinces/process-csv-import', 'ProvinceController@processCsvImport')->name('provinces.processCsvImport');
+    Route::get('provinces/province-regencies', 'ProvinceController@getProvincesWithRegencies')->name('provinces.getProvincesWithRegencies');
     Route::resource('provinces', 'ProvinceController');
 
     // Regencies
     Route::delete('regencies/destroy', 'RegenciesController@massDestroy')->name('regencies.massDestroy');
     Route::post('regencies/parse-csv-import', 'RegenciesController@parseCsvImport')->name('regencies.parseCsvImport');
     Route::post('regencies/process-csv-import', 'RegenciesController@processCsvImport')->name('regencies.processCsvImport');
+    Route::post('regencies/import', 'RegenciesController@import')->name('regencies.import');
     Route::resource('regencies', 'RegenciesController');
 
     // Company

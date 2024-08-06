@@ -109,4 +109,31 @@ class IndustryController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function searchSelect(Request $request)
+    {
+        $search = $request->get('q');
+        $results = Industry::where('name', 'LIKE', '%' . $search . '%')->get();
+        // Transform data to the structure Select2 expects
+        $formattedResults = $results->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->name,
+            ];
+        });
+
+        return response()->json($formattedResults);
+    }
+
+    public function storeSelect(Request $request)
+    {
+        $newOption = Industry::create([
+            'name' => $request->input('text')
+        ]);
+
+        return response()->json([
+            'id' => $newOption->id,
+            'text' => $newOption->name
+        ]);
+    }
 }

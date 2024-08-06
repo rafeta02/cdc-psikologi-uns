@@ -13,6 +13,8 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Excel;
+use App\Imports\RegencyImport;
 
 class RegenciesController extends Controller
 {
@@ -123,5 +125,18 @@ class RegenciesController extends Controller
         }
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('import_file');
+        $request->validate([
+            'import_file' => 'mimes:csv,txt,xls,xlsx',
+        ]);
+
+        Excel::import(new RegencyImport(), $file);
+
+        Alert::success('Success', 'Regency berhasil di import');
+        return redirect()->back();
     }
 }

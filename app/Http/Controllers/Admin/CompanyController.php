@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class CompanyController extends Controller
 {
@@ -91,6 +92,8 @@ class CompanyController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $company->id]);
         }
 
+        Alert::success('Success', 'Company created successfully.');
+
         return redirect()->route('admin.companies.index');
     }
 
@@ -119,6 +122,8 @@ class CompanyController extends Controller
         } elseif ($company->image) {
             $company->image->delete();
         }
+
+        Alert::success('Success', 'Company updated successfully.');
 
         return redirect()->route('admin.companies.index');
     }

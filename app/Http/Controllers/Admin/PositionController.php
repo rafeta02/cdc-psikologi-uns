@@ -109,4 +109,16 @@ class PositionController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function storeSelect(Request $request)
+    {
+        $newOption = Position::create([
+            'name' => $request->input('text')
+        ]);
+
+        return response()->json([
+            'id' => $newOption->id,
+            'text' => $newOption->name
+        ]);
+    }
 }

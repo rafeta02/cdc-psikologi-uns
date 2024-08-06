@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Vacancy extends Model implements HasMedia
 {
-    use SoftDeletes, MultiTenantModelTrait, InteractsWithMedia, Auditable, HasFactory;
+    use SoftDeletes, MultiTenantModelTrait, InteractsWithMedia, Auditable, HasFactory, Sluggable;
 
     public $table = 'vacancies';
 
@@ -64,6 +65,22 @@ class Vacancy extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => ['name', 'company_name'],
+                'separator' => '-', // Custom separator
+                'maxLength' => 50, // Maximum length of the slug
+            ]
+        ];
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return $this->company ? $this->company->name : '';
     }
 
     public function company()
