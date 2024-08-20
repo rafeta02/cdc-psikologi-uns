@@ -56,7 +56,7 @@ class TracerStakeholder extends Model implements HasMedia
         'tidak' => 'Tidak',
     ];
 
-    public const KESESUAIAN_BIDAN_RADIO = [
+    public const KESESUAIAN_BIDANG_RADIO = [
         'tinggi' => 'Tinggi',
         'sedang' => 'Sedang',
         'rendah' => 'Rendah',
@@ -82,7 +82,7 @@ class TracerStakeholder extends Model implements HasMedia
         'tahun_lulus',
         'waktu_tunggu',
         'tingkat_instansi',
-        'kesesuaian_bidan',
+        'kesesuaian_bidang',
         'kompetensi_integritas',
         'kompetensi_profesionalisme',
         'kompetensi_inggris',
