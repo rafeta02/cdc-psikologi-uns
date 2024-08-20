@@ -393,8 +393,6 @@ return [
             'waktu_tunggu_helper'               => ' ',
             'tingkat_instansi'                  => 'Tingkat Tempat Bekerja',
             'tingkat_instansi_helper'           => ' ',
-            'kesesuaian_bidan'                  => 'Kesesuaian Bidang Kerja',
-            'kesesuaian_bidan_helper'           => ' ',
             'kompetensi_integritas'             => 'Integritas (etika & moral)',
             'kompetensi_integritas_helper'      => ' ',
             'kompetensi_profesionalisme'        => 'Keahlian berdasarkan bidang ilmu (profesionalisme)',
@@ -423,6 +421,8 @@ return [
             'updated_at_helper'                 => ' ',
             'deleted_at'                        => 'Deleted at',
             'deleted_at_helper'                 => ' ',
+            'kesesuaian_bidang'                 => 'Kesesuaian Bidang Kerja',
+            'kesesuaian_bidang_helper'          => ' ',
         ],
     ],
     'prestasi' => [

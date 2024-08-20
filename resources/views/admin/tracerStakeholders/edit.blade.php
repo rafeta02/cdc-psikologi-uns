@@ -64,17 +64,17 @@
                 <span class="help-block">{{ trans('cruds.tracerStakeholder.fields.tingkat_instansi_helper') }}</span>
             </div>
             <div class="form-group">
-                <label class="required">{{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidan') }}</label>
-                @foreach(App\Models\TracerStakeholder::KESESUAIAN_BIDAN_RADIO as $key => $label)
-                    <div class="form-check {{ $errors->has('kesesuaian_bidan') ? 'is-invalid' : '' }}">
-                        <input class="form-check-input" type="radio" id="kesesuaian_bidan_{{ $key }}" name="kesesuaian_bidan" value="{{ $key }}" {{ old('kesesuaian_bidan', $tracerStakeholder->kesesuaian_bidan) === (string) $key ? 'checked' : '' }} required>
-                        <label class="form-check-label" for="kesesuaian_bidan_{{ $key }}">{{ $label }}</label>
+                <label>{{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidang') }}</label>
+                @foreach(App\Models\TracerStakeholder::KESESUAIAN_BIDANG_RADIO as $key => $label)
+                    <div class="form-check {{ $errors->has('kesesuaian_bidang') ? 'is-invalid' : '' }}">
+                        <input class="form-check-input" type="radio" id="kesesuaian_bidang_{{ $key }}" name="kesesuaian_bidang" value="{{ $key }}" {{ old('kesesuaian_bidang', $tracerStakeholder->kesesuaian_bidang) === (string) $key ? 'checked' : '' }}>
+                        <label class="form-check-label" for="kesesuaian_bidang_{{ $key }}">{{ $label }}</label>
                     </div>
                 @endforeach
-                @if($errors->has('kesesuaian_bidan'))
-                    <span class="text-danger">{{ $errors->first('kesesuaian_bidan') }}</span>
+                @if($errors->has('kesesuaian_bidang'))
+                    <span class="text-danger">{{ $errors->first('kesesuaian_bidang') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidan_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidang_helper') }}</span>
             </div>
             <div class="form-group">
                 <label>{{ trans('cruds.tracerStakeholder.fields.kompetensi_integritas') }}</label>
