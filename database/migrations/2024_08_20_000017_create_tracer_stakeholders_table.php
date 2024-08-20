@@ -16,7 +16,7 @@ class CreateTracerStakeholdersTable extends Migration
             $table->integer('tahun_lulus');
             $table->integer('waktu_tunggu');
             $table->string('tingkat_instansi')->nullable();
-            $table->string('kesesuaian_bidan');
+            $table->string('kesesuaian_bidang')->nullable();
             $table->string('kompetensi_integritas')->nullable();
             $table->string('kompetensi_profesionalisme')->nullable();
             $table->string('kompetensi_inggris')->nullable();

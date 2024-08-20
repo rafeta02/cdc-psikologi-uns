@@ -68,10 +68,10 @@
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidan') }}
+                                        {{ trans('cruds.tracerStakeholder.fields.kesesuaian_bidang') }}
                                     </th>
                                     <td>
-                                        {{ App\Models\TracerStakeholder::KESESUAIAN_BIDAN_RADIO[$tracerStakeholder->kesesuaian_bidan] ?? '' }}
+                                        {{ App\Models\TracerStakeholder::KESESUAIAN_BIDANG_RADIO[$tracerStakeholder->kesesuaian_bidang] ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>

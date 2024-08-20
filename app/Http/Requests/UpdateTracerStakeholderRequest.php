@@ -41,9 +41,6 @@ class UpdateTracerStakeholderRequest extends FormRequest
                 'min:-2147483648',
                 'max:2147483647',
             ],
-            'kesesuaian_bidan' => [
-                'required',
-            ],
         ];
     }
 }
