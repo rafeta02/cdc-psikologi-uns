@@ -30,6 +30,9 @@
                                         {{ trans('cruds.education.fields.name') }}
                                     </th>
                                     <th>
+                                        {{ trans('cruds.education.fields.featured') }}
+                                    </th>
+                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -39,6 +42,10 @@
                                     <tr data-entry-id="{{ $education->id }}">
                                         <td>
                                             {{ $education->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            <span style="display:none">{{ $education->featured ?? '' }}</span>
+                                            <input type="checkbox" disabled="disabled" {{ $education->featured ? 'checked' : '' }}>
                                         </td>
                                         <td>
                                             @can('education_show')

@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->string('meta_title')->nullable();
             $table->longText('meta_description')->nullable();
             $table->string('status')->nullable();
+            $table->boolean('featured')->default(0)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

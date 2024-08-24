@@ -137,6 +137,8 @@ return [
             'deleted_at_helper'  => ' ',
             'description'        => 'Description',
             'description_helper' => ' ',
+            'featured'           => 'Featured',
+            'featured_helper'    => ' ',
         ],
     ],
     'post' => [
@@ -175,6 +177,8 @@ return [
             'deleted_at_helper'       => ' ',
             'created_by'              => 'Created By',
             'created_by_helper'       => ' ',
+            'featured'                => 'Featured',
+            'featured_helper'         => ' ',
         ],
     ],
     'vacancyMaster' => [
@@ -197,6 +201,8 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+            'featured'           => 'Featured',
+            'featured_helper'    => ' ',
         ],
     ],
     'position' => [
@@ -215,6 +221,8 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+            'featured'           => 'Featured',
+            'featured_helper'    => ' ',
         ],
     ],
     'department' => [
@@ -251,6 +259,8 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+            'featured'           => 'Featured',
+            'featured_helper'    => ' ',
         ],
     ],
     'area' => [
@@ -333,6 +343,10 @@ return [
             'location_helper'           => 'Latitude;Longitude',
             'slug'                      => 'Slug',
             'slug_helper'               => ' ',
+            'regency'                   => 'Regency',
+            'regency_helper'            => ' ',
+            'featured'                  => 'Featured',
+            'featured_helper'           => ' ',
         ],
     ],
     'tracer' => [
@@ -955,6 +969,8 @@ return [
             'created_by_helper'         => ' ',
             'slug'                      => 'Slug',
             'slug_helper'               => ' ',
+            'featured'                  => 'Featured',
+            'featured_helper'           => ' ',
         ],
     ],
     'prestasiMaba' => [

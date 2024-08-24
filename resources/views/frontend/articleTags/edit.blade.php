@@ -34,6 +34,19 @@
                             <span class="help-block">{{ trans('cruds.articleTag.fields.description_helper') }}</span>
                         </div>
                         <div class="form-group">
+                            <div>
+                                <input type="hidden" name="featured" value="0">
+                                <input type="checkbox" name="featured" id="featured" value="1" {{ $articleTag->featured || old('featured', 0) === 1 ? 'checked' : '' }}>
+                                <label for="featured">{{ trans('cruds.articleTag.fields.featured') }}</label>
+                            </div>
+                            @if($errors->has('featured'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('featured') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.articleTag.fields.featured_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <button class="btn btn-danger" type="submit">
                                 {{ trans('global.save') }}
                             </button>

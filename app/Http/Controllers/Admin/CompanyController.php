@@ -10,6 +10,7 @@ use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Models\Industry;
+use App\Models\Regency;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -25,7 +26,7 @@ class CompanyController extends Controller
         abort_if(Gate::denies('company_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Company::with(['industry'])->select(sprintf('%s.*', (new Company)->table));
+            $query = Company::with(['regency', 'industry'])->select(sprintf('%s.*', (new Company)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -74,9 +75,11 @@ class CompanyController extends Controller
     {
         abort_if(Gate::denies('company_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $regencies = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.companies.create', compact('industries'));
+        return view('admin.companies.create', compact('industries', 'regencies'));
     }
 
     public function store(StoreCompanyRequest $request)
@@ -98,11 +101,13 @@ class CompanyController extends Controller
     {
         abort_if(Gate::denies('company_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $regencies = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $company->load('industry');
+        $company->load('regency', 'industry');
 
-        return view('admin.companies.edit', compact('company', 'industries'));
+        return view('admin.companies.edit', compact('company', 'industries', 'regencies'));
     }
 
     public function update(UpdateCompanyRequest $request, Company $company)
@@ -127,7 +132,7 @@ class CompanyController extends Controller
     {
         abort_if(Gate::denies('company_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $company->load('industry');
+        $company->load('regency', 'industry');
 
         return view('admin.companies.show', compact('company'));
     }

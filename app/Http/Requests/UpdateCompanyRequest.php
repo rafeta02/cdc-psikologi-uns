@@ -21,10 +21,6 @@ class UpdateCompanyRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'slug' => [
-                'string',
-                'nullable',
-            ],
             'address' => [
                 'string',
                 'nullable',
