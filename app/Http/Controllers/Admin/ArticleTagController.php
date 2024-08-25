@@ -49,8 +49,11 @@ class ArticleTagController extends Controller
             $table->editColumn('slug', function ($row) {
                 return $row->slug ? $row->slug : '';
             });
+            $table->editColumn('featured', function ($row) {
+                return '<input type="checkbox" disabled ' . ($row->featured ? 'checked' : null) . '>';
+            });
 
-            $table->rawColumns(['actions', 'placeholder']);
+            $table->rawColumns(['actions', 'placeholder', 'featured']);
 
             return $table->make(true);
         }

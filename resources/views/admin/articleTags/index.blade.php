@@ -32,6 +32,9 @@
                         {{ trans('cruds.articleTag.fields.slug') }}
                     </th>
                     <th>
+                        {{ trans('cruds.articleTag.fields.featured') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -89,6 +92,7 @@
       { data: 'placeholder', name: 'placeholder' },
 { data: 'name', name: 'name' },
 { data: 'slug', name: 'slug' },
+{ data: 'featured', name: 'featured' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

@@ -108,6 +108,14 @@
                                 </tr>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.post.fields.featured') }}
+                                    </th>
+                                    <td>
+                                        <input type="checkbox" disabled="disabled" {{ $post->featured ? 'checked' : '' }}>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.post.fields.author') }}
                                     </th>
                                     <td>

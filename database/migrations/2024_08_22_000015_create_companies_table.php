@@ -21,6 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->integer('number_of_employee')->nullable();
             $table->string('ownership')->nullable();
             $table->string('location')->nullable();
+            $table->boolean('featured')->default(0)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

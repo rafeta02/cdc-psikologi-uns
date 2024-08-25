@@ -55,6 +55,20 @@
                             <span class="help-block">{{ trans('cruds.company.fields.address_helper') }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="regency_id">{{ trans('cruds.company.fields.regency') }}</label>
+                            <select class="form-control select2" name="regency_id" id="regency_id">
+                                @foreach($regencies as $id => $entry)
+                                    <option value="{{ $id }}" {{ old('regency_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('regency'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('regency') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.company.fields.regency_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="telephone">{{ trans('cruds.company.fields.telephone') }}</label>
                             <input class="form-control" type="text" name="telephone" id="telephone" value="{{ old('telephone', '') }}">
                             @if($errors->has('telephone'))
@@ -147,6 +161,19 @@
                                 </div>
                             @endif
                             <span class="help-block">{{ trans('cruds.company.fields.location_helper') }}</span>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <input type="hidden" name="featured" value="0">
+                                <input type="checkbox" name="featured" id="featured" value="1" {{ old('featured', 0) == 1 ? 'checked' : '' }}>
+                                <label for="featured">{{ trans('cruds.company.fields.featured') }}</label>
+                            </div>
+                            @if($errors->has('featured'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('featured') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.company.fields.featured_helper') }}</span>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-danger" type="submit">

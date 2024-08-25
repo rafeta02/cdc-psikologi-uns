@@ -30,6 +30,9 @@
                                         {{ trans('cruds.position.fields.name') }}
                                     </th>
                                     <th>
+                                        {{ trans('cruds.position.fields.featured') }}
+                                    </th>
+                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -39,6 +42,10 @@
                                     <tr data-entry-id="{{ $position->id }}">
                                         <td>
                                             {{ $position->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            <span style="display:none">{{ $position->featured ?? '' }}</span>
+                                            <input type="checkbox" disabled="disabled" {{ $position->featured ? 'checked' : '' }}>
                                         </td>
                                         <td>
                                             @can('position_show')

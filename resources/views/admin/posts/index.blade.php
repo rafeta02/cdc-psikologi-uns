@@ -41,6 +41,9 @@
                         {{ trans('cruds.post.fields.status') }}
                     </th>
                     <th>
+                        {{ trans('cruds.post.fields.featured') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.post.fields.created_at') }}
                     </th>
                     <th>
@@ -104,11 +107,12 @@
 { data: 'category', name: 'categories.name' },
 { data: 'tag', name: 'tags.name' },
 { data: 'status', name: 'status' },
+{ data: 'featured', name: 'featured' },
 { data: 'created_at', name: 'created_at' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
-    order: [[ 6, 'desc' ]],
+    order: [[ 7, 'desc' ]],
     pageLength: 50,
   };
   let table = $('.datatable-Post').DataTable(dtOverrideGlobals);
