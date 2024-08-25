@@ -33,22 +33,37 @@ class TracerStakeholder extends Model implements HasMedia
 
     public const KOMPETENSI_INGGRIS_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     public const KOMPETENSI_KERJASAMA_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     public const KOMPETENSI_KOMUNIKASI_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     public const KOMPETENSI_PENGEMBANGAN_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     public const KOMPETENSI_PROFESIONALISME_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     public const KETERSEDIAAN_CAMPUS_HIRING_RADIO = [

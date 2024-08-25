@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use Excel;
 use App\Imports\RegencyImport;
+use Alert;
 
 class RegenciesController extends Controller
 {

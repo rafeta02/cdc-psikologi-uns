@@ -1,9 +1,27 @@
 <?php
 
-Route::view('/', 'frontend.about');
+use Mews\Captcha\Captcha;
+
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('jobs', 'HomeController@job')->name('jobs');
+Route::get('jobs/{slug}', 'HomeController@jobDetail')->name('job-detail');
+Route::get('companies', 'HomeController@company')->name('companies');
+Route::get('companies/{slug}', 'HomeController@companyDetail')->name('company-detail');
+Route::get('news/{category?}', 'HomeController@news')->name('news');
+Route::get('alumni-caring', 'HomeController@alumniCaring')->name('alumni-caring');
+Route::get('articles/search', 'HomeController@blogSearch')->name('blog-search');
+Route::get('articles/{slug}', 'HomeController@blogDetail')->name('blog-detail');
+Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
+Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
 
 Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
+
+//ajax for select
+Route::get('select/regencies', 'Admin\ProvinceController@getRegencies')->name('select.getRegencies');
+
 Auth::routes();
+
+Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
@@ -177,7 +195,7 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
     }
 });
 Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['auth']], function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/dashboard', 'HomeController@index')->name('home');
 
     // Tracer Alumni
     Route::delete('tracer-alumnus/destroy', 'TracerAlumniController@massDestroy')->name('tracer-alumnus.massDestroy');

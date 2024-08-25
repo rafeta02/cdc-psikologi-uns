@@ -38,4 +38,9 @@ class Regency extends Model
     {
         return $this->belongsTo(Province::class, 'province_id');
     }
+
+    public function getRegencyWithProvinceNameAttribute()
+    {
+        return $this->name . ' - ' . optional($this->province)->name;
+    }
 }

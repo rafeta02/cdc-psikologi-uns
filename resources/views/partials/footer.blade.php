@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="footer-item mt-4 mt-lg-0 me-lg-5">
-                    <h4 class="text-white mb-4">Jobcy</h4>
+                    <h4 class="text-white mb-2">Career Development Center<br>Fakultas Psikologi<br>Universitas Sebelas Maret</h4>
                     <p class="text-white-50">It is a long established fact that a reader will be of a page reader
                         will be of at its layout.</p>
                     <p class="text-white mt-3">Follow Us on:</p>

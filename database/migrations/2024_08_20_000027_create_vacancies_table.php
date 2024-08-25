@@ -20,7 +20,7 @@ class CreateVacanciesTable extends Migration
             $table->longText('persyaratan_khusus')->nullable();
             $table->longText('registration')->nullable();
             $table->longText('job_description')->nullable();
-            $table->float('minimum_gpa', 2, 2)->nullable();
+            $table->float('minimum_gpa', 4, 2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

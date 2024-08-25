@@ -1,6 +1,6 @@
 @extends('layouts.jobcy')
 
-@section('title', 'Blog')
+@section('title', $category ?? 'News' . ' - Career Development Center Fakultas Psikologi UNS')
 
 @section('content')
     <!-- Start home -->
@@ -9,13 +9,12 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="text-center text-white">
-                        <h3 class="mb-4">Blog</h3>
+                        <h3 class="mb-4">{{ $category ?? 'News' }}</h3>
                         <div class="page-next">
                             <nav class="d-inline-block" aria-label="breadcrumb text-center">
                                 <ol class="breadcrumb justify-content-center">
                                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="javascript:void(0)">Blog</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"> Alumni Sharing </li>
+                                    <li class="breadcrumb-item active" aria-current="page"> {{ $category ?? 'News' }} </li>
                                 </ol>
                             </nav>
                         </div>
@@ -47,194 +46,88 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <div class="mb-4">
-                        <h4>Latest & Trending Blog Post</h4>
+                        <h4>Featured Article</h4>
                     </div>
                 </div><!--end col-->
-                <div class="col-lg-7">
-                    <div class="post-preview overflow-hidden rounded-3 mb-3 mb-lg-0">
-                        <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-04.jpg') }}" alt="Blog" class="img-fluid blog-img" /></a>
-                    </div>
-                </div><!--end col-->
-                <div class="col-lg-5">
-                    <!-- Post-->
-                    <article class="post position-relative">
-                        <div class="post ms-lg-4">
-                            <p class="text-muted mb-2"><b>Product</b> - Aug 01, 2021</p>
-                            <h5 class="mb-3"><a href="blog-details.html" class="primary-link">Do traditional landing pages work for Saas startups?</a></h5>
-                            <p class="text-muted">
-                                Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                            </p>
-                            <div class="d-flex align-items-center mt-4">
-                                <div class="flex-shrink-0">
-                                    <img src="{{ asset('jobcy/images/blog/img-01.jpg') }}" alt="" class="avatar-sm rounded-circle">
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">James Lemire </h6></a>
-                                    <p class="text-muted mb-0">Product Manager</p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                    <!-- Post end-->
-                </div><!--end col-->
+
+                <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+                    <div class="carousel-inner">
+
+                        @foreach ($featured as $item)
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="post-preview overflow-hidden rounded-3 mb-3 mb-lg-0">
+                                        <a href="{{ route('blog-detail', $item->slug) }}"><img src="{{ $item->image ? $item->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="Blog" class="img-fluid blog-img" /></a>
+                                    </div>
+                                </div><!--end col-->
+                                <div class="col-lg-5">
+                                    <article class="post position-relative">
+                                        <div class="post ms-lg-4">
+                                            <p  class="text-muted mb-2">Posted By {{ $item->author->name }} - {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</p>
+                                            <h5 class="mb-3"><a href="{{ route('blog-detail', $item->slug) }}" class="primary-link">{{ $item->title }}</a></h5>
+                                            <p class="text-muted">
+                                                {!! $item->excerpt !!}
+                                            </p>
+                                            <p class="text-muted mb-2">
+                                                @foreach ($item->categories as $category)
+                                                    <b>{{ $category->name }}; </b>
+                                                @endforeach
+                                            </p>
+                                        </div>
+                                    </article>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end carousel-item-->
+                        @endforeach
+                    </div><!--end carousel-inner-->
+
+                     <!-- Visible Controls -->
+                    <a class="carousel-control-prev" href="#blogCarousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%);"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#blogCarousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%);"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </div><!--end carousel-->
+
             </div><!--end row-->
             <div class="row mt-5">
                 <div class="col-lg-12">
                     <div>
-                        <h4>All Blog Post</h4>
+                        <h4>All Article</h4>
                     </div>
                 </div><!--end col-->
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-4">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-06.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Fashion</b> - July 29, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">A day in the of a professional fashion designer</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="jobcy/images/user/img-02.jpg" alt="" class="avatar-sm rounded-circle">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Rebecca Swartz</h6></a>
-                                <p class="text-muted mb-0">Fashion Designer</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-lg-4 mt-5">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-05.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Business</b> - July 25, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">Stack designer Olivia Murphy offers freelancing advice</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="jobcy/images/user/img-03.jpg" alt="" class="avatar-sm rounded-circle">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Olivia Murphy</h6></a>
-                                <p class="text-muted mb-0">Product Leader</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
             </div><!--end row-->
             <div class="row">
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-5">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-07.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Business</b> - July 25, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">Manage white space in responsive layouts ?</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('jobcy/images/blog/img-03.jpg') }}" alt="" class="avatar-sm rounded-circle">
+                @foreach ($posts as $item)
+                    <div class="col-lg-6">
+                        <article class="post position-relative mt-5">
+                            <div class="post-preview overflow-hidden mb-3 rounded-3">
+                                <a href="{{ route('blog-detail', $item->slug) }}"><img src="{{ $item->image ? $item->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="" class="img-fluid blog-img"></a>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Olivia Murphy</h6></a>
-                                <p class="text-muted mb-0">Product Leader</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-5">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-08.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Development</b> - July 29, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">How to get creative in your work ?</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('jobcy/images/blog/img-02.jpg') }}" alt="" class="avatar-sm rounded-circle">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Rebecca Swartz</h6></a>
-                                <p class="text-muted mb-0">Fashion Designer</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
-            </div><!--end row-->
-            <div class="row">
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-5">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-09.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Business</b> - July 25, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">What planning process needs ?</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('jobcy/images/blog/img-03.jpg') }}" alt="" class="avatar-sm rounded-circle">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Olivia Murphy</h6></a>
-                                <p class="text-muted mb-0">Product Leader</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
-                <div class="col-lg-6">
-                    <article class="post position-relative mt-5">
-                        <div class="post-preview overflow-hidden mb-3 rounded-3">
-                            <a href="blog-details.html"><img src="{{ asset('jobcy/images/blog/img-10.jpg') }}" alt="" class="img-fluid blog-img"></a>
-                        </div>
-                        <p class="text-muted mb-2"><b>Development</b> - July 29, 2021</p>
-                        <h5 class="mb-3"><a href="blog-details.html" class="primary-link">How to become a best sale marketer in a year!</a></h5>
-                        <p class="text-muted">
-                            Objectively pursue diverse catalysts for change for interoperable meta-services. Distinctively re-engineer revolutionary meta-services and premium architectures. Intrinsically incubate intuitive opportunities and real-time potentialities. Appropriately communicate one-to-one technology.
-                        </p>
-                        <div class="d-flex align-items-center mt-4">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('jobcy/images/blog/img-02.jpg') }}" alt="" class="avatar-sm rounded-circle">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <a href="blog-author.html" class="primary-link"><h6 class="fs-16 mb-0">Rebecca Swartz</h6></a>
-                                <p class="text-muted mb-0">Fashion Designer</p>
-                            </div>
-                        </div>
-                    </article>
-                </div><!--end col-->
+                            <p class="text-muted mb-2">Posted By {{ $item->author->name }} - {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</p>
+                            <h5 class="mb-3"><a href="{{ route('blog-detail', $item->slug) }}" class="primary-link">{{ $item->title }}</a></h5>
+                            <p class="text-muted">
+                                {!! $item->excerpt !!}
+                            </p>
+                            <p class="text-muted mb-2">
+                                @foreach ($item->categories as $category)
+                                    <b>{{ $category->name }}; </b>
+                                @endforeach
+                            </p>
+                        </article>
+                    </div><!--end col-->
+                @endforeach
             </div><!--end row-->
 
+            <!-- Pagination controls -->
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination job-pagination mb-0 justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="javascript:void(0)" tabindex="-1">
-                                    <i class="mdi mdi-chevron-double-left fs-15"></i>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="javascript:void(0)">1</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript:void(0)">4</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">
-                                    <i class="mdi mdi-chevron-double-right fs-15"></i>
-                                </a>
-                            </li>
-                        </ul>
+                        @include('partials.custom-pagination', ['paginator' => $posts])
                     </nav>
                 </div><!--end col-->
             </div><!-- end row -->

@@ -162,5 +162,23 @@ class ProvinceController extends Controller
         return response()->json($regencies);
     }
 
+    public function getRegencies(Request $request)
+    {
+        $query = $request->input('q');
 
+        $regencies = Regency::where('name', 'like', '%' . $query . '%')
+            ->orWhereHas('province', function($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%');
+            })
+            ->with('province')
+            ->get()
+            ->map(function($regency) {
+                return [
+                    'id' => $regency->id,
+                    'text' => $regency->name . ', ' . $regency->province->name
+                ];
+            });
+
+        return response()->json($regencies);
+    }
 }

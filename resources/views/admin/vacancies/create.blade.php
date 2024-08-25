@@ -138,7 +138,7 @@
 
             <div class="form-group">
                 <label class="required" for="location_id">{{ trans('cruds.vacancy.fields.location') }}</label>
-                <select class="form-control select2 {{ $errors->has('location') ? 'is-invalid' : '' }}" name="location_id" id="location_id" required>
+                <select class="select2 {{ $errors->has('location') ? 'is-invalid' : '' }}" name="location_id" id="location_id" required>
                     {{-- @foreach($locations as $id => $entry)
                         <option value="{{ $id }}" {{ old('location_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach --}}

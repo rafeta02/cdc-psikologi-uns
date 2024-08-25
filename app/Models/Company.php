@@ -87,6 +87,11 @@ class Company extends Model implements HasMedia
         return $this->belongsTo(Industry::class, 'industry_id');
     }
 
+    public function vacancies()
+    {
+        return $this->hasMany(Vacancy::class);
+    }
+
     public function sluggable(): array
     {
         return [
