@@ -45,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label class="required">{{ trans('cruds.tracerAlumnu.fields.angkatan') }}</label>
-                            <select class="form-control" name="angkatan" id="angkatan" required>
+                            <select class="form-control select2" name="angkatan" id="angkatan" required>
                                 <option value disabled {{ old('angkatan', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
                                 @foreach(App\Models\TracerAlumnu::ANGKATAN_SELECT as $key => $label)
                                     <option value="{{ $key }}" {{ old('angkatan', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
@@ -59,11 +59,8 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.angkatan_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="kota_asal_id">{{ trans('cruds.tracerAlumnu.fields.kota_asal') }}</label>
-                            <select class="form-control select2" name="kota_asal_id" id="kota_asal_id">
-                                @foreach($kota_asals as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('kota_asal_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
+                            <label class="required" for="kota_asal_id">{{ trans('cruds.tracerAlumnu.fields.kota_asal') }}</label>
+                            <select class="form-control select2" name="kota_asal_id" id="kota_asal_id" required>
                             </select>
                             @if($errors->has('kota_asal'))
                                 <div class="invalid-feedback">
@@ -73,11 +70,8 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.kota_asal_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="kota_domisili_id">{{ trans('cruds.tracerAlumnu.fields.kota_domisili') }}</label>
-                            <select class="form-control select2" name="kota_domisili_id" id="kota_domisili_id">
-                                @foreach($kota_domisilis as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('kota_domisili_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
+                            <label class="required" for="kota_domisili_id">{{ trans('cruds.tracerAlumnu.fields.kota_domisili') }}</label>
+                            <select class="form-control select2" name="kota_domisili_id" id="kota_domisili_id" required>
                             </select>
                             @if($errors->has('kota_domisili'))
                                 <div class="invalid-feedback">
@@ -87,10 +81,10 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.kota_domisili_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label>{{ trans('cruds.tracerAlumnu.fields.partisipasi') }}</label>
+                            <label class="required">{{ trans('cruds.tracerAlumnu.fields.partisipasi') }}</label>
                             @foreach(App\Models\TracerAlumnu::PARTISIPASI_RADIO as $key => $label)
                                 <div>
-                                    <input type="radio" id="partisipasi_{{ $key }}" name="partisipasi" value="{{ $key }}" {{ old('partisipasi', '') === (string) $key ? 'checked' : '' }}>
+                                    <input type="radio" id="partisipasi_{{ $key }}" name="partisipasi" value="{{ $key }}" {{ old('partisipasi', '') === (string) $key ? 'checked' : '' }} required>
                                     <label for="partisipasi_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
@@ -102,9 +96,9 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.partisipasi_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label>{{ trans('cruds.tracerAlumnu.fields.kesibukan') }}</label>
+                            <label class="required">{{ trans('cruds.tracerAlumnu.fields.kesibukan') }}</label>
                             <select class="form-control" name="kesibukan" id="kesibukan">
-                                <option value disabled {{ old('kesibukan', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                                <option value disabled {{ old('kesibukan', null) === null ? 'selected' : '' }} required>{{ trans('global.pleaseSelect') }}</option>
                                 @foreach(App\Models\TracerAlumnu::KESIBUKAN_SELECT as $key => $label)
                                     <option value="{{ $key }}" {{ old('kesibukan', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
                                 @endforeach
@@ -117,8 +111,8 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.kesibukan_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="nama_instansi">{{ trans('cruds.tracerAlumnu.fields.nama_instansi') }}</label>
-                            <input class="form-control" type="text" name="nama_instansi" id="nama_instansi" value="{{ old('nama_instansi', '') }}">
+                            <label class="required" for="nama_instansi">{{ trans('cruds.tracerAlumnu.fields.nama_instansi') }}</label>
+                            <input class="form-control" type="text" name="nama_instansi" id="nama_instansi" value="{{ old('nama_instansi', '') }}" required>
                             @if($errors->has('nama_instansi'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('nama_instansi') }}
@@ -127,20 +121,20 @@
                             <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.nama_instansi_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="jabatan_instansi">{{ trans('cruds.tracerAlumnu.fields.jabatan_instansi') }}</label>
-                            <input class="form-control" type="text" name="jabatan_instansi" id="jabatan_instansi" value="{{ old('jabatan_instansi', '') }}">
+                            <label class="required"  for="jabatan_instansi">{{ trans('cruds.tracerAlumnu.fields.jabatan_instansi') }}</label>
+                            <input class="form-control" type="text" name="jabatan_instansi" id="jabatan_instansi" value="{{ old('jabatan_instansi', '') }}" required>
                             @if($errors->has('jabatan_instansi'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('jabatan_instansi') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.jabatan_instansi_helper') }}</span>
+                            <span class="help-block {{ trans('cruds.tracerAlumnu.fields.jabatan_instansi_helper') ? 'with-icon' : '' }}">{{ trans('cruds.tracerAlumnu.fields.jabatan_instansi_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label>{{ trans('cruds.tracerAlumnu.fields.pendapatan') }}</label>
+                            <label class="required" for="pendapatan">{{ trans('cruds.tracerAlumnu.fields.pendapatan') }}</label>
                             @foreach(App\Models\TracerAlumnu::PENDAPATAN_RADIO as $key => $label)
                                 <div>
-                                    <input type="radio" id="pendapatan_{{ $key }}" name="pendapatan" value="{{ $key }}" {{ old('pendapatan', '') === (string) $key ? 'checked' : '' }}>
+                                    <input type="radio" id="pendapatan_{{ $key }}" name="pendapatan" value="{{ $key }}" {{ old('pendapatan', '') === (string) $key ? 'checked' : '' }} required>
                                     <label for="pendapatan_{{ $key }}">{{ $label }}</label>
                                 </div>
                             @endforeach
@@ -163,4 +157,53 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    console.log('Initializing Select2 for kota_asal_id');
+    $('#kota_asal_id').select2({
+        placeholder: 'Search for a City or Province',
+        ajax: {
+            url: '{{ route("admin.provinces.getProvincesWithRegencies") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 3 // minimum chars to search
+    });
+    console.log('Initializing Select2 for kota_asal_id');
+    $('#kota_domisili_id').select2({
+        placeholder: 'Search for a City or Province',
+        ajax: {
+            url: '{{ route("admin.provinces.getProvincesWithRegencies") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 3 // minimum chars to search
+    });
+});
+</script>
 @endsection

@@ -246,6 +246,6 @@ class HomeController
 
         $chart7 = new LaravelChart($settings7);
 
-        return view('home', compact('chart7', 'settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6'));
+        return view('admin.home', compact('chart7', 'settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6'));
     }
 }

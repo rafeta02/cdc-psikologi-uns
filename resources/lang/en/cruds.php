@@ -958,8 +958,8 @@ return [
         ],
     ],
     'prestasiMaba' => [
-        'title'          => 'Prestasi Maba',
-        'title_singular' => 'Prestasi Maba',
+        'title'          => 'Prestasi Mahasiswa Baru',
+        'title_singular' => 'Prestasi Mahasiswa Baru',
         'fields'         => [
             'id'                          => 'ID',
             'id_helper'                   => ' ',

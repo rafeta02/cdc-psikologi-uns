@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>CDC Fakultas Psikologi UNS</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -27,16 +27,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/loading.css') }}" rel="stylesheet" />
     @yield('styles')
 </head>
 
+<div class="loading" style="display: none" id="loadingSpinner">
+    <div style="color: blue" class="loading-content la-ball-spin-fade la-3x">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
 <body>
+    @include('sweetalert::alert')
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    CDC Fakultas Psikologi UNS
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -87,19 +103,9 @@
                                             {{ trans('cruds.tracerAlumnu.title') }}
                                         </a>
                                     @endcan
-                                    @can('tracer_stakeholder_access')
-                                        <a class="dropdown-item ml-3" href="{{ route('frontend.tracer-stakeholders.index') }}">
-                                            {{ trans('cruds.tracerStakeholder.title') }}
-                                        </a>
-                                    @endcan
                                     @can('prestasi_access')
                                         <a class="dropdown-item disabled" href="#">
                                             {{ trans('cruds.prestasi.title') }}
-                                        </a>
-                                    @endcan
-                                    @can('prestasi_maba_access')
-                                        <a class="dropdown-item ml-3" href="{{ route('frontend.prestasi-mabas.index') }}">
-                                            {{ trans('cruds.prestasiMaba.title') }}
                                         </a>
                                     @endcan
                                     @can('prestasi_mahasiswa_access')
@@ -107,17 +113,12 @@
                                             {{ trans('cruds.prestasiMahasiswa.title') }}
                                         </a>
                                     @endcan
+                                    @can('prestasi_maba_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.prestasi-mabas.index') }}">
+                                            {{ trans('cruds.prestasiMaba.title') }}
+                                        </a>
+                                    @endcan
 
-                                    @can('result_competence_access')
-                                        <a class="dropdown-item ml-3" href="{{ route('frontend.result-competences.index') }}">
-                                            {{ trans('cruds.resultCompetence.title') }}
-                                        </a>
-                                    @endcan
-                                    @can('result_assessment_access')
-                                        <a class="dropdown-item ml-3" href="{{ route('frontend.result-assessments.index') }}">
-                                            {{ trans('cruds.resultAssessment.title') }}
-                                        </a>
-                                    @endcan
 
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

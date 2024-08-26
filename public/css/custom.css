@@ -103,3 +103,28 @@ div.dt-button-collection {
     background-color: rgba(128, 128, 128, 0.1);
     font-weight: bolder;
 }
+
+.help-block {
+    font-size: 0.875rem; /* Slightly smaller text */
+    color: #6c757d; /* Muted text color */
+    margin-top: 0.25rem; /* Small space above the help text */
+    margin-left: 0.25rem; /* Align with input fields */
+    line-height: 1.4; /* Slightly increased line height for readability */
+}
+
+.help-block.with-icon::before {
+    content: "\f059"; /* FontAwesome info-circle icon */
+    font-family: "Font Awesome 5 Free"; /* Assuming you're using FontAwesome */
+    font-weight: 900;
+    margin-right: 0.5rem; /* Space between icon and text */
+    color: #17a2b8; /* Info color to make the icon stand out */
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* Increase space between form groups */
+}
+
+.invalid-feedback {
+    color: #dc3545; /* Ensure error messages are easily distinguishable */
+    font-weight: bold; /* Make error messages stand out */
+}

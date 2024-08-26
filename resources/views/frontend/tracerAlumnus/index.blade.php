@@ -2,12 +2,15 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="col-md-12 mb-4">
+            <h3>Data Tracer Alumni</h3>
+        </div>
         <div class="col-md-12">
             @can('tracer_alumnu_create')
                 <div style="margin-bottom: 10px;" class="row">
                     <div class="col-lg-12">
                         <a class="btn btn-success" href="{{ route('frontend.tracer-alumnus.create') }}">
-                            {{ trans('global.add') }} {{ trans('cruds.tracerAlumnu.title_singular') }}
+                            Tambah Data
                         </a>
                     </div>
                 </div>
@@ -23,19 +26,19 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.tracerAlumnu.fields.nama') }}
+                                        Tanggal Input
                                     </th>
                                     <th>
-                                        {{ trans('cruds.tracerAlumnu.fields.telephone') }}
+                                        Nama
                                     </th>
                                     <th>
-                                        {{ trans('cruds.tracerAlumnu.fields.email') }}
+                                        Kesibukan
                                     </th>
                                     <th>
-                                        {{ trans('cruds.tracerAlumnu.fields.angkatan') }}
+                                        Nama Instansi
                                     </th>
                                     <th>
-                                        {{ trans('cruds.tracerAlumnu.fields.kota_asal') }}
+                                        Nama Jabatan
                                     </th>
                                     <th>
                                         &nbsp;
@@ -45,44 +48,33 @@
                             <tbody>
                                 @foreach($tracerAlumnus as $key => $tracerAlumnu)
                                     <tr data-entry-id="{{ $tracerAlumnu->id }}">
-                                        <td>
+                                        <td class="text-center">
+                                            {{ Carbon\Carbon::parse($tracerAlumnu->created_at)->format('d F Y') }}
+                                        </td>
+                                        <td class="text-center">
                                             {{ $tracerAlumnu->nama ?? '' }}
                                         </td>
-                                        <td>
-                                            {{ $tracerAlumnu->telephone ?? '' }}
+                                        <td class="text-center">
+                                            {{ App\Models\TracerAlumnu::KESIBUKAN_SELECT[$tracerAlumnu->kesibukan] ?? '' }}
                                         </td>
-                                        <td>
-                                            {{ $tracerAlumnu->email ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ App\Models\TracerAlumnu::ANGKATAN_SELECT[$tracerAlumnu->angkatan] ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $tracerAlumnu->kota_asal->name ?? '' }}
-                                        </td>
-                                        <td>
+                                        <td class="text-center">
+                                            {{ $tracerAlumnu->nama_instansi ?? '' }}
+                                        </td class="text-center">
+                                        <td class="text-center">
+                                            {{ $tracerAlumnu->jabatan_instansi ?? '' }}
+                                        </td class="text-center">
+                                        <td class="text-center">
                                             @can('tracer_alumnu_show')
                                                 <a class="btn btn-xs btn-primary" href="{{ route('frontend.tracer-alumnus.show', $tracerAlumnu->id) }}">
                                                     {{ trans('global.view') }}
                                                 </a>
                                             @endcan
-
                                             @can('tracer_alumnu_edit')
                                                 <a class="btn btn-xs btn-info" href="{{ route('frontend.tracer-alumnus.edit', $tracerAlumnu->id) }}">
                                                     {{ trans('global.edit') }}
                                                 </a>
                                             @endcan
-
-                                            @can('tracer_alumnu_delete')
-                                                <form action="{{ route('frontend.tracer-alumnus.destroy', $tracerAlumnu->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                                </form>
-                                            @endcan
-
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -98,37 +90,8 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('tracer_alumnu_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('frontend.tracer-alumnus.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,
@@ -140,8 +103,6 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
 })
-
 </script>
 @endsection

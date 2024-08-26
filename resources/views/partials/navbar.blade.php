@@ -55,6 +55,19 @@
             </ul><!--end navbar-nav-->
         </div>
         <!--end navabar-collapse-->
+
+        <ul class="header-menu list-inline d-flex align-items-center mb-0">
+            <li class="list-inline-item dropdown my-2 d-none d-md-block">
+                <a href="{{ route('frontend.home') }}" class="btn btn-primary me-2">
+                    @guest
+                        <i class="mdi mdi-account-circle"></i> Login
+                    @else
+                        <i class="mdi mdi-home-account"></i> Dashboard
+                    @endguest
+                </a>
+            </li>
+        </ul>
+
     </div>
     <!--end container-->
 </nav>
