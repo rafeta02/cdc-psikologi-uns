@@ -29,9 +29,6 @@
                         {{ trans('cruds.industry.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.industry.fields.featured') }}
-                    </th>
-                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -88,7 +85,6 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'name', name: 'name' },
-{ data: 'featured', name: 'featured' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

@@ -72,11 +72,8 @@ class PostController extends Controller
             $table->editColumn('status', function ($row) {
                 return $row->status ? Post::STATUS_SELECT[$row->status] : '';
             });
-            $table->editColumn('featured', function ($row) {
-                return '<input type="checkbox" disabled ' . ($row->featured ? 'checked' : null) . '>';
-            });
 
-            $table->rawColumns(['actions', 'placeholder', 'category', 'tag', 'featured']);
+            $table->rawColumns(['actions', 'placeholder', 'category', 'tag']);
 
             return $table->make(true);
         }

@@ -42,9 +42,6 @@
                                         {{ trans('cruds.post.fields.status') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.post.fields.featured') }}
-                                    </th>
-                                    <th>
                                         {{ trans('cruds.post.fields.created_at') }}
                                     </th>
                                     <th>
@@ -73,10 +70,6 @@
                                         </td>
                                         <td>
                                             {{ App\Models\Post::STATUS_SELECT[$post->status] ?? '' }}
-                                        </td>
-                                        <td>
-                                            <span style="display:none">{{ $post->featured ?? '' }}</span>
-                                            <input type="checkbox" disabled="disabled" {{ $post->featured ? 'checked' : '' }}>
                                         </td>
                                         <td>
                                             {{ $post->created_at ?? '' }}
@@ -153,7 +146,7 @@
 
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,
-    order: [[ 6, 'desc' ]],
+    order: [[ 5, 'desc' ]],
     pageLength: 50,
   });
   let table = $('.datatable-Post:not(.ajaxTable)').DataTable({ buttons: dtButtons })

@@ -33,9 +33,6 @@
                                         {{ trans('cruds.articleTag.fields.slug') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.articleTag.fields.featured') }}
-                                    </th>
-                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -48,10 +45,6 @@
                                         </td>
                                         <td>
                                             {{ $articleTag->slug ?? '' }}
-                                        </td>
-                                        <td>
-                                            <span style="display:none">{{ $articleTag->featured ?? '' }}</span>
-                                            <input type="checkbox" disabled="disabled" {{ $articleTag->featured ? 'checked' : '' }}>
                                         </td>
                                         <td>
                                             @can('article_tag_show')

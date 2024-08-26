@@ -46,11 +46,8 @@ class IndustryController extends Controller
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
             });
-            $table->editColumn('featured', function ($row) {
-                return '<input type="checkbox" disabled ' . ($row->featured ? 'checked' : null) . '>';
-            });
 
-            $table->rawColumns(['actions', 'placeholder', 'featured']);
+            $table->rawColumns(['actions', 'placeholder']);
 
             return $table->make(true);
         }
