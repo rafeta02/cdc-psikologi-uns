@@ -46,6 +46,7 @@ class Company extends Model implements HasMedia
         'slug',
         'description',
         'address',
+        'regency_id',
         'telephone',
         'email',
         'website',
@@ -54,6 +55,7 @@ class Company extends Model implements HasMedia
         'ownership',
         'industry_id',
         'location',
+        'featured',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -80,6 +82,11 @@ class Company extends Model implements HasMedia
         }
 
         return $file;
+    }
+
+    public function regency()
+    {
+        return $this->belongsTo(Regency::class, 'regency_id');
     }
 
     public function industry()

@@ -61,6 +61,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.company.fields.regency') }}
+                        </th>
+                        <td>
+                            {{ $company->regency->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.company.fields.telephone') }}
                         </th>
                         <td>
@@ -121,6 +129,14 @@
                         </th>
                         <td>
                             {{ $company->location }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.company.fields.featured') }}
+                        </th>
+                        <td>
+                            <input type="checkbox" disabled="disabled" {{ $company->featured ? 'checked' : '' }}>
                         </td>
                     </tr>
                 </tbody>

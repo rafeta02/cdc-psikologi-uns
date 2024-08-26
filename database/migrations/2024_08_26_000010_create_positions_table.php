@@ -12,6 +12,7 @@ class CreatePositionsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->longText('description')->nullable();
+            $table->boolean('featured')->default(0)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

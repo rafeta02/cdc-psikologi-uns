@@ -51,6 +51,7 @@ class Vacancy extends Model implements HasMedia
         'industry_id',
         'location_id',
         'created_at',
+        'featured',
         'updated_at',
         'deleted_at',
         'created_by_id',

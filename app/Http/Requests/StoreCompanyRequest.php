@@ -21,10 +21,6 @@ class StoreCompanyRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'slug' => [
-                'string',
-                'nullable',
-            ],
             'address' => [
                 'string',
                 'nullable',

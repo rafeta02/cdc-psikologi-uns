@@ -25,6 +25,7 @@ class ArticleTag extends Model
         'name',
         'slug',
         'description',
+        'featured',
         'created_at',
         'updated_at',
         'deleted_at',
