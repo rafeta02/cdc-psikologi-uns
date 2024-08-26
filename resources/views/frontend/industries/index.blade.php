@@ -30,9 +30,6 @@
                                         {{ trans('cruds.industry.fields.name') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.industry.fields.featured') }}
-                                    </th>
-                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -42,10 +39,6 @@
                                     <tr data-entry-id="{{ $industry->id }}">
                                         <td>
                                             {{ $industry->name ?? '' }}
-                                        </td>
-                                        <td>
-                                            <span style="display:none">{{ $industry->featured ?? '' }}</span>
-                                            <input type="checkbox" disabled="disabled" {{ $industry->featured ? 'checked' : '' }}>
                                         </td>
                                         <td>
                                             @can('industry_show')

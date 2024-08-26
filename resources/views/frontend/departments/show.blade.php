@@ -34,6 +34,14 @@
                                         {{ $department->description }}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.department.fields.featured') }}
+                                    </th>
+                                    <td>
+                                        <input type="checkbox" disabled="disabled" {{ $department->featured ? 'checked' : '' }}>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="form-group">
