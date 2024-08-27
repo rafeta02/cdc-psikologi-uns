@@ -45,12 +45,13 @@ class Vacancy extends Model implements HasMedia
         'persyaratan_khusus',
         'registration',
         'job_description',
+        'experience_id',
         'minimum_gpa',
         'position_id',
         'industry_id',
         'location_id',
-        'created_at',
         'featured',
+        'created_at',
         'updated_at',
         'deleted_at',
         'created_by_id',
@@ -90,6 +91,11 @@ class Vacancy extends Model implements HasMedia
     public function setCloseDateAttribute($value)
     {
         $this->attributes['close_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function experience()
+    {
+        return $this->belongsTo(Experience::class, 'experience_id');
     }
 
     public function education()

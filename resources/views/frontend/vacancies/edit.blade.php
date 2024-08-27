@@ -123,6 +123,20 @@
                             <span class="help-block">{{ trans('cruds.vacancy.fields.job_description_helper') }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="experience_id">{{ trans('cruds.vacancy.fields.experience') }}</label>
+                            <select class="form-control select2" name="experience_id" id="experience_id">
+                                @foreach($experiences as $id => $entry)
+                                    <option value="{{ $id }}" {{ (old('experience_id') ? old('experience_id') : $vacancy->experience->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('experience'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('experience') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.vacancy.fields.experience_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="education">{{ trans('cruds.vacancy.fields.education') }}</label>
                             <div style="padding-bottom: 4px">
                                 <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>

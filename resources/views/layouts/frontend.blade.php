@@ -152,6 +152,11 @@
                                             {{ trans('cruds.department.title') }}
                                         </a>
                                     @endcan
+                                    @can('experience_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.experiences.index') }}">
+                                            {{ trans('cruds.experience.title') }}
+                                        </a>
+                                    @endcan
                                     @can('company_access')
                                         <a class="dropdown-item" href="{{ route('frontend.companies.index') }}">
                                             {{ trans('cruds.company.title') }}
