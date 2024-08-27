@@ -137,9 +137,11 @@ class VacancyController extends Controller
 
         $positions = Position::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $vacancy->load('company', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
-        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'positions', 'vacancy'));
+        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'positions', 'vacancy', 'industries'));
     }
 
     public function update(UpdateVacancyRequest $request, Vacancy $vacancy)

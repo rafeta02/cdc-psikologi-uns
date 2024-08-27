@@ -1,7 +1,12 @@
 @extends('layouts.frontend')
 @section('content')
 <div class="container">
+
     <div class="row justify-content-center">
+        <div class="col-md-12 mb-4">
+            <h3>Data Tracer Alumni</h3>
+        </div>
+
         <div class="col-md-12">
 
             <div class="card">
@@ -93,7 +98,7 @@
                                     {{ $errors->first('partisipasi') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.partisipasi_helper') }}</span>
+                            <span class="help-block with-icon">{{ trans('cruds.tracerAlumnu.fields.partisipasi_helper') }}</span>
                         </div>
                         <div class="form-group">
                             <label class="required">{{ trans('cruds.tracerAlumnu.fields.kesibukan') }}</label>
@@ -108,7 +113,6 @@
                                     {{ $errors->first('kesibukan') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.kesibukan_helper') }}</span>
                         </div>
                         <div class="form-group">
                             <label class="required" for="nama_instansi">{{ trans('cruds.tracerAlumnu.fields.nama_instansi') }}</label>
@@ -118,7 +122,7 @@
                                     {{ $errors->first('nama_instansi') }}
                                 </div>
                             @endif
-                            <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.nama_instansi_helper') }}</span>
+                            <span class="help-block with-icon">{{ trans('cruds.tracerAlumnu.fields.nama_instansi_helper') }}</span>
                         </div>
                         <div class="form-group">
                             <label class="required"  for="jabatan_instansi">{{ trans('cruds.tracerAlumnu.fields.jabatan_instansi') }}</label>

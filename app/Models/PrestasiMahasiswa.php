@@ -47,7 +47,7 @@ class PrestasiMahasiswa extends Model implements HasMedia
     public const TINGKAT_RADIO = [
         'internasional' => 'Internasional (min. 2 negara)',
         'nasional'      => 'Nasional (min. 4 provinsi)',
-        'regional'      => 'Provinsi/ Regional (1-3 provinsi)',
+        'regional'      => 'Provinsi/Regional (1-3 provinsi)',
     ];
 
     public const SKIM_RADIO = [
@@ -63,7 +63,7 @@ class PrestasiMahasiswa extends Model implements HasMedia
         'harapan_2' => 'Harapan 2',
         'harapan_3' => 'Harapan 3',
         'apresiasi' => 'Apresiasi kejuaraan/Penghargaan tambahan/Juara umum',
-        'peserta'   => 'peserta',
+        'peserta'   => 'Peserta',
     ];
 
     protected $fillable = [

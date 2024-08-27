@@ -189,56 +189,6 @@
                 <span class="help-block">{{ trans('cruds.vacancy.fields.minimum_gpa_helper') }}</span>
             </div>
             <div class="form-group">
-<<<<<<< HEAD
-=======
-                <label for="position_id">{{ trans('cruds.vacancy.fields.position') }}</label>
-                <select class="form-control select2 {{ $errors->has('position') ? 'is-invalid' : '' }}" name="position_id" id="position_id">
-                    @foreach($positions as $id => $entry)
-                        <option value="{{ $id }}" {{ old('position_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('position'))
-                    <span class="text-danger">{{ $errors->first('position') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.vacancy.fields.position_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="industry_id">{{ trans('cruds.vacancy.fields.industry') }}</label>
-                <select class="form-control select2 {{ $errors->has('industry') ? 'is-invalid' : '' }}" name="industry_id" id="industry_id">
-                    @foreach($industries as $id => $entry)
-                        <option value="{{ $id }}" {{ old('industry_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('industry'))
-                    <span class="text-danger">{{ $errors->first('industry') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.vacancy.fields.industry_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="location_id">{{ trans('cruds.vacancy.fields.location') }}</label>
-                <select class="form-control select2 {{ $errors->has('location') ? 'is-invalid' : '' }}" name="location_id" id="location_id">
-                    @foreach($locations as $id => $entry)
-                        <option value="{{ $id }}" {{ old('location_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('location'))
-                    <span class="text-danger">{{ $errors->first('location') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.vacancy.fields.location_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <div class="form-check {{ $errors->has('featured') ? 'is-invalid' : '' }}">
-                    <input type="hidden" name="featured" value="0">
-                    <input class="form-check-input" type="checkbox" name="featured" id="featured" value="1" {{ old('featured', 0) == 1 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="featured">{{ trans('cruds.vacancy.fields.featured') }}</label>
-                </div>
-                @if($errors->has('featured'))
-                    <span class="text-danger">{{ $errors->first('featured') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.vacancy.fields.featured_helper') }}</span>
-            </div>
-            <div class="form-group">
->>>>>>> e65bc34d288fe17184576c8191eac04ecbe998d5
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

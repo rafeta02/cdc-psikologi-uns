@@ -152,6 +152,34 @@
                             @endif
                             <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.keikutsertaan_helper') }}</span>
                         </div>
+
+                        <!-- Dynamic Nama Peserta and NIM Peserta -->
+                        <div id="peserta-wrapper">
+                            <div class="card mb-3 peserta-group">
+                                <div class="card-body">
+                                    <h5 class="card-title">Peserta 1</h5>
+                                    <div class="form-group">
+                                        <label for="nama_peserta">
+                                            Nama Peserta
+                                        </label>
+                                        <input class="form-control" type="text" name="nama_peserta[]" id="nama_peserta" value="{{ old('nama_peserta.0', '') }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="nim_peserta">
+                                            NIM Peserta
+                                        </label>
+                                        <input class="form-control" type="text" name="nim_peserta[]" id="nim_peserta" value="{{ old('nim_peserta.0', '') }}">
+                                    </div>
+
+                                    <button type="button" class="btn btn-success add-peserta">
+                                        <i class="fas fa-plus"></i> Tambah Peserta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="form-group">
                             <label for="url_publikasi">{{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}</label>
                             <input class="form-control" type="text" name="url_publikasi" id="url_publikasi" value="{{ old('url_publikasi', '') }}">
@@ -243,7 +271,44 @@
 
 @section('scripts')
 <script>
-    var uploadedSuratTugasMap = {}
+    document.addEventListener('DOMContentLoaded', function() {
+        let pesertaWrapper = document.getElementById('peserta-wrapper');
+        let pesertaIndex = 1;
+
+        function updatePesertaTitles() {
+            let pesertaGroups = document.querySelectorAll('.peserta-group');
+            pesertaGroups.forEach((group, index) => {
+                group.querySelector('.card-title').textContent = `Peserta ${index + 1}`;
+                group.querySelector('input[name="nama_peserta[]"]').id = `nama_peserta_${index}`;
+                group.querySelector('input[name="nim_peserta[]"]').id = `nim_peserta_${index}`;
+            });
+        }
+
+        document.querySelector('.add-peserta').addEventListener('click', function() {
+            let newPesertaGroup = document.querySelector('.peserta-group').cloneNode(true);
+            newPesertaGroup.querySelectorAll('input').forEach(input => input.value = '');
+            newPesertaGroup.querySelector('.add-peserta').innerHTML = '<i class="fas fa-minus"></i> Remove Peserta';
+            newPesertaGroup.querySelector('.add-peserta').classList.remove('btn-success');
+            newPesertaGroup.querySelector('.add-peserta').classList.add('btn-danger');
+            newPesertaGroup.querySelector('.add-peserta').classList.add('remove-peserta');
+            pesertaWrapper.appendChild(newPesertaGroup);
+            pesertaIndex++;
+            updatePesertaTitles();
+        });
+
+        pesertaWrapper.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-peserta')) {
+                e.target.closest('.peserta-group').remove();
+                pesertaIndex--;
+                updatePesertaTitles();
+            }
+        });
+
+        updatePesertaTitles();
+    });
+</script>
+<script>
+var uploadedSuratTugasMap = {}
 Dropzone.options.suratTugasDropzone = {
     url: '{{ route('frontend.prestasi-mahasiswas.storeMedia') }}',
     maxFilesize: 5, // MB
