@@ -67,6 +67,7 @@ class PrestasiMahasiswa extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'user_id',
         'skim',
         'tingkat',
         'nama_kegiatan',
@@ -99,6 +100,11 @@ class PrestasiMahasiswa extends Model implements HasMedia
     public function prestasiMahasiswaPrestasiMahasiswaDetails()
     {
         return $this->hasMany(PrestasiMahasiswaDetail::class, 'prestasi_mahasiswa_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function kategori()

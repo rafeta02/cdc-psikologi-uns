@@ -397,6 +397,8 @@ return [
             'deleted_at_helper'       => ' ',
             'partisipasi'             => 'Apakah Anda Tertarik untuk Berpartisipasi dalam Kegiatan KAFPSI ?',
             'partisipasi_helper'      => 'Misal menjadi narasumber dalam sharing alumni, seminar, talkshow',
+            'user'                    => 'User',
+            'user_helper'             => ' ',
         ],
     ],
     'tracerStakeholder' => [
@@ -501,6 +503,8 @@ return [
             'deleted_at_helper'             => ' ',
             'kategori'                      => 'Kriteria/Kategori',
             'kategori_helper'               => ' ',
+            'user'                          => 'User',
+            'user_helper'                   => ' ',
         ],
     ],
     'prestasiMahasiswaDetail' => [
@@ -1019,6 +1023,8 @@ return [
             'deleted_at_helper'           => ' ',
             'kategori'                    => 'Kriteria/Kategori',
             'kategori_helper'             => ' ',
+            'user'                        => 'User',
+            'user_helper'                 => ' ',
         ],
     ],
     'kategoriPrestasi' => [

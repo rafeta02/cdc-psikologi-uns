@@ -11,6 +11,18 @@
             @method('PUT')
             @csrf
             <div class="form-group">
+                <label for="user_id">{{ trans('cruds.tracerAlumnu.fields.user') }}</label>
+                <select class="form-control select2 {{ $errors->has('user') ? 'is-invalid' : '' }}" name="user_id" id="user_id">
+                    @foreach($users as $id => $entry)
+                        <option value="{{ $id }}" {{ (old('user_id') ? old('user_id') : $tracerAlumnu->user->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('user'))
+                    <span class="text-danger">{{ $errors->first('user') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.tracerAlumnu.fields.user_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label class="required" for="nama">{{ trans('cruds.tracerAlumnu.fields.nama') }}</label>
                 <input class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" type="text" name="nama" id="nama" value="{{ old('nama', $tracerAlumnu->nama) }}" required>
                 @if($errors->has('nama'))
