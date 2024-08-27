@@ -29,6 +29,9 @@
                         {{ trans('cruds.department.fields.name') }}
                     </th>
                     <th>
+                        {{ trans('cruds.department.fields.slug') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>

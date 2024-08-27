@@ -203,6 +203,8 @@ return [
             'deleted_at_helper'  => ' ',
             'featured'           => 'Featured',
             'featured_helper'    => ' ',
+            'slug'               => 'Slug',
+            'slug_helper'        => ' ',
         ],
     ],
     'position' => [
@@ -223,6 +225,8 @@ return [
             'deleted_at_helper'  => ' ',
             'featured'           => 'Featured',
             'featured_helper'    => ' ',
+            'slug'               => 'Slug',
+            'slug_helper'        => ' ',
         ],
     ],
     'department' => [
@@ -243,6 +247,8 @@ return [
             'deleted_at_helper'  => ' ',
             'featured'           => 'Featured',
             'featured_helper'    => ' ',
+            'slug'               => 'Slug',
+            'slug_helper'        => ' ',
         ],
     ],
     'industry' => [
@@ -263,6 +269,8 @@ return [
             'deleted_at_helper'  => ' ',
             'featured'           => 'Featured',
             'featured_helper'    => ' ',
+            'slug'               => 'Slug',
+            'slug_helper'        => ' ',
         ],
     ],
     'area' => [
