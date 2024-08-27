@@ -44,6 +44,6 @@ class LoginController extends Controller
             return '/admin';
         }
 
-        return '/home';
+        return '/dashboard';
     }
 }

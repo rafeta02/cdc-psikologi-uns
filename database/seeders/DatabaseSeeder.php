@@ -17,13 +17,13 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        // $this->call([
-        //     PermissionsTableSeeder::class,
-        //     RolesTableSeeder::class,
-        //     PermissionRoleTableSeeder::class,
-        //     UsersTableSeeder::class,
-        //     RoleUserTableSeeder::class,
-        // ]);
+        $this->call([
+            PermissionsTableSeeder::class,
+            RolesTableSeeder::class,
+            PermissionRoleTableSeeder::class,
+            UsersTableSeeder::class,
+            RoleUserTableSeeder::class,
+        ]);
 
         // ArticleCategory::factory()->count(10)->create();
         // ArticleTag::factory()->count(30)->create();
