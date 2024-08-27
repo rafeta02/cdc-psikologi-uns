@@ -9,6 +9,7 @@ use App\Http\Requests\StorePrestasiMabaRequest;
 use App\Http\Requests\UpdatePrestasiMabaRequest;
 use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMaba;
+use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,7 +25,7 @@ class PrestasiMabaController extends Controller
         abort_if(Gate::denies('prestasi_maba_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = PrestasiMaba::with(['kategori'])->select(sprintf('%s.*', (new PrestasiMaba)->table));
+            $query = PrestasiMaba::with(['user', 'kategori'])->select(sprintf('%s.*', (new PrestasiMaba)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -80,9 +81,11 @@ class PrestasiMabaController extends Controller
     {
         abort_if(Gate::denies('prestasi_maba_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.prestasiMabas.create', compact('kategoris'));
+        return view('admin.prestasiMabas.create', compact('kategoris', 'users'));
     }
 
     public function store(StorePrestasiMabaRequest $request)
@@ -104,11 +107,13 @@ class PrestasiMabaController extends Controller
     {
         abort_if(Gate::denies('prestasi_maba_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $prestasiMaba->load('kategori');
+        $prestasiMaba->load('user', 'kategori');
 
-        return view('admin.prestasiMabas.edit', compact('kategoris', 'prestasiMaba'));
+        return view('admin.prestasiMabas.edit', compact('kategoris', 'prestasiMaba', 'users'));
     }
 
     public function update(UpdatePrestasiMabaRequest $request, PrestasiMaba $prestasiMaba)
@@ -136,7 +141,7 @@ class PrestasiMabaController extends Controller
     {
         abort_if(Gate::denies('prestasi_maba_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $prestasiMaba->load('kategori');
+        $prestasiMaba->load('user', 'kategori');
 
         return view('admin.prestasiMabas.show', compact('prestasiMaba'));
     }

@@ -20,6 +20,14 @@
                             <tbody>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.prestasiMaba.fields.user') }}
+                                    </th>
+                                    <td>
+                                        {{ $prestasiMaba->user->name ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.prestasiMaba.fields.tingkat') }}
                                     </th>
                                     <td>

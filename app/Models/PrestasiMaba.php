@@ -47,6 +47,7 @@ class PrestasiMaba extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'user_id',
         'tingkat',
         'nama_kegiatan',
         'kategori_id',
@@ -82,6 +83,11 @@ class PrestasiMaba extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function kategori()

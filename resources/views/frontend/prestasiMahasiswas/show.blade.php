@@ -20,6 +20,14 @@
                             <tbody>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.prestasiMahasiswa.fields.user') }}
+                                    </th>
+                                    <td>
+                                        {{ $prestasiMahasiswa->user->name ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.prestasiMahasiswa.fields.skim') }}
                                     </th>
                                     <td>
