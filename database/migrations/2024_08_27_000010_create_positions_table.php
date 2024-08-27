@@ -11,6 +11,7 @@ class CreatePositionsTable extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('slug')->nullable();
             $table->longText('description')->nullable();
             $table->boolean('featured')->default(0)->nullable();
             $table->timestamps();

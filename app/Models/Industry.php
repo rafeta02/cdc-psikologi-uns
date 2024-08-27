@@ -22,6 +22,7 @@ class Industry extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'featured',
         'created_at',
