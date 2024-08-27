@@ -23,9 +23,10 @@ class ArticleTagFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->unique()->word;
         return [
-            'name' => $this->faker->unique()->word,
-            'slug' => Str::slug($this->faker->unique()->word),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'description' => $this->faker->paragraph(),
         ];
     }

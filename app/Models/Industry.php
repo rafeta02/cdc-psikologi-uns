@@ -7,10 +7,11 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Industry extends Model
 {
-    use SoftDeletes, Auditable, HasFactory;
+    use SoftDeletes, Auditable, HasFactory, Sluggable;
 
     public $table = 'industries';
 
@@ -33,5 +34,14 @@ class Industry extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 }

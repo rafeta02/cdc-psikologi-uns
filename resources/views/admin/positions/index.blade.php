@@ -29,9 +29,6 @@
                         {{ trans('cruds.position.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.position.fields.slug') }}
-                    </th>
-                    <th>
                         &nbsp;
                     </th>
                 </tr>

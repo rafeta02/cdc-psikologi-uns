@@ -18,9 +18,10 @@ class VacancyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->jobTitle;
         return [
-            'name' => $this->faker->jobTitle,
-            'slug' => Str::slug($this->faker->jobTitle),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'company_id' => \App\Models\Company::factory(),  // Assuming Company model has a factory
             'description' => $this->faker->paragraphs(3, true),
             'type' => $this->faker->randomElement(['fulltime', 'partime', 'internship']),
@@ -30,8 +31,9 @@ class VacancyFactory extends Factory
             'persyaratan_khusus' => $this->faker->paragraph(),
             'registration' => $this->faker->sentence(),
             'job_description' => $this->faker->paragraphs(2, true),
+            'minimum_gpa' => $this->faker->randomFloat(2, 0, 4),
             'position_id' => \App\Models\Position::factory(),  // Assuming Position model has a factory
-            'industry_id' => \App\Models\Industry::factory(),  // Assuming Industry model has a factory
+            'industry_id' => \App\Models\Industry::factory(),  // Assuming Industry model has a factor // Assuming Industry model has a factory
             'created_by_id' => 1,
         ];
     }

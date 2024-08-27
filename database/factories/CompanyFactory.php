@@ -18,9 +18,10 @@ class CompanyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->company;
         return [
-            'name' => $this->faker->company,
-            'slug' => Str::slug($this->faker->company),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'description' => $this->faker->paragraph(),
             'address' => $this->faker->address,
             'telephone' => $this->faker->phoneNumber,
@@ -30,6 +31,7 @@ class CompanyFactory extends Factory
             'number_of_employee' => $this->faker->numberBetween(10, 1000),
             'ownership' => $this->faker->randomElement(['negara', 'swasta']),
             'industry_id' => \App\Models\Industry::factory(),
+            'regency_id' => $this->faker->numberBetween(1, 200),
             'location' => $this->faker->city,
         ];
     }

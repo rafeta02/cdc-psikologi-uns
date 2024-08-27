@@ -29,9 +29,6 @@
                         {{ trans('cruds.education.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.education.fields.slug') }}
-                    </th>
-                    <th>
                         &nbsp;
                     </th>
                 </tr>

@@ -17,23 +17,23 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->call([
-            PermissionsTableSeeder::class,
-            RolesTableSeeder::class,
-            PermissionRoleTableSeeder::class,
-            UsersTableSeeder::class,
-            RoleUserTableSeeder::class,
-        ]);
+        // $this->call([
+        //     PermissionsTableSeeder::class,
+        //     RolesTableSeeder::class,
+        //     PermissionRoleTableSeeder::class,
+        //     UsersTableSeeder::class,
+        //     RoleUserTableSeeder::class,
+        // ]);
 
-        ArticleCategory::factory()->count(10)->create();
-        ArticleTag::factory()->count(30)->create();
-        Industry::factory()->count(15)->create();
-        Position::factory()->count(20)->create();
-        Education::factory()->count(30)->create();
-        Department::factory()->count(25)->create();
-        Company::factory()->count(25)->create();
+        // ArticleCategory::factory()->count(10)->create();
+        // ArticleTag::factory()->count(30)->create();
+        // Industry::factory()->count(15)->create();
+        // Position::factory()->count(20)->create();
+        // Education::factory()->count(30)->create();
+        // Department::factory()->count(25)->create();
+        // Company::factory()->count(25)->create();
+        // Vacancy::factory()->count(50)->create();
         Post::factory()->count(25)->create();
-        Vacancy::factory()->count(50)->create();
 
         // Assuming you want to assign tags to each post
         $posts = Post::all();
