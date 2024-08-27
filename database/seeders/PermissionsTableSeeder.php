@@ -552,6 +552,26 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 136,
+                'title' => 'experience_create',
+            ],
+            [
+                'id'    => 137,
+                'title' => 'experience_edit',
+            ],
+            [
+                'id'    => 138,
+                'title' => 'experience_show',
+            ],
+            [
+                'id'    => 139,
+                'title' => 'experience_delete',
+            ],
+            [
+                'id'    => 140,
+                'title' => 'experience_access',
+            ],
+            [
+                'id'    => 141,
                 'title' => 'profile_password_edit',
             ],
         ];

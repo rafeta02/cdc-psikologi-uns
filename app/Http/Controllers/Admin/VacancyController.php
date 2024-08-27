@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateVacancyRequest;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Education;
+use App\Models\Experience;
 use App\Models\Industry;
 use App\Models\Position;
 use App\Models\Regency;
@@ -29,7 +30,7 @@ class VacancyController extends Controller
         abort_if(Gate::denies('vacancy_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Vacancy::with(['company', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->select(sprintf('%s.*', (new Vacancy)->table));
+            $query = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->select(sprintf('%s.*', (new Vacancy)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -83,6 +84,8 @@ class VacancyController extends Controller
 
         $companies = Company::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $experiences = Experience::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $education = Education::pluck('name', 'id');
 
         $departments = Department::pluck('name', 'id');
@@ -93,7 +96,7 @@ class VacancyController extends Controller
 
         $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'industries', 'locations', 'positions'));
+        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions'));
     }
 
     public function store(StoreVacancyRequest $request)
@@ -114,6 +117,8 @@ class VacancyController extends Controller
 
         $companies = Company::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $experiences = Experience::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $education = Education::pluck('name', 'id');
 
         $departments = Department::pluck('name', 'id');
@@ -124,9 +129,9 @@ class VacancyController extends Controller
 
         $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $vacancy->load('company', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
+        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
-        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'industries', 'locations', 'positions', 'vacancy'));
+        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions', 'vacancy'));
     }
 
     public function update(UpdateVacancyRequest $request, Vacancy $vacancy)
@@ -142,7 +147,7 @@ class VacancyController extends Controller
     {
         abort_if(Gate::denies('vacancy_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $vacancy->load('company', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
+        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
         return view('admin.vacancies.show', compact('vacancy'));
     }
