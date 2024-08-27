@@ -9,6 +9,7 @@ use App\Http\Requests\StorePrestasiMahasiswaRequest;
 use App\Http\Requests\UpdatePrestasiMahasiswaRequest;
 use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMahasiswa;
+use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,7 +25,7 @@ class PrestasiMahasiswaController extends Controller
         abort_if(Gate::denies('prestasi_mahasiswa_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = PrestasiMahasiswa::with(['kategori'])->select(sprintf('%s.*', (new PrestasiMahasiswa)->table));
+            $query = PrestasiMahasiswa::with(['user', 'kategori'])->select(sprintf('%s.*', (new PrestasiMahasiswa)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -86,9 +87,11 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.prestasiMahasiswas.create', compact('kategoris'));
+        return view('admin.prestasiMahasiswas.create', compact('kategoris', 'users'));
     }
 
     public function store(StorePrestasiMahasiswaRequest $request)
@@ -126,11 +129,13 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $prestasiMahasiswa->load('kategori');
+        $prestasiMahasiswa->load('user', 'kategori');
 
-        return view('admin.prestasiMahasiswas.edit', compact('kategoris', 'prestasiMahasiswa'));
+        return view('admin.prestasiMahasiswas.edit', compact('kategoris', 'prestasiMahasiswa', 'users'));
     }
 
     public function update(UpdatePrestasiMahasiswaRequest $request, PrestasiMahasiswa $prestasiMahasiswa)
@@ -211,7 +216,7 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $prestasiMahasiswa->load('kategori', 'prestasiMahasiswaPrestasiMahasiswaDetails');
+        $prestasiMahasiswa->load('user', 'kategori', 'prestasiMahasiswaPrestasiMahasiswaDetails');
 
         return view('admin.prestasiMahasiswas.show', compact('prestasiMahasiswa'));
     }

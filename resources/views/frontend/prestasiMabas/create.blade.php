@@ -14,6 +14,20 @@
                         @method('POST')
                         @csrf
                         <div class="form-group">
+                            <label for="user_id">{{ trans('cruds.prestasiMaba.fields.user') }}</label>
+                            <select class="form-control select2" name="user_id" id="user_id">
+                                @foreach($users as $id => $entry)
+                                    <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('user'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('user') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.prestasiMaba.fields.user_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label class="required">{{ trans('cruds.prestasiMaba.fields.tingkat') }}</label>
                             @foreach(App\Models\PrestasiMaba::TINGKAT_RADIO as $key => $label)
                                 <div>

@@ -17,6 +17,14 @@
                 <tbody>
                     <tr>
                         <th>
+                            {{ trans('cruds.tracerAlumnu.fields.user') }}
+                        </th>
+                        <td>
+                            {{ $tracerAlumnu->user->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.tracerAlumnu.fields.nama') }}
                         </th>
                         <td>
