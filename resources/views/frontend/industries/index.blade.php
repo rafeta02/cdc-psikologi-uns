@@ -30,6 +30,9 @@
                                         {{ trans('cruds.industry.fields.name') }}
                                     </th>
                                     <th>
+                                        {{ trans('cruds.industry.fields.slug') }}
+                                    </th>
+                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -39,6 +42,9 @@
                                     <tr data-entry-id="{{ $industry->id }}">
                                         <td>
                                             {{ $industry->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $industry->slug ?? '' }}
                                         </td>
                                         <td>
                                             @can('industry_show')

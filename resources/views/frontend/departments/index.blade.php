@@ -30,6 +30,9 @@
                                         {{ trans('cruds.department.fields.name') }}
                                     </th>
                                     <th>
+                                        {{ trans('cruds.department.fields.slug') }}
+                                    </th>
+                                    <th>
                                         &nbsp;
                                     </th>
                                 </tr>
@@ -39,6 +42,9 @@
                                     <tr data-entry-id="{{ $department->id }}">
                                         <td>
                                             {{ $department->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $department->slug ?? '' }}
                                         </td>
                                         <td>
                                             @can('department_show')

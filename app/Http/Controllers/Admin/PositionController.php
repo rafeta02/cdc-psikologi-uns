@@ -46,6 +46,9 @@ class PositionController extends Controller
             $table->editColumn('name', function ($row) {
                 return $row->name ? $row->name : '';
             });
+            $table->editColumn('slug', function ($row) {
+                return $row->slug ? $row->slug : '';
+            });
 
             $table->rawColumns(['actions', 'placeholder']);
 

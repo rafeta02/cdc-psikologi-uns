@@ -25,6 +25,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.position.fields.slug') }}
+                        </th>
+                        <td>
+                            {{ $position->slug }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.position.fields.description') }}
                         </th>
                         <td>
