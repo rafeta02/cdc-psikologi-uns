@@ -105,6 +105,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.vacancy.fields.experience') }}
+                        </th>
+                        <td>
+                            {{ $vacancy->experience->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.vacancy.fields.education') }}
                         </th>
                         <td>

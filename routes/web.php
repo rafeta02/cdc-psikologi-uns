@@ -184,6 +184,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('questions/parse-csv-import', 'QuestionController@parseCsvImport')->name('questions.parseCsvImport');
     Route::post('questions/process-csv-import', 'QuestionController@processCsvImport')->name('questions.processCsvImport');
     Route::resource('questions', 'QuestionController');
+
+    // Experience
+    Route::delete('experiences/destroy', 'ExperienceController@massDestroy')->name('experiences.massDestroy');
+    Route::post('experiences/parse-csv-import', 'ExperienceController@parseCsvImport')->name('experiences.parseCsvImport');
+    Route::post('experiences/process-csv-import', 'ExperienceController@processCsvImport')->name('experiences.processCsvImport');
+    Route::resource('experiences', 'ExperienceController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

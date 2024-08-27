@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
@@ -19,75 +19,18 @@ use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
-use Yajra\DataTables\Facades\DataTables;
-use Alert;
-use Carbon\Carbon;
 
 class VacancyController extends Controller
 {
     use MediaUploadingTrait;
 
-    public function index(Request $request)
+    public function index()
     {
         abort_if(Gate::denies('vacancy_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($request->ajax()) {
-            $query = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->select(sprintf('%s.*', (new Vacancy)->table));
-            $table = Datatables::of($query);
+        $vacancies = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->get();
 
-            $table->addColumn('placeholder', '&nbsp;');
-            $table->addColumn('actions', '&nbsp;');
-
-            $table->editColumn('actions', function ($row) {
-                $viewGate      = 'vacancy_show';
-                $editGate      = 'vacancy_edit';
-                $deleteGate    = 'vacancy_delete';
-                $crudRoutePart = 'vacancies';
-
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
-                    'crudRoutePart',
-                    'row'
-                ));
-            });
-
-            $table->editColumn('name', function ($row) {
-                return $row->name ? $row->name : '';
-            });
-            $table->addColumn('company_name', function ($row) {
-                return $row->company ? $row->company->name : '';
-            });
-
-            $table->editColumn('type', function ($row) {
-                if ($row->type == 'fulltime') {
-                    return '<span class="badge badge-success">Fulltime</span>';
-                } elseif ($row->type == 'parttime') {
-                    return '<span class="badge badge-warning">Parttime</span>';
-                } else {
-                    return '<span class="badge badge-danger">Intern</span>';
-                }
-            });
-
-            $table->editColumn('close_date', function ($row) {
-                return $row->close_date ? Carbon::parse($row->close_date)->format('j F Y') : '';
-            });
-
-            $table->addColumn('industry_name', function ($row) {
-                return $row->industry ? $row->industry->name : '';
-            });
-
-            $table->addColumn('location_name', function ($row) {
-                return $row->location ? $row->location->name.' - '. $row->location->province->name : '';
-            });
-
-            $table->rawColumns(['actions', 'placeholder', 'company', 'industry', 'location', 'type']);
-
-            return $table->make(true);
-        }
-
-        return view('admin.vacancies.index');
+        return view('frontend.vacancies.index', compact('vacancies'));
     }
 
     public function create()
@@ -108,16 +51,11 @@ class VacancyController extends Controller
 
         $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions'));
+        return view('frontend.vacancies.create', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions'));
     }
 
     public function store(StoreVacancyRequest $request)
     {
-        $company = Company::find($request->company_id);
-
-        $request->request->add(['industry_id' => $company->industry_id]);
-        $request->request->add(['created_by_id' => auth()->user()->id]);
-
         $vacancy = Vacancy::create($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
@@ -125,9 +63,7 @@ class VacancyController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $vacancy->id]);
         }
 
-        Alert::success('Success', 'Vacancy created successfully.');
-
-        return redirect()->route('admin.vacancies.index');
+        return redirect()->route('frontend.vacancies.index');
     }
 
     public function edit(Vacancy $vacancy)
@@ -150,21 +86,16 @@ class VacancyController extends Controller
 
         $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
-        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions', 'vacancy'));
+        return view('frontend.vacancies.edit', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions', 'vacancy'));
     }
 
     public function update(UpdateVacancyRequest $request, Vacancy $vacancy)
     {
-        $company = Company::find($request->company_id);
-        $request->request->add(['industry_id' => $company->industry_id]);
-
         $vacancy->update($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
 
-        Alert::success('Success', 'Vacancy updated successfully.');
-
-        return redirect()->route('admin.vacancies.index');
+        return redirect()->route('frontend.vacancies.index');
     }
 
     public function show(Vacancy $vacancy)
@@ -173,7 +104,7 @@ class VacancyController extends Controller
 
         $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
 
-        return view('admin.vacancies.show', compact('vacancy'));
+        return view('frontend.vacancies.show', compact('vacancy'));
     }
 
     public function destroy(Vacancy $vacancy)

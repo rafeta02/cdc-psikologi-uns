@@ -11,6 +11,8 @@ class AddRelationshipFieldsToVacanciesTable extends Migration
         Schema::table('vacancies', function (Blueprint $table) {
             $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id', 'company_fk_9976909')->references('id')->on('companies');
+            $table->unsignedBigInteger('experience_id')->nullable();
+            $table->foreign('experience_id', 'experience_fk_10065359')->references('id')->on('experiences');
             $table->unsignedBigInteger('position_id')->nullable();
             $table->foreign('position_id', 'position_fk_9976921')->references('id')->on('positions');
             $table->unsignedBigInteger('industry_id')->nullable();
