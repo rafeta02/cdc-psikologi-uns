@@ -26,11 +26,13 @@ class ResultAssessment extends Model
     ];
 
     public const TEST_NAME_SELECT = [
-        'personality' => 'Personality',
-        'career'      => 'Karir',
+        'HCI' => 'Holland Carrer Interest',
+        'WR'  => 'Work Readiness',
+        'CCI' => 'Career Confidence Inventory',
     ];
 
     protected $fillable = [
+        'user_id',
         'initial',
         'age',
         'gender',
@@ -48,8 +50,8 @@ class ResultAssessment extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

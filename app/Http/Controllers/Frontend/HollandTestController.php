@@ -14,7 +14,7 @@ class HollandTestController extends Controller
     {
         abort_if(Gate::denies('holland_test_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $hollandTests = HollandTest::with(['result'])->get();
+        $hollandTests = HollandTest::with(['user', 'result'])->get();
 
         return view('frontend.hollandTests.index', compact('hollandTests'));
     }
@@ -23,7 +23,7 @@ class HollandTestController extends Controller
     {
         abort_if(Gate::denies('holland_test_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $hollandTest->load('result');
+        $hollandTest->load('user', 'result');
 
         return view('frontend.hollandTests.show', compact('hollandTest'));
     }

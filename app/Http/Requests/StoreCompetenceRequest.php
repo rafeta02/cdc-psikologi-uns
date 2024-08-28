@@ -21,10 +21,6 @@ class StoreCompetenceRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'slug' => [
-                'string',
-                'nullable',
-            ],
         ];
     }
 }

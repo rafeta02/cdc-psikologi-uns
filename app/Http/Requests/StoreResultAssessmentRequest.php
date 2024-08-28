@@ -17,13 +17,6 @@ class StoreResultAssessmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'users.*' => [
-                'integer',
-            ],
-            'users' => [
-                'required',
-                'array',
-            ],
             'initial' => [
                 'string',
                 'nullable',

@@ -119,7 +119,7 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'user_name', name: 'user.name' },
-{ data: 'result_test_name', name: 'result.test_name' },
+{ data: 'result_initial', name: 'result.initial' },
 { data: 'r_1', name: 'r_1' },
 { data: 'r_2', name: 'r_2' },
 { data: 'r_3', name: 'r_3' },

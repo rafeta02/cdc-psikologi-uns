@@ -587,10 +587,6 @@ return [
         'fields'         => [
             'id'                 => 'ID',
             'id_helper'          => ' ',
-            'user'               => 'User',
-            'user_helper'        => ' ',
-            'competence'         => 'Competence',
-            'competence_helper'  => ' ',
             'certificate'        => 'Certificate',
             'certificate_helper' => ' ',
             'description'        => 'Description',
@@ -601,6 +597,10 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+            'user'               => 'User',
+            'user_helper'        => ' ',
+            'competence'         => 'Competence',
+            'competence_helper'  => ' ',
         ],
     ],
     'resultAssessment' => [
@@ -609,8 +609,6 @@ return [
         'fields'         => [
             'id'                        => 'ID',
             'id_helper'                 => ' ',
-            'user'                      => 'User',
-            'user_helper'               => ' ',
             'test_name'                 => 'Test Name',
             'test_name_helper'          => ' ',
             'result_text'               => 'Result Text',
@@ -631,6 +629,8 @@ return [
             'gender_helper'             => ' ',
             'field'                     => 'field',
             'field_helper'              => '3 Bidang Pekerjaan yang Diminati',
+            'user'                      => 'User',
+            'user_helper'               => ' ',
         ],
     ],
     'hollandTest' => [
@@ -743,6 +743,8 @@ return [
             'updated_at_helper' => ' ',
             'deleted_at'        => 'Deleted at',
             'deleted_at_helper' => ' ',
+            'user'              => 'User',
+            'user_helper'       => ' ',
         ],
     ],
     'workReadinessTest' => [

@@ -104,7 +104,7 @@
                                             {{ $careerConfidenceTest->user->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $careerConfidenceTest->result->test_name ?? '' }}
+                                            {{ $careerConfidenceTest->result->initial ?? '' }}
                                         </td>
                                         <td>
                                             {{ $careerConfidenceTest->r_1 ?? '' }}

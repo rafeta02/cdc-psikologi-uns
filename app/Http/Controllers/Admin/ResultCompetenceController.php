@@ -25,7 +25,7 @@ class ResultCompetenceController extends Controller
         abort_if(Gate::denies('result_competence_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = ResultCompetence::with(['users', 'competences'])->select(sprintf('%s.*', (new ResultCompetence)->table));
+            $query = ResultCompetence::with(['user', 'competence'])->select(sprintf('%s.*', (new ResultCompetence)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -46,22 +46,14 @@ class ResultCompetenceController extends Controller
                 ));
             });
 
-            $table->editColumn('user', function ($row) {
-                $labels = [];
-                foreach ($row->users as $user) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $user->name);
-                }
-
-                return implode(' ', $labels);
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
             });
-            $table->editColumn('competence', function ($row) {
-                $labels = [];
-                foreach ($row->competences as $competence) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $competence->name);
-                }
 
-                return implode(' ', $labels);
+            $table->addColumn('competence_name', function ($row) {
+                return $row->competence ? $row->competence->name : '';
             });
+
             $table->editColumn('description', function ($row) {
                 return $row->description ? $row->description : '';
             });
@@ -78,9 +70,9 @@ class ResultCompetenceController extends Controller
     {
         abort_if(Gate::denies('result_competence_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $competences = Competence::pluck('name', 'id');
+        $competences = Competence::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('admin.resultCompetences.create', compact('competences', 'users'));
     }
@@ -88,8 +80,7 @@ class ResultCompetenceController extends Controller
     public function store(StoreResultCompetenceRequest $request)
     {
         $resultCompetence = ResultCompetence::create($request->all());
-        $resultCompetence->users()->sync($request->input('users', []));
-        $resultCompetence->competences()->sync($request->input('competences', []));
+
         if ($request->input('certificate', false)) {
             $resultCompetence->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate'))))->toMediaCollection('certificate');
         }
@@ -105,11 +96,11 @@ class ResultCompetenceController extends Controller
     {
         abort_if(Gate::denies('result_competence_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $competences = Competence::pluck('name', 'id');
+        $competences = Competence::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $resultCompetence->load('users', 'competences');
+        $resultCompetence->load('user', 'competence');
 
         return view('admin.resultCompetences.edit', compact('competences', 'resultCompetence', 'users'));
     }
@@ -117,8 +108,7 @@ class ResultCompetenceController extends Controller
     public function update(UpdateResultCompetenceRequest $request, ResultCompetence $resultCompetence)
     {
         $resultCompetence->update($request->all());
-        $resultCompetence->users()->sync($request->input('users', []));
-        $resultCompetence->competences()->sync($request->input('competences', []));
+
         if ($request->input('certificate', false)) {
             if (! $resultCompetence->certificate || $request->input('certificate') !== $resultCompetence->certificate->file_name) {
                 if ($resultCompetence->certificate) {
@@ -137,7 +127,7 @@ class ResultCompetenceController extends Controller
     {
         abort_if(Gate::denies('result_competence_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultCompetence->load('users', 'competences');
+        $resultCompetence->load('user', 'competence');
 
         return view('admin.resultCompetences.show', compact('resultCompetence'));
     }

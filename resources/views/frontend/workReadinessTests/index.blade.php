@@ -191,7 +191,7 @@
                                             {{ $workReadinessTest->user->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $workReadinessTest->result->test_name ?? '' }}
+                                            {{ $workReadinessTest->result->initial ?? '' }}
                                         </td>
                                         <td>
                                             {{ $workReadinessTest->cbs_1 ?? '' }}

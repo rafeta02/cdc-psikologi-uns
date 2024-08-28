@@ -86,13 +86,13 @@
     ajax: "{{ route('admin.result-competences.index') }}",
     columns: [
       { data: 'placeholder', name: 'placeholder' },
-{ data: 'user', name: 'users.name' },
-{ data: 'competence', name: 'competences.name' },
+{ data: 'user_name', name: 'user.name' },
+{ data: 'competence_name', name: 'competence.name' },
 { data: 'description', name: 'description' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
-    order: [[ 2, 'desc' ]],
+    order: [[ 3, 'desc' ]],
     pageLength: 50,
   };
   let table = $('.datatable-ResultCompetence').DataTable(dtOverrideGlobals);
