@@ -206,7 +206,7 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'user_name', name: 'user.name' },
-{ data: 'result_test_name', name: 'result.test_name' },
+{ data: 'result_initial', name: 'result.initial' },
 { data: 'cbs_1', name: 'cbs_1' },
 { data: 'cbs_2', name: 'cbs_2' },
 { data: 'cbs_3', name: 'cbs_3' },

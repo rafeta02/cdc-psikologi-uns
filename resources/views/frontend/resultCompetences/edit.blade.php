@@ -14,37 +14,29 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
-                            <label for="users">{{ trans('cruds.resultCompetence.fields.user') }}</label>
-                            <div style="padding-bottom: 4px">
-                                <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                            </div>
-                            <select class="form-control select2" name="users[]" id="users" multiple>
-                                @foreach($users as $id => $user)
-                                    <option value="{{ $id }}" {{ (in_array($id, old('users', [])) || $resultCompetence->users->contains($id)) ? 'selected' : '' }}>{{ $user }}</option>
+                            <label for="user_id">{{ trans('cruds.resultCompetence.fields.user') }}</label>
+                            <select class="form-control select2" name="user_id" id="user_id">
+                                @foreach($users as $id => $entry)
+                                    <option value="{{ $id }}" {{ (old('user_id') ? old('user_id') : $resultCompetence->user->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                                 @endforeach
                             </select>
-                            @if($errors->has('users'))
+                            @if($errors->has('user'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('users') }}
+                                    {{ $errors->first('user') }}
                                 </div>
                             @endif
                             <span class="help-block">{{ trans('cruds.resultCompetence.fields.user_helper') }}</span>
                         </div>
                         <div class="form-group">
-                            <label for="competences">{{ trans('cruds.resultCompetence.fields.competence') }}</label>
-                            <div style="padding-bottom: 4px">
-                                <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                            </div>
-                            <select class="form-control select2" name="competences[]" id="competences" multiple>
-                                @foreach($competences as $id => $competence)
-                                    <option value="{{ $id }}" {{ (in_array($id, old('competences', [])) || $resultCompetence->competences->contains($id)) ? 'selected' : '' }}>{{ $competence }}</option>
+                            <label for="competence_id">{{ trans('cruds.resultCompetence.fields.competence') }}</label>
+                            <select class="form-control select2" name="competence_id" id="competence_id">
+                                @foreach($competences as $id => $entry)
+                                    <option value="{{ $id }}" {{ (old('competence_id') ? old('competence_id') : $resultCompetence->competence->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                                 @endforeach
                             </select>
-                            @if($errors->has('competences'))
+                            @if($errors->has('competence'))
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('competences') }}
+                                    {{ $errors->first('competence') }}
                                 </div>
                             @endif
                             <span class="help-block">{{ trans('cruds.resultCompetence.fields.competence_helper') }}</span>

@@ -14,6 +14,20 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
+                            <label for="user_id">{{ trans('cruds.hollandTest.fields.user') }}</label>
+                            <select class="form-control select2" name="user_id" id="user_id">
+                                @foreach($users as $id => $entry)
+                                    <option value="{{ $id }}" {{ (old('user_id') ? old('user_id') : $hollandTest->user->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('user'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('user') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.hollandTest.fields.user_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="result_id">{{ trans('cruds.hollandTest.fields.result') }}</label>
                             <select class="form-control select2" name="result_id" id="result_id">
                                 @foreach($results as $id => $entry)

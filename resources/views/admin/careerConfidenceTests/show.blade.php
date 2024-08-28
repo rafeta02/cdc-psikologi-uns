@@ -28,7 +28,7 @@
                             {{ trans('cruds.careerConfidenceTest.fields.result') }}
                         </th>
                         <td>
-                            {{ $careerConfidenceTest->result->test_name ?? '' }}
+                            {{ $careerConfidenceTest->result->initial ?? '' }}
                         </td>
                     </tr>
                     <tr>

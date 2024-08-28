@@ -16,19 +16,6 @@ class StoreResultCompetenceRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'users.*' => [
-                'integer',
-            ],
-            'users' => [
-                'array',
-            ],
-            'competences.*' => [
-                'integer',
-            ],
-            'competences' => [
-                'array',
-            ],
-        ];
+        return [];
     }
 }

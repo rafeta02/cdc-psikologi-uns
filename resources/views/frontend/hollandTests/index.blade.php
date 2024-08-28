@@ -15,6 +15,9 @@
                             <thead>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.hollandTest.fields.user') }}
+                                    </th>
+                                    <th>
                                         {{ trans('cruds.hollandTest.fields.result') }}
                                     </th>
                                     <th>
@@ -170,7 +173,10 @@
                                 @foreach($hollandTests as $key => $hollandTest)
                                     <tr data-entry-id="{{ $hollandTest->id }}">
                                         <td>
-                                            {{ $hollandTest->result->test_name ?? '' }}
+                                            {{ $hollandTest->user->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $hollandTest->result->initial ?? '' }}
                                         </td>
                                         <td>
                                             {{ $hollandTest->r_1 ?? '' }}

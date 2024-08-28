@@ -21,10 +21,6 @@ class UpdateCompetenceRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'slug' => [
-                'string',
-                'nullable',
-            ],
         ];
     }
 }

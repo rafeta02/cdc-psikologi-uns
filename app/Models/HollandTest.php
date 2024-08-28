@@ -20,6 +20,7 @@ class HollandTest extends Model
     ];
 
     protected $fillable = [
+        'user_id',
         'result_id',
         'r_1',
         'r_2',
@@ -77,6 +78,11 @@ class HollandTest extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function result()

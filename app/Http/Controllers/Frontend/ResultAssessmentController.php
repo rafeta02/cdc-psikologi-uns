@@ -18,7 +18,7 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultAssessments = ResultAssessment::with(['users'])->get();
+        $resultAssessments = ResultAssessment::with(['user'])->get();
 
         return view('frontend.resultAssessments.index', compact('resultAssessments'));
     }
@@ -27,7 +27,7 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('frontend.resultAssessments.create', compact('users'));
     }
@@ -35,7 +35,6 @@ class ResultAssessmentController extends Controller
     public function store(StoreResultAssessmentRequest $request)
     {
         $resultAssessment = ResultAssessment::create($request->all());
-        $resultAssessment->users()->sync($request->input('users', []));
 
         return redirect()->route('frontend.result-assessments.index');
     }
@@ -44,9 +43,9 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $resultAssessment->load('users');
+        $resultAssessment->load('user');
 
         return view('frontend.resultAssessments.edit', compact('resultAssessment', 'users'));
     }
@@ -54,7 +53,6 @@ class ResultAssessmentController extends Controller
     public function update(UpdateResultAssessmentRequest $request, ResultAssessment $resultAssessment)
     {
         $resultAssessment->update($request->all());
-        $resultAssessment->users()->sync($request->input('users', []));
 
         return redirect()->route('frontend.result-assessments.index');
     }
@@ -63,7 +61,7 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultAssessment->load('users');
+        $resultAssessment->load('user');
 
         return view('frontend.resultAssessments.show', compact('resultAssessment'));
     }

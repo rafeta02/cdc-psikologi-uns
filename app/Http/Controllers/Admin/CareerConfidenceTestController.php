@@ -41,8 +41,8 @@ class CareerConfidenceTestController extends Controller
                 return $row->user ? $row->user->name : '';
             });
 
-            $table->addColumn('result_test_name', function ($row) {
-                return $row->result ? $row->result->test_name : '';
+            $table->addColumn('result_initial', function ($row) {
+                return $row->result ? $row->result->initial : '';
             });
 
             $table->editColumn('r_1', function ($row) {

@@ -20,10 +20,18 @@
                             <tbody>
                                 <tr>
                                     <th>
+                                        {{ trans('cruds.hollandTest.fields.user') }}
+                                    </th>
+                                    <td>
+                                        {{ $hollandTest->user->name ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.hollandTest.fields.result') }}
                                     </th>
                                     <td>
-                                        {{ $hollandTest->result->test_name ?? '' }}
+                                        {{ $hollandTest->result->initial ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>

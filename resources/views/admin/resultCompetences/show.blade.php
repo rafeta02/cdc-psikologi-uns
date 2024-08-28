@@ -20,9 +20,7 @@
                             {{ trans('cruds.resultCompetence.fields.user') }}
                         </th>
                         <td>
-                            @foreach($resultCompetence->users as $key => $user)
-                                <span class="label label-info">{{ $user->name }}</span>
-                            @endforeach
+                            {{ $resultCompetence->user->name ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -30,9 +28,7 @@
                             {{ trans('cruds.resultCompetence.fields.competence') }}
                         </th>
                         <td>
-                            @foreach($resultCompetence->competences as $key => $competence)
-                                <span class="label label-info">{{ $competence->name }}</span>
-                            @endforeach
+                            {{ $resultCompetence->competence->name ?? '' }}
                         </td>
                     </tr>
                     <tr>

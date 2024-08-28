@@ -31,7 +31,7 @@
                                         {{ trans('cruds.workReadinessTest.fields.result') }}
                                     </th>
                                     <td>
-                                        {{ $workReadinessTest->result->test_name ?? '' }}
+                                        {{ $workReadinessTest->result->initial ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>

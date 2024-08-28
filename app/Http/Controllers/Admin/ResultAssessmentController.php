@@ -20,7 +20,7 @@ class ResultAssessmentController extends Controller
         abort_if(Gate::denies('result_assessment_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = ResultAssessment::with(['users'])->select(sprintf('%s.*', (new ResultAssessment)->table));
+            $query = ResultAssessment::with(['user'])->select(sprintf('%s.*', (new ResultAssessment)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -41,14 +41,10 @@ class ResultAssessmentController extends Controller
                 ));
             });
 
-            $table->editColumn('user', function ($row) {
-                $labels = [];
-                foreach ($row->users as $user) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $user->name);
-                }
-
-                return implode(' ', $labels);
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
             });
+
             $table->editColumn('initial', function ($row) {
                 return $row->initial ? $row->initial : '';
             });
@@ -83,7 +79,7 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('admin.resultAssessments.create', compact('users'));
     }
@@ -91,7 +87,6 @@ class ResultAssessmentController extends Controller
     public function store(StoreResultAssessmentRequest $request)
     {
         $resultAssessment = ResultAssessment::create($request->all());
-        $resultAssessment->users()->sync($request->input('users', []));
 
         return redirect()->route('admin.result-assessments.index');
     }
@@ -100,9 +95,9 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $resultAssessment->load('users');
+        $resultAssessment->load('user');
 
         return view('admin.resultAssessments.edit', compact('resultAssessment', 'users'));
     }
@@ -110,7 +105,6 @@ class ResultAssessmentController extends Controller
     public function update(UpdateResultAssessmentRequest $request, ResultAssessment $resultAssessment)
     {
         $resultAssessment->update($request->all());
-        $resultAssessment->users()->sync($request->input('users', []));
 
         return redirect()->route('admin.result-assessments.index');
     }
@@ -119,7 +113,7 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultAssessment->load('users');
+        $resultAssessment->load('user');
 
         return view('admin.resultAssessments.show', compact('resultAssessment'));
     }
