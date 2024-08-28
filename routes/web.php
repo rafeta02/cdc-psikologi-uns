@@ -233,6 +233,7 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('competences/destroy', 'ResultCompetenceController@massDestroy')->name('competences.massDestroy');
     Route::post('competences/media', 'ResultCompetenceController@storeMedia')->name('competences.storeMedia');
     Route::post('competences/ckmedia', 'ResultCompetenceController@storeCKEditorImages')->name('competences.storeCKEditorImages');
+    Route::get('competences/certificate/{competence}', 'ResultCompetenceController@certificate')->name('competences.certificate');
     Route::resource('competences', 'ResultCompetenceController')->names('competences');
 
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');

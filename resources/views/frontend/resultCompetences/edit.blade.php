@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route("frontend.result-competences.update", [$resultCompetence->id]) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route("frontend.competences.update", [$resultCompetence->id]) }}" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <div class="form-group">
@@ -79,7 +79,7 @@
 @section('scripts')
 <script>
     Dropzone.options.certificateDropzone = {
-    url: '{{ route('frontend.result-competences.storeMedia') }}',
+    url: '{{ route('frontend.competences.storeMedia') }}',
     maxFilesize: 5, // MB
     maxFiles: 1,
     addRemoveLinks: true,

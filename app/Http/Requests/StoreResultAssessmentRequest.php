@@ -24,17 +24,10 @@ class StoreResultAssessmentRequest extends FormRequest
             'age' => [
                 'nullable',
                 'integer',
-                'min:-2147483648',
-                'max:2147483647',
+                'min:0',
+                'max:120',
             ],
             'field' => [
-                'string',
-                'nullable',
-            ],
-            'test_name' => [
-                'required',
-            ],
-            'result_text' => [
                 'string',
                 'nullable',
             ],

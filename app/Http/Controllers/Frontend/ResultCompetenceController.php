@@ -8,12 +8,14 @@ use App\Http\Requests\MassDestroyResultCompetenceRequest;
 use App\Http\Requests\StoreResultCompetenceRequest;
 use App\Http\Requests\UpdateResultCompetenceRequest;
 use App\Models\Competence;
+use App\Models\CompetenceItem;
 use App\Models\ResultCompetence;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class ResultCompetenceController extends Controller
 {
@@ -23,9 +25,10 @@ class ResultCompetenceController extends Controller
     {
         abort_if(Gate::denies('result_competence_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultCompetences = ResultCompetence::with(['user', 'competence', 'media'])->get();
+        $competences = Competence::all();
+        $resultCompetences = ResultCompetence::where('user_id', auth()->id())->pluck('competence_id')->toArray();
 
-        return view('frontend.resultCompetences.index', compact('resultCompetences'));
+        return view('frontend.resultCompetences.index', compact('competences', 'resultCompetences'));
     }
 
     public function create()
@@ -39,9 +42,14 @@ class ResultCompetenceController extends Controller
         return view('frontend.resultCompetences.create', compact('competences', 'users'));
     }
 
+    public function certificate(Competence $competence)
+    {
+        return view('frontend.resultCompetences.create', compact('competence'));
+    }
+
     public function store(StoreResultCompetenceRequest $request)
     {
-        $resultCompetence = ResultCompetence::create($request->all());
+        $resultCompetence = ResultCompetence::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         if ($request->input('certificate', false)) {
             $resultCompetence->addMedia(storage_path('tmp/uploads/' . basename($request->input('certificate'))))->toMediaCollection('certificate');
@@ -51,7 +59,9 @@ class ResultCompetenceController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $resultCompetence->id]);
         }
 
-        return redirect()->route('frontend.result-competences.index');
+        Alert::success('Success', 'Certificate uploaded successfully.');
+
+        return redirect()->route('frontend.competences.index');
     }
 
     public function edit(ResultCompetence $resultCompetence)
@@ -82,16 +92,16 @@ class ResultCompetenceController extends Controller
             $resultCompetence->certificate->delete();
         }
 
-        return redirect()->route('frontend.result-competences.index');
+        return redirect()->route('frontend.competences.index');
     }
 
-    public function show(ResultCompetence $resultCompetence)
+    public function show(Competence $competence)
     {
         abort_if(Gate::denies('result_competence_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $resultCompetence->load('user', 'competence');
+        $competence_list = CompetenceItem::where('competence_id', $competence->id)->get();
 
-        return view('frontend.resultCompetences.show', compact('resultCompetence'));
+        return view('frontend.resultCompetences.show', compact('competence', 'competence_list'));
     }
 
     public function destroy(ResultCompetence $resultCompetence)

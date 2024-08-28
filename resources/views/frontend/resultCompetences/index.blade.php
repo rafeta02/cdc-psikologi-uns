@@ -1,80 +1,92 @@
 @extends('layouts.frontend')
+@section('styles')
+<style>
+    .job-box {
+        overflow: hidden;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .job-box:hover {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+        border-color: purple;
+    }
+    .check-icon {
+        font-size: 5rem; /* Adjust the size as needed */
+    }
+</style>
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @can('result_competence_create')
-                <div style="margin-bottom: 10px;" class="row">
-                    <div class="col-lg-12">
-                        <a class="btn btn-success" href="{{ route('frontend.result-competences.create') }}">
-                            {{ trans('global.add') }} {{ trans('cruds.resultCompetence.title_singular') }}
-                        </a>
-                    </div>
-                </div>
-            @endcan
             <div class="card">
                 <div class="card-header">
-                    {{ trans('cruds.resultCompetence.title_singular') }} {{ trans('global.list') }}
+                    Competence List
                 </div>
-
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class=" table table-bordered table-striped table-hover datatable datatable-ResultCompetence">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.resultCompetence.fields.user') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.resultCompetence.fields.competence') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.resultCompetence.fields.description') }}
-                                    </th>
-                                    <th>
-                                        &nbsp;
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($resultCompetences as $key => $resultCompetence)
-                                    <tr data-entry-id="{{ $resultCompetence->id }}">
-                                        <td>
-                                            {{ $resultCompetence->user->name ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $resultCompetence->competence->name ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $resultCompetence->description ?? '' }}
-                                        </td>
-                                        <td>
-                                            @can('result_competence_show')
-                                                <a class="btn btn-xs btn-primary" href="{{ route('frontend.result-competences.show', $resultCompetence->id) }}">
-                                                    {{ trans('global.view') }}
-                                                </a>
-                                            @endcan
+                    <div class="row">
+                        @foreach($competences as $competence)
+                        @php
+                            $certificate = in_array($competence->id, $resultCompetences);
+                        @endphp
+                        <div class="col-12">
+                            <div class="job-box card mt-4 shadow-sm border-0">
+                                <div class="p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2 text-center">
+                                            <a href="company-details.html">
+                                                <img src="{{ asset('jobcy/images/featured-job/img-02.png') }}" alt="Image" class="img-fluid rounded-3 mb-3 mb-md-0">
+                                            </a>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-3">
+                                            <h5 class="fs-16 mb-1">{{ $competence->name }}</h5>
+                                            {{-- <p class="text-muted fs-14 mb-0">Jobcy Technology Pvt.Ltd</p> --}}
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-5">
+                                            <div class="d-flex align-items-center">
+                                                <p class="text-muted mb-0">An important aspect of effective education is creating lesson plans for students. Establishing lesson plans allows teachers to prepare materials, create a timeline for their lessons and form an objective, or overall learning target, for their students.</p>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-2 text-md-end text-start">
+                                            <div class="d-flex align-items-center">
+                                                <i class="{{ $certificate ? 'fa fa-check-circle text-success' : 'fa fa-exclamation-circle text-danger' }} check-icon"></i>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                                <div class="p-3 bg-light">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-8">
+                                            {{-- <p class="text-muted mb-0"><span class="text-dark fw-semibold">Experience:</span> 4+ years</p> --}}
+                                        </div>
+                                        <!--end col-->
+                                        @if (!$certificate)
+                                            <div class="col-md-2 text-md-end text-center">
+                                                <a href="{{ route('frontend.competences.certificate', $competence->id) }}" class="btn btn-danger btn-sm px-4 py-2 rounded-pill shadow-sm">Upload Certificate</a>
+                                            </div>
+                                            <div class="col-md-2 text-md-end text-center">
+                                                <a href="{{route('frontend.competences.show', $competence->id) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-pill shadow-sm">View Detail</a>
+                                            </div>
+                                        @else
+                                            <div class="col-md-3 text-md-end text-center">
+                                                <a href="{{route('frontend.competences.show', $competence->id) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-pill shadow-sm">View Detail</a>
+                                            </div>
+                                        @endif
 
-                                            @can('result_competence_edit')
-                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.result-competences.edit', $resultCompetence->id) }}">
-                                                    {{ trans('global.edit') }}
-                                                </a>
-                                            @endcan
-
-                                            @can('result_competence_delete')
-                                                <form action="{{ route('frontend.result-competences.destroy', $resultCompetence->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                                </form>
-                                            @endcan
-
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -92,7 +104,7 @@
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('frontend.result-competences.massDestroy') }}",
+    url: "{{ route('frontend.competences.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -128,7 +140,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 })
 
 </script>

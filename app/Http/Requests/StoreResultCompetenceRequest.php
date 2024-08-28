@@ -16,6 +16,8 @@ class StoreResultCompetenceRequest extends FormRequest
 
     public function rules()
     {
-        return [];
+        return [
+            'certificate' => ['required']
+        ];
     }
 }

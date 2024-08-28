@@ -1,4 +1,12 @@
 @extends('layouts.frontend')
+@section('styles')
+<style>
+    .bg-purple {
+        background-color: #6f42c1; /* Bootstrap's purple color */
+        color: white;
+    }
+</style>
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -6,43 +14,16 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ trans('global.create') }} {{ trans('cruds.resultCompetence.title_singular') }}
+                    Upload Certificate for {{ $competence->name }}
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route("frontend.result-competences.store") }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route("frontend.competences.store") }}" enctype="multipart/form-data">
                         @method('POST')
                         @csrf
+                        <input type="hidden" name="competence_id" id="competence_id" value="{{ $competence->id }}">
                         <div class="form-group">
-                            <label for="user_id">{{ trans('cruds.resultCompetence.fields.user') }}</label>
-                            <select class="form-control select2" name="user_id" id="user_id">
-                                @foreach($users as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('user'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('user') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultCompetence.fields.user_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="competence_id">{{ trans('cruds.resultCompetence.fields.competence') }}</label>
-                            <select class="form-control select2" name="competence_id" id="competence_id">
-                                @foreach($competences as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('competence_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('competence'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('competence') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultCompetence.fields.competence_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="certificate">{{ trans('cruds.resultCompetence.fields.certificate') }}</label>
+                            <label class="required" for="certificate">{{ trans('cruds.resultCompetence.fields.certificate') }}</label>
                             <div class="needsclick dropzone" id="certificate-dropzone">
                             </div>
                             @if($errors->has('certificate'))
@@ -79,7 +60,7 @@
 @section('scripts')
 <script>
     Dropzone.options.certificateDropzone = {
-    url: '{{ route('frontend.result-competences.storeMedia') }}',
+    url: '{{ route('frontend.competences.storeMedia') }}',
     maxFilesize: 5, // MB
     maxFiles: 1,
     addRemoveLinks: true,

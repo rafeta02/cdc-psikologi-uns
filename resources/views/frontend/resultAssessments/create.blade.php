@@ -200,7 +200,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ trans('global.create') }} {{ trans('cruds.assessments.title_singular') }}
+                    Asessment Karier dan Kepribadian
                 </div>
 
                 <div class="card-body">
@@ -212,9 +212,75 @@
                             $totalSteps = count($question1->chunk(10)) + count($question2->chunk(10)) + count($question3->chunk(10));
                         @endphp
 
+                        <div class="step active">
+                            <div class="form-group">
+                                <p>
+                                    Halo!👋🏼<br>
+                                    Perkenalkan, kami dari Career Development Center Fakultas Psikologi UNS. Di sini, kami ingin meminta bantuan Saudara/i untuk mengisi asesmen karier dalam rangka meningkatkan optimalisasi pengembangan karier di Fakultas Psikologi UNS.
+                                    <br>
+                                    Asesmen karier ini terdiri dari 3 bagian, yang masing-masing mengukur:
+                                    <ul>
+                                        <li>Minat Pekerjaan</li>
+                                        <li>Kesiapan Kerja</li>
+                                        <li>Kepercayaan Diri dalam Karier</li>
+                                    </ul>
+                                    Estimasi pengerjaan asesmen karier ini membutuhkan waktu sekitar 30 menit <br>
+                                    Kriteria responden yang kami butuhkan adalah mahasiswa/i aktif Universitas Sebelas Maret. Identitas dan hasil asesmen bersifat rahasia dan hanya akan digunakan untuk kepentingan penelitian. <br>
+                                    Terima kasih banyak atas kesediaan Saudara/i untuk mengisi asesmen karier kami☺️🙏🏼<br>
+                                    Apabila ada yang ingin ditanyakan, silakan menghubungi👇🏼<br>
+                                    📲: 085692156358 (Florine)
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label class="required" for="initial">{{ trans('cruds.resultAssessment.fields.initial') }}</label>
+                                <input class="form-control" type="text" name="initial" id="initial" value="{{ old('initial', '') }}" required>
+                                @if($errors->has('initial'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('initial') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.resultAssessment.fields.initial_helper') }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="required" for="age">{{ trans('cruds.resultAssessment.fields.age') }}</label>
+                                <input class="form-control" type="number" name="age" id="age" value="{{ old('age', '') }}" step="1" required>
+                                @if($errors->has('age'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('age') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.resultAssessment.fields.age_helper') }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">{{ trans('cruds.resultAssessment.fields.gender') }}</label>
+                                @foreach(App\Models\ResultAssessment::GENDER_RADIO as $key => $label)
+                                    <div>
+                                        <input type="radio" id="gender_{{ $key }}" name="gender" value="{{ $key }}" {{ old('gender', '') === (string) $key ? 'checked' : '' }} required>
+                                        <label for="gender_{{ $key }}">{{ $label }}</label>
+                                    </div>
+                                @endforeach
+                                @if($errors->has('gender'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('gender') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.resultAssessment.fields.gender_helper') }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="required" for="field">{{ trans('cruds.resultAssessment.fields.field') }}</label>
+                                <input class="form-control" type="text" name="field" id="field" value="{{ old('field', '') }}" required>
+                                @if($errors->has('field'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('field') }}
+                                    </div>
+                                @endif
+                                <span class="help-block with-icon">{{ trans('cruds.resultAssessment.fields.field_helper') }}</span>
+                            </div>
+                        </div>
+
                         @foreach ($question1->chunk(10) as $index => $questionPair)
                             <div class="step {{ $index === 0 ? 'active' : '' }}">
-                                <div class="step-number-label">Step {{ $index + 1 }} of {{ $totalSteps }}</div>
+                                <div class="step-number-label">Step {{ $index + 2 }} of {{ $totalSteps }}</div>
                                 @foreach ($questionPair as $question)
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
@@ -234,7 +300,7 @@
                         @endforeach
                         @foreach ($question2->chunk(10) as $index => $questionPair)
                             <div class="step">
-                                <div class="step-number-label">Step {{ $index + 1 + count($question1->chunk(10)) }}</div>
+                                <div class="step-number-label">Step {{ $index + 2 + count($question1->chunk(10)) }} of {{ $totalSteps }}</div>
                                 @foreach ($questionPair as $question)
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
@@ -253,8 +319,8 @@
                                             <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
                                             <label for="id_WR_{{ $question->code }}_4"></label>
 
-                                            <input type="radio" id="id_HCI_{{ $question->code }}_5" name="HCI_{{ $question->code }}" value="5">
-                                            <label for="id_HCI_{{ $question->code }}_5"></label>
+                                            <input type="radio" id="id_WR_{{ $question->code }}_5" name="WR_{{ $question->code }}" value="5">
+                                            <label for="id_WR_{{ $question->code }}_5"></label>
 
                                             <span class="disagree">Disagree</span>
                                         </div>
@@ -264,27 +330,27 @@
                         @endforeach
                         @foreach ($question3->chunk(10) as $index => $questionPair)
                             <div class="step">
-                                <div class="step-number-label">Step {{ $index + 1 + count($question1->chunk(10)) + count($question2->chunk(10)) }}</div>
+                                <div class="step-number-label">Step {{ $index + 2 + count($question1->chunk(10)) + count($question2->chunk(10)) }} of {{ $totalSteps }}</div>
                                 @foreach ($questionPair as $question)
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
                                         <div class="radio-group">
                                             <span class="agree">Agree</span>
 
-                                            <input type="radio" id="id_WR_{{ $question->code }}_1" name="WR_{{ $question->code }}" value="1">
-                                            <label for="id_WR_{{ $question->code }}_1"></label>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_1" name="CCI_{{ $question->code }}" value="1">
+                                            <label for="id_CCI_{{ $question->code }}_1"></label>
 
-                                            <input type="radio" id="id_WR_{{ $question->code }}_2" name="WR_{{ $question->code }}" value="2">
-                                            <label for="id_WR_{{ $question->code }}_2"></label>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_2" name="CCI_{{ $question->code }}" value="2">
+                                            <label for="id_CCI_{{ $question->code }}_2"></label>
 
-                                            <input type="radio" id="id_WR_{{ $question->code }}_3" name="WR_{{ $question->code }}" value="3">
-                                            <label for="id_WR_{{ $question->code }}_3"></label>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_3" name="CCI_{{ $question->code }}" value="3">
+                                            <label for="id_CCI_{{ $question->code }}_3"></label>
 
-                                            <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
-                                            <label for="id_WR_{{ $question->code }}_4"></label>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_4" name="CCI_{{ $question->code }}" value="4">
+                                            <label for="id_CCI_{{ $question->code }}_4"></label>
 
-                                            <input type="radio" id="id_HCI_{{ $question->code }}_5" name="HCI_{{ $question->code }}" value="5">
-                                            <label for="id_HCI_{{ $question->code }}_5"></label>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_5" name="CCI_{{ $question->code }}" value="5">
+                                            <label for="id_CCI_{{ $question->code }}_5"></label>
 
                                             <span class="disagree">Disagree</span>
                                         </div>
@@ -296,7 +362,7 @@
                         <!-- Navigation Buttons -->
                         <div class="step-buttons text-center mt-5">
                             <button type="button" class="btn btn-secondary previous " onclick="nextPrev(-1)">
-                                <i class="fas fa-arrow-left"></i> Previous
+                                <i class="fas fa-arrow-left"></i> Prev
                             </button>
                             <button type="button" class="btn btn-primary next" onclick="nextPrev(1)">
                                 Next <i class="fas fa-arrow-right"></i>
@@ -342,37 +408,54 @@
 
         // Validation for moving forward
         if (n === 1) {
-            const radioGroups = currentStepElem.querySelectorAll('.radio-group, .custom-radio-group');
-            let allAnswered = true;
-            let firstIncompleteRadio = null;
+            let allFieldsValid = true;
+            let firstInvalidField = null;
 
+            // Validate required radio groups
+            const radioGroups = currentStepElem.querySelectorAll('.radio-group, .custom-radio-group');
             radioGroups.forEach(group => {
                 const inputs = group.querySelectorAll('input[type="radio"]');
                 const isAnswered = Array.from(inputs).some(input => input.checked);
                 if (!isAnswered) {
-                    allAnswered = false;
-                    if (!firstIncompleteRadio) {
-                        firstIncompleteRadio = group.querySelector('input[type="radio"]');
+                    allFieldsValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = group.querySelector('input[type="radio"]');
                     }
                 }
             });
 
-            if (!allAnswered) {
-                // If not all questions are answered, show the alert
+            // Validate other required fields
+            const requiredFields = currentStepElem.querySelectorAll('input[required]');
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    allFieldsValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = field;
+                    }
+                } else if (field.type === 'number' && field.value < field.min) {
+                    allFieldsValid = false;
+                    if (!firstInvalidField) {
+                        firstInvalidField = field;
+                    }
+                }
+            });
+
+            if (!allFieldsValid) {
+                // If any required field is not filled, show the alert
                 Swal.fire({
                     icon: 'warning',
                     title: 'Incomplete',
-                    text: 'Please answer all questions before proceeding to the next step.',
+                    text: 'Please fill all required fields before proceeding to the next step.',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    // Scroll to the first incomplete radio button
+                    // Scroll to the first incomplete field
                     setTimeout(() => {
-                        if (firstIncompleteRadio) {
-                            firstIncompleteRadio.scrollIntoView({
+                        if (firstInvalidField) {
+                            firstInvalidField.scrollIntoView({
                                 behavior: 'smooth',
                                 block: 'center'
                             });
-                            firstIncompleteRadio.focus(); // Optionally set focus
+                            firstInvalidField.focus(); // Optionally set focus
                         }
                     }, 500);
                 });

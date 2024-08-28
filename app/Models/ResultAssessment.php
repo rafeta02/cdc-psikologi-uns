@@ -26,9 +26,7 @@ class ResultAssessment extends Model
     ];
 
     public const TEST_NAME_SELECT = [
-        'HCI' => 'Holland Carrer Interest',
-        'WR'  => 'Work Readiness',
-        'CCI' => 'Career Confidence Inventory',
+        'karir' => 'Career Assessment',
     ];
 
     protected $fillable = [
