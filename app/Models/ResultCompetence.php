@@ -28,6 +28,8 @@ class ResultCompetence extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'user_id',
+        'competence_id',
         'description',
         'created_at',
         'updated_at',
@@ -45,14 +47,14 @@ class ResultCompetence extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
     }
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function competences()
+    public function competence()
     {
-        return $this->belongsToMany(Competence::class);
+        return $this->belongsTo(Competence::class, 'competence_id');
     }
 
     public function getCertificateAttribute()

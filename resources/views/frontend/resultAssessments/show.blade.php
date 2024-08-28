@@ -23,9 +23,7 @@
                                         {{ trans('cruds.resultAssessment.fields.user') }}
                                     </th>
                                     <td>
-                                        @foreach($resultAssessment->users as $key => $user)
-                                            <span class="label label-info">{{ $user->name }}</span>
-                                        @endforeach
+                                        {{ $resultAssessment->user->name ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>

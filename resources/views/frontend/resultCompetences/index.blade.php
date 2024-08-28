@@ -40,14 +40,10 @@
                                 @foreach($resultCompetences as $key => $resultCompetence)
                                     <tr data-entry-id="{{ $resultCompetence->id }}">
                                         <td>
-                                            @foreach($resultCompetence->users as $key => $item)
-                                                <span>{{ $item->name }}</span>
-                                            @endforeach
+                                            {{ $resultCompetence->user->name ?? '' }}
                                         </td>
                                         <td>
-                                            @foreach($resultCompetence->competences as $key => $item)
-                                                <span>{{ $item->name }}</span>
-                                            @endforeach
+                                            {{ $resultCompetence->competence->name ?? '' }}
                                         </td>
                                         <td>
                                             {{ $resultCompetence->description ?? '' }}
@@ -124,7 +120,7 @@
 
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,
-    order: [[ 1, 'desc' ]],
+    order: [[ 2, 'desc' ]],
     pageLength: 50,
   });
   let table = $('.datatable-ResultCompetence:not(.ajaxTable)').DataTable({ buttons: dtButtons })

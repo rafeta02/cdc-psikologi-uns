@@ -55,9 +55,7 @@
                                 @foreach($resultAssessments as $key => $resultAssessment)
                                     <tr data-entry-id="{{ $resultAssessment->id }}">
                                         <td>
-                                            @foreach($resultAssessment->users as $key => $item)
-                                                <span>{{ $item->name }}</span>
-                                            @endforeach
+                                            {{ $resultAssessment->user->name ?? '' }}
                                         </td>
                                         <td>
                                             {{ $resultAssessment->initial ?? '' }}

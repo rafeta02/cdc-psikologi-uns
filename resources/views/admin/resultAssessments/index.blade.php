@@ -101,7 +101,7 @@
     ajax: "{{ route('admin.result-assessments.index') }}",
     columns: [
       { data: 'placeholder', name: 'placeholder' },
-{ data: 'user', name: 'users.name' },
+{ data: 'user_name', name: 'user.name' },
 { data: 'initial', name: 'initial' },
 { data: 'age', name: 'age' },
 { data: 'gender', name: 'gender' },
@@ -112,7 +112,7 @@
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
-    order: [[ 1, 'desc' ]],
+    order: [[ 2, 'desc' ]],
     pageLength: 50,
   };
   let table = $('.datatable-ResultAssessment').DataTable(dtOverrideGlobals);

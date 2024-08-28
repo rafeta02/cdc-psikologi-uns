@@ -14,6 +14,9 @@
 
                     </th>
                     <th>
+                        {{ trans('cruds.hollandTest.fields.user') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.hollandTest.fields.result') }}
                     </th>
                     <th>
@@ -187,7 +190,8 @@
     ajax: "{{ route('admin.holland-tests.index') }}",
     columns: [
       { data: 'placeholder', name: 'placeholder' },
-{ data: 'result_test_name', name: 'result.test_name' },
+{ data: 'user_name', name: 'user.name' },
+{ data: 'result_initial', name: 'result.initial' },
 { data: 'r_1', name: 'r_1' },
 { data: 'r_2', name: 'r_2' },
 { data: 'r_3', name: 'r_3' },
@@ -239,7 +243,7 @@
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
-    order: [[ 1, 'desc' ]],
+    order: [[ 2, 'desc' ]],
     pageLength: 50,
   };
   let table = $('.datatable-HollandTest').DataTable(dtOverrideGlobals);

@@ -10,34 +10,26 @@
         <form method="POST" action="{{ route("admin.result-competences.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="users">{{ trans('cruds.resultCompetence.fields.user') }}</label>
-                <div style="padding-bottom: 4px">
-                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                </div>
-                <select class="form-control select2 {{ $errors->has('users') ? 'is-invalid' : '' }}" name="users[]" id="users" multiple>
-                    @foreach($users as $id => $user)
-                        <option value="{{ $id }}" {{ in_array($id, old('users', [])) ? 'selected' : '' }}>{{ $user }}</option>
+                <label for="user_id">{{ trans('cruds.resultCompetence.fields.user') }}</label>
+                <select class="form-control select2 {{ $errors->has('user') ? 'is-invalid' : '' }}" name="user_id" id="user_id">
+                    @foreach($users as $id => $entry)
+                        <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('users'))
-                    <span class="text-danger">{{ $errors->first('users') }}</span>
+                @if($errors->has('user'))
+                    <span class="text-danger">{{ $errors->first('user') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.resultCompetence.fields.user_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="competences">{{ trans('cruds.resultCompetence.fields.competence') }}</label>
-                <div style="padding-bottom: 4px">
-                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                </div>
-                <select class="form-control select2 {{ $errors->has('competences') ? 'is-invalid' : '' }}" name="competences[]" id="competences" multiple>
-                    @foreach($competences as $id => $competence)
-                        <option value="{{ $id }}" {{ in_array($id, old('competences', [])) ? 'selected' : '' }}>{{ $competence }}</option>
+                <label for="competence_id">{{ trans('cruds.resultCompetence.fields.competence') }}</label>
+                <select class="form-control select2 {{ $errors->has('competence') ? 'is-invalid' : '' }}" name="competence_id" id="competence_id">
+                    @foreach($competences as $id => $entry)
+                        <option value="{{ $id }}" {{ old('competence_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('competences'))
-                    <span class="text-danger">{{ $errors->first('competences') }}</span>
+                @if($errors->has('competence'))
+                    <span class="text-danger">{{ $errors->first('competence') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.resultCompetence.fields.competence_helper') }}</span>
             </div>

@@ -16,7 +16,7 @@ class HollandTestController extends Controller
         abort_if(Gate::denies('holland_test_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = HollandTest::with(['result'])->select(sprintf('%s.*', (new HollandTest)->table));
+            $query = HollandTest::with(['user', 'result'])->select(sprintf('%s.*', (new HollandTest)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -37,8 +37,12 @@ class HollandTestController extends Controller
                 ));
             });
 
-            $table->addColumn('result_test_name', function ($row) {
-                return $row->result ? $row->result->test_name : '';
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
+            });
+
+            $table->addColumn('result_initial', function ($row) {
+                return $row->result ? $row->result->initial : '';
             });
 
             $table->editColumn('r_1', function ($row) {
@@ -186,7 +190,7 @@ class HollandTestController extends Controller
                 return $row->c_8 ? $row->c_8 : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'result']);
+            $table->rawColumns(['actions', 'placeholder', 'user', 'result']);
 
             return $table->make(true);
         }
@@ -198,7 +202,7 @@ class HollandTestController extends Controller
     {
         abort_if(Gate::denies('holland_test_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $hollandTest->load('result');
+        $hollandTest->load('user', 'result');
 
         return view('admin.hollandTests.show', compact('hollandTest'));
     }
