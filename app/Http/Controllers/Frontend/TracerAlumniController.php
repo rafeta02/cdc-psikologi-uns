@@ -12,6 +12,7 @@ use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class TracerAlumniController extends Controller
 {
@@ -39,7 +40,10 @@ class TracerAlumniController extends Controller
 
     public function store(StoreTracerAlumnuRequest $request)
     {
-        $tracerAlumnu = TracerAlumnu::create($request->all());
+
+        $tracerAlumnu = TracerAlumnu::create(array_merge($request->all(), ['user_id' => auth()->id()]));
+
+        Alert::success('Success', 'Data Berhasil Disimpan, Terima kasih.');
 
         return redirect()->route('frontend.tracer-alumnus.index');
     }

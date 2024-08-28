@@ -2,6 +2,9 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="col-md-12 mb-4">
+            <h3>Data Prestasi Mahasiswa</h3>
+        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -19,15 +22,7 @@
                         <table class="table table-bordered table-striped">
                             <tbody>
                                 <tr>
-                                    <th>
-                                        {{ trans('cruds.prestasiMahasiswa.fields.user') }}
-                                    </th>
-                                    <td>
-                                        {{ $prestasiMahasiswa->user->name ?? '' }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
+                                    <th width="30%">
                                         {{ trans('cruds.prestasiMahasiswa.fields.skim') }}
                                     </th>
                                     <td>
@@ -112,6 +107,29 @@
                                     </th>
                                     <td>
                                         {{ App\Models\PrestasiMahasiswa::KEIKUTSERTAAN_RADIO[$prestasiMahasiswa->keikutsertaan] ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Peserta</th>
+                                    <td>
+                                        <table width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>NIM Peserta</th>
+                                                    <th>Nama Peserta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($prestasiMahasiswa->pesertas as $item)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $item->nim }}</td>
+                                                    <td>{{ $item->nama }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </td>
                                 </tr>
                                 <tr>

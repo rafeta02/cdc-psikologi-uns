@@ -26,9 +26,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/loading.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     @yield('styles')
 </head>
 
@@ -117,6 +118,21 @@
                                             {{ trans('cruds.prestasiMaba.title') }}
                                         </a>
                                     @endcan
+                                    @can('result_access')
+                                        <a class="dropdown-item disabled" href="#">
+                                            Assessment
+                                        </a>
+                                    @endcan
+                                    @can('result_assessment_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.assessments.index') }}">
+                                            Assessment
+                                        </a>
+                                    @endcan
+                                    @can('result_competence_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.competences.index') }}">
+                                            Competence
+                                        </a>
+                                    @endcan
 
 
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -184,6 +200,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/main.js') }}"></script>
 @yield('scripts')
 

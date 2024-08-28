@@ -8,6 +8,7 @@ use App\Http\Requests\StoreResultAssessmentRequest;
 use App\Http\Requests\UpdateResultAssessmentRequest;
 use App\Models\ResultAssessment;
 use App\Models\User;
+use App\Models\Question;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +28,11 @@ class ResultAssessmentController extends Controller
     {
         abort_if(Gate::denies('result_assessment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::pluck('name', 'id');
+        $question1 = Question::where('type', 'HCI')->get();
+        $question2 = Question::where('type', 'WR')->get();
+        $question3 = Question::where('type', 'CCI')->get();
 
-        return view('frontend.resultAssessments.create', compact('users'));
+        return view('frontend.resultAssessments.create', compact('question1', 'question2', 'question3'));
     }
 
     public function store(StoreResultAssessmentRequest $request)

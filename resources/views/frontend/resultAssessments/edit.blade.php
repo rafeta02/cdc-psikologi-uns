@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route("frontend.result-assessments.update", [$resultAssessment->id]) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route("frontend.assessments.update", [$resultAssessment->id]) }}" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <div class="form-group">

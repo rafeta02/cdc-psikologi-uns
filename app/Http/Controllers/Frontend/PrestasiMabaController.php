@@ -41,7 +41,7 @@ class PrestasiMabaController extends Controller
 
     public function store(StorePrestasiMabaRequest $request)
     {
-        $prestasiMaba = PrestasiMaba::create($request->all());
+        $prestasiMaba = PrestasiMaba::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         foreach ($request->input('bukti_kegiatan', []) as $file) {
             $prestasiMaba->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('bukti_kegiatan');

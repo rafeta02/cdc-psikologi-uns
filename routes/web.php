@@ -226,14 +226,14 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
      // Result Assessment
-     Route::delete('result-assessments/destroy', 'ResultAssessmentController@massDestroy')->name('result-assessments.massDestroy');
-     Route::resource('result-assessments', 'ResultAssessmentController');
+     Route::delete('assessments/destroy', 'ResultAssessmentController@massDestroy')->name('assessments.massDestroy');
+     Route::resource('assessments', 'ResultAssessmentController')->names('assessments');
 
     // Result Competence
-    Route::delete('result-competences/destroy', 'ResultCompetenceController@massDestroy')->name('result-competences.massDestroy');
-    Route::post('result-competences/media', 'ResultCompetenceController@storeMedia')->name('result-competences.storeMedia');
-    Route::post('result-competences/ckmedia', 'ResultCompetenceController@storeCKEditorImages')->name('result-competences.storeCKEditorImages');
-    Route::resource('result-competences', 'ResultCompetenceController');
+    Route::delete('competences/destroy', 'ResultCompetenceController@massDestroy')->name('competences.massDestroy');
+    Route::post('competences/media', 'ResultCompetenceController@storeMedia')->name('competences.storeMedia');
+    Route::post('competences/ckmedia', 'ResultCompetenceController@storeCKEditorImages')->name('competences.storeCKEditorImages');
+    Route::resource('competences', 'ResultCompetenceController')->names('competences');
 
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
     Route::post('frontend/profile', 'ProfileController@update')->name('profile.update');

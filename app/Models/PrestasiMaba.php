@@ -71,7 +71,7 @@ class PrestasiMaba extends Model implements HasMedia
         'harapan_2' => 'Harapan 2',
         'harapan_3' => 'Harapan 3',
         'apresiasi' => 'Apresiasi kejuaraan/Penghargaan tambahan/Juara umum',
-        'peserta'   => 'peserta',
+        'peserta'   => 'Peserta',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

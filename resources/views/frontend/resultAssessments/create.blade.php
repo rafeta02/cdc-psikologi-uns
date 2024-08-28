@@ -1,4 +1,198 @@
 @extends('layouts.frontend')
+
+@section('styles')
+<style>
+    .question {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+    .radio-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: nowrap;
+    }
+    .radio-group label {
+        position: relative;
+        margin: 0 12px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #6c757d;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+    .radio-group input[type="radio"] {
+        display: none;
+    }
+    .radio-group label::before {
+        content: '';
+        display: inline-block;
+        width: 40px;  /* Adjust size as needed */
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #6c757d;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 36px;
+        font-size: 20px;
+        color: transparent;
+    }
+    .radio-group input[type="radio"]:nth-of-type(1) + label {
+        color: #28a745;
+    }
+    .radio-group input[type="radio"]:nth-of-type(1):checked + label::before {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        content: '✔';
+    }
+    .radio-group input[type="radio"]:nth-of-type(2) + label {
+        color: #28a745;
+    }
+    .radio-group input[type="radio"]:nth-of-type(2):checked + label::before {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        content: '✔';
+    }
+    .radio-group input[type="radio"]:nth-of-type(3) + label {
+        color: #6c757d;
+    }
+    .radio-group input[type="radio"]:nth-of-type(3):checked + label::before {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+        content: '✔';
+    }
+    .radio-group input[type="radio"]:nth-of-type(4) + label {
+        color: #6f42c1;
+    }
+    .radio-group input[type="radio"]:nth-of-type(4):checked + label::before {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+        content: '✔';
+    }
+    .radio-group input[type="radio"]:nth-of-type(5) + label {
+        color: #6f42c1;
+    }
+    .radio-group input[type="radio"]:nth-of-type(5):checked + label::before {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+        content: '✔';
+    }
+    .radio-group input[type="radio"]:nth-of-type(1) + label::before,
+    .radio-group input[type="radio"]:nth-of-type(5) + label::before {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+    }
+    .radio-group input[type="radio"]:nth-of-type(2) + label::before,
+    .radio-group input[type="radio"]:nth-of-type(3) + label::before,
+    .radio-group input[type="radio"]:nth-of-type(4) + label::before {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+    }
+    .radio-group input[type="radio"]:nth-of-type(3) + label::before {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .agree {
+        font-size: 1.5rem;
+        color: #28a745;
+        font-weight: bold;
+        margin-right: 20px;
+    }
+    .disagree {
+        font-size: 1.5rem;
+        color: #6f42c1;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+    .step {
+        display: none;
+    }
+    .step.active {
+        display: block;
+    }
+    .step-buttons {
+        text-align: center;
+        margin-top: 50px;
+    }
+    .step-buttons .btn {
+        margin: 0 10px;
+    }
+
+    /* Base styling for the radio group */
+    .custom-radio-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: nowrap;
+    }
+    .custom-radio-group label {
+        position: relative;
+        margin: 0 12px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #6c757d;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+    .custom-radio-group input[type="radio"] {
+        display: none;
+    }
+
+    .custom-radio-group label::before {
+        content: '';
+        display: inline-block;
+        width: 40px;  /* Adjust the size of the radio circles */
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #6c757d;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 36px;
+        font-size: 20px;
+        color: transparent;
+    }
+    .custom-radio-group input[type="radio"]:checked + label::before {
+        background-color: #28a745; /* Green background for the first option */
+        border-color: #28a745; /* Match the border to the background */
+        color: white; /* White checkmark */
+        content: '✔'; /* Display the checkmark inside the circle */
+    }
+    .custom-radio-group input[type="radio"]:nth-of-type(2):checked + label::before {
+        background-color: #6f42c1; /* Purple background for the second option */
+        border-color: #6f42c1; /* Match the border to the background */
+        color: white; /* White checkmark */
+        content: '✔'; /* Display the checkmark inside the circle */
+    }
+
+    .step-number-label {
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+</style>
+
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -6,115 +200,108 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ trans('global.create') }} {{ trans('cruds.resultAssessment.title_singular') }}
+                    {{ trans('global.create') }} {{ trans('cruds.assessments.title_singular') }}
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route("frontend.result-assessments.store") }}" enctype="multipart/form-data">
+                    <form id="personalityForm" method="POST" action="{{ route("frontend.assessments.store") }}">
                         @method('POST')
                         @csrf
-                        <div class="form-group">
-                            <label class="required" for="users">{{ trans('cruds.resultAssessment.fields.user') }}</label>
-                            <div style="padding-bottom: 4px">
-                                <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+
+                        @php
+                            $totalSteps = count($question1->chunk(10)) + count($question2->chunk(10)) + count($question3->chunk(10));
+                        @endphp
+
+                        @foreach ($question1->chunk(10) as $index => $questionPair)
+                            <div class="step {{ $index === 0 ? 'active' : '' }}">
+                                <div class="step-number-label">Step {{ $index + 1 }} of {{ $totalSteps }}</div>
+                                @foreach ($questionPair as $question)
+                                    <div class="card mb-3">
+                                        <p class="question text-center">{{ $question->text }}</p>
+                                        <div class="custom-radio-group">
+                                            <span class="agree">Yes</span>
+                                            <input type="radio" id="id_HCI_{{ $question->code }}_1" name="HCI_{{ $question->code }}" value="1">
+                                            <label for="id_HCI_{{ $question->code }}_1"></label>
+
+                                            <input type="radio" id="id_HCI_{{ $question->code }}_0" name="HCI_{{ $question->code }}" value="0">
+                                            <label for="id_HCI_{{ $question->code }}_0"></label>
+
+                                            <span class="disagree">No</span>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <select class="form-control select2" name="users[]" id="users" multiple required>
-                                @foreach($users as $id => $user)
-                                    <option value="{{ $id }}" {{ in_array($id, old('users', [])) ? 'selected' : '' }}>{{ $user }}</option>
+                        @endforeach
+                        @foreach ($question2->chunk(10) as $index => $questionPair)
+                            <div class="step">
+                                <div class="step-number-label">Step {{ $index + 1 + count($question1->chunk(10)) }}</div>
+                                @foreach ($questionPair as $question)
+                                    <div class="card mb-3">
+                                        <p class="question text-center">{{ $question->text }}</p>
+                                        <div class="radio-group">
+                                            <span class="agree">Agree</span>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_1" name="WR_{{ $question->code }}" value="1">
+                                            <label for="id_WR_{{ $question->code }}_1"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_2" name="WR_{{ $question->code }}" value="2">
+                                            <label for="id_WR_{{ $question->code }}_2"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_3" name="WR_{{ $question->code }}" value="3">
+                                            <label for="id_WR_{{ $question->code }}_3"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
+                                            <label for="id_WR_{{ $question->code }}_4"></label>
+
+                                            <input type="radio" id="id_HCI_{{ $question->code }}_5" name="HCI_{{ $question->code }}" value="5">
+                                            <label for="id_HCI_{{ $question->code }}_5"></label>
+
+                                            <span class="disagree">Disagree</span>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </select>
-                            @if($errors->has('users'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('users') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.user_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="initial">{{ trans('cruds.resultAssessment.fields.initial') }}</label>
-                            <input class="form-control" type="text" name="initial" id="initial" value="{{ old('initial', '') }}">
-                            @if($errors->has('initial'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('initial') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.initial_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="age">{{ trans('cruds.resultAssessment.fields.age') }}</label>
-                            <input class="form-control" type="number" name="age" id="age" value="{{ old('age', '') }}" step="1">
-                            @if($errors->has('age'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('age') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.age_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label>{{ trans('cruds.resultAssessment.fields.gender') }}</label>
-                            @foreach(App\Models\ResultAssessment::GENDER_RADIO as $key => $label)
-                                <div>
-                                    <input type="radio" id="gender_{{ $key }}" name="gender" value="{{ $key }}" {{ old('gender', '') === (string) $key ? 'checked' : '' }}>
-                                    <label for="gender_{{ $key }}">{{ $label }}</label>
-                                </div>
-                            @endforeach
-                            @if($errors->has('gender'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('gender') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.gender_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="field">{{ trans('cruds.resultAssessment.fields.field') }}</label>
-                            <input class="form-control" type="text" name="field" id="field" value="{{ old('field', '') }}">
-                            @if($errors->has('field'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('field') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.field_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label class="required">{{ trans('cruds.resultAssessment.fields.test_name') }}</label>
-                            <select class="form-control" name="test_name" id="test_name" required>
-                                <option value disabled {{ old('test_name', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                                @foreach(App\Models\ResultAssessment::TEST_NAME_SELECT as $key => $label)
-                                    <option value="{{ $key }}" {{ old('test_name', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                            </div>
+                        @endforeach
+                        @foreach ($question3->chunk(10) as $index => $questionPair)
+                            <div class="step">
+                                <div class="step-number-label">Step {{ $index + 1 + count($question1->chunk(10)) + count($question2->chunk(10)) }}</div>
+                                @foreach ($questionPair as $question)
+                                    <div class="card mb-3">
+                                        <p class="question text-center">{{ $question->text }}</p>
+                                        <div class="radio-group">
+                                            <span class="agree">Agree</span>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_1" name="WR_{{ $question->code }}" value="1">
+                                            <label for="id_WR_{{ $question->code }}_1"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_2" name="WR_{{ $question->code }}" value="2">
+                                            <label for="id_WR_{{ $question->code }}_2"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_3" name="WR_{{ $question->code }}" value="3">
+                                            <label for="id_WR_{{ $question->code }}_3"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
+                                            <label for="id_WR_{{ $question->code }}_4"></label>
+
+                                            <input type="radio" id="id_HCI_{{ $question->code }}_5" name="HCI_{{ $question->code }}" value="5">
+                                            <label for="id_HCI_{{ $question->code }}_5"></label>
+
+                                            <span class="disagree">Disagree</span>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </select>
-                            @if($errors->has('test_name'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('test_name') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.test_name_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="result_text">{{ trans('cruds.resultAssessment.fields.result_text') }}</label>
-                            <input class="form-control" type="text" name="result_text" id="result_text" value="{{ old('result_text', '') }}">
-                            @if($errors->has('result_text'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('result_text') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.result_text_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="result_description">{{ trans('cruds.resultAssessment.fields.result_description') }}</label>
-                            <textarea class="form-control" name="result_description" id="result_description">{{ old('result_description') }}</textarea>
-                            @if($errors->has('result_description'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('result_description') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.resultAssessment.fields.result_description_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-danger" type="submit">
-                                {{ trans('global.save') }}
+                            </div>
+                        @endforeach
+
+                        <!-- Navigation Buttons -->
+                        <div class="step-buttons text-center mt-5">
+                            <button type="button" class="btn btn-secondary previous " onclick="nextPrev(-1)">
+                                <i class="fas fa-arrow-left"></i> Previous
                             </button>
+                            <button type="button" class="btn btn-primary next" onclick="nextPrev(1)">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-primary submit">Submit <i class="fas fa-paper-plane"></i></button>
                         </div>
                     </form>
                 </div>
@@ -123,4 +310,87 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    let currentStep = 0;
+    showStep(currentStep);
+
+    function showStep(step) {
+        const steps = document.getElementsByClassName("step");
+        const prevBtn = document.querySelector(".btn-secondary");
+        const nextBtn = document.querySelector(".btn-primary.next");
+        const submitBtn = document.querySelector(".btn-primary.submit");
+
+        // Hide all steps and show the current step
+        for (let i = 0; i < steps.length; i++) {
+            steps[i].classList.remove("active");
+        }
+        steps[step].classList.add("active");
+
+        // Update button visibility
+        prevBtn.style.display = step === 0 ? "none" : "inline";
+        nextBtn.style.display = step === steps.length - 1 ? "none" : "inline";
+        submitBtn.style.display = step === steps.length - 1 ? "inline" : "none";
+    }
+
+    function nextPrev(n) {
+        const steps = document.getElementsByClassName("step");
+        const currentStepElem = Array.from(steps).find(step => step.classList.contains("active"));
+        const currentStepIndex = Array.from(steps).indexOf(currentStepElem);
+
+        // Validation for moving forward
+        if (n === 1) {
+            const radioGroups = currentStepElem.querySelectorAll('.radio-group, .custom-radio-group');
+            let allAnswered = true;
+            let firstIncompleteRadio = null;
+
+            radioGroups.forEach(group => {
+                const inputs = group.querySelectorAll('input[type="radio"]');
+                const isAnswered = Array.from(inputs).some(input => input.checked);
+                if (!isAnswered) {
+                    allAnswered = false;
+                    if (!firstIncompleteRadio) {
+                        firstIncompleteRadio = group.querySelector('input[type="radio"]');
+                    }
+                }
+            });
+
+            if (!allAnswered) {
+                // If not all questions are answered, show the alert
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Incomplete',
+                    text: 'Please answer all questions before proceeding to the next step.',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Scroll to the first incomplete radio button
+                    setTimeout(() => {
+                        if (firstIncompleteRadio) {
+                            firstIncompleteRadio.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            firstIncompleteRadio.focus(); // Optionally set focus
+                        }
+                    }, 500);
+                });
+                return; // Exit the function without moving to the next step
+            }
+        }
+
+        // Handle navigation
+        let nextStepIndex = currentStepIndex + n;
+        if (nextStepIndex >= 0 && nextStepIndex < steps.length) {
+            showStep(nextStepIndex);
+        }
+
+        // Scroll to the top of the page
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // for smooth scrolling
+        });
+    }
+</script>
 @endsection

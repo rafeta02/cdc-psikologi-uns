@@ -97,7 +97,7 @@ class PrestasiMahasiswa extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
     }
 
-    public function prestasiMahasiswaPrestasiMahasiswaDetails()
+    public function pesertas()
     {
         return $this->hasMany(PrestasiMahasiswaDetail::class, 'prestasi_mahasiswa_id', 'id');
     }

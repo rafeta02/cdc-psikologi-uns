@@ -2,6 +2,9 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <div class="col-md-12 mb-4">
+            <h3>Data Prestasi Mahasiswa</h3>
+        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -13,20 +16,6 @@
                     <form method="POST" action="{{ route("frontend.prestasi-mahasiswas.store") }}" enctype="multipart/form-data">
                         @method('POST')
                         @csrf
-                        <div class="form-group">
-                            <label for="user_id">{{ trans('cruds.prestasiMahasiswa.fields.user') }}</label>
-                            <select class="form-control select2" name="user_id" id="user_id">
-                                @foreach($users as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('user'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('user') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.user_helper') }}</span>
-                        </div>
                         <div class="form-group">
                             <label class="required">{{ trans('cruds.prestasiMahasiswa.fields.skim') }}</label>
                             @foreach(App\Models\PrestasiMahasiswa::SKIM_RADIO as $key => $label)

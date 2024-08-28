@@ -9,6 +9,7 @@ use App\Http\Requests\StorePrestasiMahasiswaRequest;
 use App\Http\Requests\UpdatePrestasiMahasiswaRequest;
 use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMahasiswa;
+use App\Models\PrestasiMahasiswaDetail;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
@@ -41,7 +42,16 @@ class PrestasiMahasiswaController extends Controller
 
     public function store(StorePrestasiMahasiswaRequest $request)
     {
-        $prestasiMahasiswa = PrestasiMahasiswa::create($request->all());
+        $prestasiMahasiswa = PrestasiMahasiswa::create(array_merge($request->all(), ['user_id' => auth()->id()]));
+
+        // Save the Nama Peserta and NIM Peserta to PrestasiMahasiswaDetail
+        foreach ($request->input('nama_peserta') as $key => $nama) {
+            PrestasiMahasiswaDetail::create([
+                'nim' => $request->nim_peserta[$key],
+                'nama' => $nama,
+                'prestasi_mahasiswa_id' => $prestasiMahasiswa->id,
+            ]);
+        }
 
         foreach ($request->input('surat_tugas', []) as $file) {
             $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('surat_tugas');
@@ -161,7 +171,7 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $prestasiMahasiswa->load('user', 'kategori', 'prestasiMahasiswaPrestasiMahasiswaDetails');
+        $prestasiMahasiswa->load('user', 'kategori', 'pesertas');
 
         return view('frontend.prestasiMahasiswas.show', compact('prestasiMahasiswa'));
     }

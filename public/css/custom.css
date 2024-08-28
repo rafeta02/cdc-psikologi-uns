@@ -197,6 +197,10 @@ table.dataTable thead .sorting_desc {
     background-color: #d9534f !important;
 }
 
+.help-block{
+    font-size: 12px;
+}
+
 .help-block.with-icon::before {
     content: "\f059"; /* FontAwesome info-circle icon */
     font-family: "Font Awesome 5 Free"; /* Assuming you're using FontAwesome */
