@@ -52,4 +52,19 @@ class ResultAssessment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function hollandTest()
+    {
+        return $this->hasOne(HollandTest::class, 'result_id');
+    }
+
+    public function workReadinessTest()
+    {
+        return $this->hasOne(WorkReadinessTest::class, 'result_id');
+    }
+
+    public function careerConfidenceTest()
+    {
+        return $this->hasOne(CareerConfidenceTest::class, 'result_id');
+    }
 }

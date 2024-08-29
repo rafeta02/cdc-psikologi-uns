@@ -152,6 +152,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Result Assessment
     Route::delete('result-assessments/destroy', 'ResultAssessmentController@massDestroy')->name('result-assessments.massDestroy');
+    Route::post('result-assessments/export', 'ResultAssessmentController@export')->name('result-assessments.export');
     Route::resource('result-assessments', 'ResultAssessmentController');
 
     // Holland Test

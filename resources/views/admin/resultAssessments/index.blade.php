@@ -2,10 +2,18 @@
 @section('content')
 @can('result_assessment_create')
     <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
+        {{-- <div class="col-lg-2">
             <a class="btn btn-success" href="{{ route('admin.result-assessments.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.resultAssessment.title_singular') }}
             </a>
+        </div> --}}
+        <div class="col-lg-12">
+            <form method="POST" action="{{ route('admin.result-assessments.export') }}" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <button type="submit" class="btn btn-primary">
+                    Export
+                </button>
+            </form>
         </div>
     </div>
 @endcan
@@ -120,7 +128,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>
