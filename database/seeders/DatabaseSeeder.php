@@ -41,10 +41,10 @@ class DatabaseSeeder extends Seeder
         // $departments = Department::all(); // Fetch all available tags
 
         // foreach ($vacancies as $vacancy) {
-        //     $vacancy->tags()->attach(
+        //     $vacancy->education()->attach(
         //         $educations->random(1)->pluck('id')->toArray() // Attaching 3 random tags
         //     );
-        //     $vacancy->categories()->attach(
+        //     $vacancy->departments()->attach(
         //         $departments->random(2)->pluck('id')->toArray() // Attaching 3 random tags
         //     );
         // }
