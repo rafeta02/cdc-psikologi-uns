@@ -17,13 +17,13 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->call([
-            PermissionsTableSeeder::class,
-            RolesTableSeeder::class,
-            PermissionRoleTableSeeder::class,
-            UsersTableSeeder::class,
-            RoleUserTableSeeder::class,
-        ]);
+        // $this->call([
+        //     PermissionsTableSeeder::class,
+        //     RolesTableSeeder::class,
+        //     PermissionRoleTableSeeder::class,
+        //     UsersTableSeeder::class,
+        //     RoleUserTableSeeder::class,
+        // ]);
 
         // ArticleCategory::factory()->count(10)->create();
         // ArticleTag::factory()->count(30)->create();
@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
         // Position::factory()->count(20)->create();
         // Education::factory()->count(30)->create();
         // Department::factory()->count(25)->create();
-        // Company::factory()->count(25)->create();
-        // Vacancy::factory()->count(50)->create();
+        // Company::factory()->count(10)->create();
+        Vacancy::factory()->count(50)->create();
         // Post::factory()->count(25)->create();
 
         // // Assuming you want to assign tags to each post
@@ -42,10 +42,10 @@ class DatabaseSeeder extends Seeder
 
         // foreach ($posts as $post) {
         //     $post->tags()->attach(
-        //         $tags->random(3)->pluck('id')->toArray() // Attaching 3 random tags
+        //         $tags->random(2)->pluck('id')->toArray() // Attaching 3 random tags
         //     );
         //     $post->categories()->attach(
-        //         $categories->random(3)->pluck('id')->toArray() // Attaching 3 random tags
+        //         $categories->random(1)->pluck('id')->toArray() // Attaching 3 random tags
         //     );
         // }
     }
