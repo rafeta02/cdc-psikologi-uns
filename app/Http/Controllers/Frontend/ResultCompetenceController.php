@@ -26,7 +26,7 @@ class ResultCompetenceController extends Controller
         abort_if(Gate::denies('result_competence_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $competences = Competence::all();
-        $resultCompetences = ResultCompetence::where('user_id', auth()->id())->pluck('competence_id')->toArray();
+        $resultCompetences = ResultCompetence::where('user_id', auth()->id())->get();
 
         return view('frontend.resultCompetences.index', compact('competences', 'resultCompetences'));
     }

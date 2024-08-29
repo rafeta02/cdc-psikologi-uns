@@ -29,7 +29,7 @@
                     <div class="row">
                         @foreach($competences as $competence)
                         @php
-                            $certificate = in_array($competence->id, $resultCompetences);
+                            $resultCompetence = $resultCompetences->where('competence_id', $competence->id)->first();
                         @endphp
                         <div class="col-12">
                             <div class="job-box card mt-4 shadow-sm border-0">
@@ -54,7 +54,12 @@
                                         <!--end col-->
                                         <div class="col-md-2 text-md-end text-start">
                                             <div class="d-flex align-items-center">
-                                                <i class="{{ $certificate ? 'fa fa-check-circle text-success' : 'fa fa-exclamation-circle text-danger' }} check-icon"></i>
+                                                @if($resultCompetence)
+                                                    <a href="{{ $resultCompetence->certificate->getUrl() }}" target="_blank" ><i class="fa fa-check-circle text-success check-icon"></i>
+                                                @else
+                                                    <i class="fa fa-exclamation-circle text-danger' check-icon"></i>
+                                                @endif
+
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -67,7 +72,7 @@
                                             {{-- <p class="text-muted mb-0"><span class="text-dark fw-semibold">Experience:</span> 4+ years</p> --}}
                                         </div>
                                         <!--end col-->
-                                        @if (!$certificate)
+                                        @if(!$resultCompetence)
                                             <div class="col-md-2 text-md-end text-center">
                                                 <a href="{{ route('frontend.competences.certificate', $competence->id) }}" class="btn btn-danger btn-sm px-4 py-2 rounded-pill shadow-sm">Upload Certificate</a>
                                             </div>
