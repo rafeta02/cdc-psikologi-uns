@@ -33,8 +33,6 @@ class VacancyFactory extends Factory
             'job_description' => $this->faker->paragraphs(2, true),
             'minimum_gpa' => $this->faker->randomFloat(2, 0, 4),
             'experience_id' => $this->faker->numberBetween(1, 6),
-            'education_id' => $this->faker->numberBetween(1, 6),
-            'department_id' => $this->faker->numberBetween(1, 3),
             'position_id' => \App\Models\Position::factory(),  // Assuming Position model has a factory
             'industry_id' => \App\Models\Industry::factory(),  // Assuming Industry model has a factor // Assuming Industry model has a factory
             'location_id' => $this->faker->numberBetween(1, 200),
