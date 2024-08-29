@@ -54,6 +54,10 @@ class HomeController extends Controller
                 $query->where('regency_id', $request->city);
             }
 
+            if (!empty($request->industry)) {
+                $query->where('industry_id', $request->industry);
+            }
+
             if (!empty($request->position)) {
                 $query->where('position_id', $request->position);
             }
