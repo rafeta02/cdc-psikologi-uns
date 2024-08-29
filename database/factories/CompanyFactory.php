@@ -30,7 +30,7 @@ class CompanyFactory extends Factory
             'scale' => $this->faker->randomElement(['mikro', 'kecil', 'menengah']),
             'number_of_employee' => $this->faker->numberBetween(10, 1000),
             'ownership' => $this->faker->randomElement(['negara', 'swasta']),
-            'industry_id' => \App\Models\Industry::factory(),
+            'industry_id' => $this->faker->numberBetween(1, 3),
             'regency_id' => $this->faker->numberBetween(1, 200),
             'location' => $this->faker->city,
         ];
