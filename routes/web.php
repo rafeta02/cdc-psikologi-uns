@@ -65,7 +65,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Education
     Route::delete('educations/destroy', 'EducationController@massDestroy')->name('educations.massDestroy');
     Route::post('educations/parse-csv-import', 'EducationController@parseCsvImport')->name('educations.parseCsvImport');
-    Route::post('educations/process-csv-import', 'EducationController@processCsvImport')->name('educations.processCsvImport');
+    Route::post('educations/process-csv-import', 'EducationController@processCsvImport')->name('education.processCsvImport');
     Route::resource('educations', 'EducationController');
 
     // Position
