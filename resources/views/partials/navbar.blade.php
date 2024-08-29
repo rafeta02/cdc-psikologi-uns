@@ -48,8 +48,8 @@
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="productdropdown">
-                        <li><a class="dropdown-item" href="blog.html">Acara</a></li>
-                        <li><a class="dropdown-item" href="blog-grid.html">Beasiswa</a></li>
+                        <li><a class="dropdown-item" href="#">Privacy Policy</a></li>
+                        <li><a class="dropdown-item" href="#">About Us</a></li>
                     </ul>
                 </li><!--end dropdown-->
             </ul><!--end navbar-nav-->

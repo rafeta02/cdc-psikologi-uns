@@ -7,7 +7,7 @@
                 <div style="margin-bottom: 10px;" class="row">
                     <div class="col-lg-12">
                         <a class="btn btn-success" href="{{ route('frontend.assessments.create') }}">
-                            {{ trans('global.add') }} {{ trans('cruds.resultAssessment.title_singular') }}
+                            Take Assessment
                         </a>
                     </div>
                 </div>
@@ -22,85 +22,51 @@
                         <table class=" table table-bordered table-striped table-hover datatable datatable-ResultAssessment">
                             <thead>
                                 <tr>
-                                    <th>
-                                        {{ trans('cruds.resultAssessment.fields.user') }}
+                                    <th class="text-center">
+                                        Tanggal Test
                                     </th>
-                                    <th>
+                                    <th class="text-center">
                                         {{ trans('cruds.resultAssessment.fields.initial') }}
                                     </th>
-                                    <th>
+                                    <th class="text-center">
                                         {{ trans('cruds.resultAssessment.fields.age') }}
                                     </th>
-                                    <th>
+                                    <th class="text-center">
                                         {{ trans('cruds.resultAssessment.fields.gender') }}
                                     </th>
-                                    <th>
+                                    <th class="text-center">
                                         {{ trans('cruds.resultAssessment.fields.field') }}
                                     </th>
-                                    <th>
-                                        {{ trans('cruds.resultAssessment.fields.test_name') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.resultAssessment.fields.result_text') }}
-                                    </th>
-                                    <th>
-                                        {{ trans('cruds.resultAssessment.fields.result_description') }}
-                                    </th>
-                                    <th>
+                                    {{-- <th>
                                         &nbsp;
-                                    </th>
+                                    </th> --}}
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($resultAssessments as $key => $resultAssessment)
                                     <tr data-entry-id="{{ $resultAssessment->id }}">
-                                        <td>
-                                            {{ $resultAssessment->user->name ?? '' }}
+                                        <td class="text-center">
+                                            {{ \carbon\Carbon::parse($resultAssessment->created_at)->diffForHumans() ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $resultAssessment->initial ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $resultAssessment->age ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ App\Models\ResultAssessment::GENDER_RADIO[$resultAssessment->gender] ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $resultAssessment->field ?? '' }}
                                         </td>
-                                        <td>
-                                            {{ App\Models\ResultAssessment::TEST_NAME_SELECT[$resultAssessment->test_name] ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $resultAssessment->result_text ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $resultAssessment->result_description ?? '' }}
-                                        </td>
-                                        <td>
+                                        {{-- <td>
                                             @can('result_assessment_show')
                                                 <a class="btn btn-xs btn-primary" href="{{ route('frontend.assessments.show', $resultAssessment->id) }}">
                                                     {{ trans('global.view') }}
                                                 </a>
                                             @endcan
-
-                                            @can('result_assessment_edit')
-                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.assessments.edit', $resultAssessment->id) }}">
-                                                    {{ trans('global.edit') }}
-                                                </a>
-                                            @endcan
-
-                                            @can('result_assessment_delete')
-                                                <form action="{{ route('frontend.assessments.destroy', $resultAssessment->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                                </form>
-                                            @endcan
-
-                                        </td>
-
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
