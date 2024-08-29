@@ -151,13 +151,14 @@ class HomeController extends Controller
 
     public function news(Request $request, $category = null)
     {
-        $featured = Post::where('status', 'published')->latest()->take(5)->get();
         $articleCategory = ArticleCategory::where('slug', $category)->first();
-        $query = Post::query();
 
+        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+
+        $query = Post::query();
         if ($articleCategory) {
             $query->whereHas('categories', function ($query) use ($articleCategory) {
-                $query->where('id', $articleCategory->id)->where('slug', 'alumni-caring');
+                $query->where('id', $articleCategory->id);
             });
         }
         $posts = $query->where('status', 'published')->latest()->paginate(10);
