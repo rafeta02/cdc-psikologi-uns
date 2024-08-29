@@ -22,7 +22,7 @@ class VacancyFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
-            'company_id' => \App\Models\Company::factory(),  // Assuming Company model has a factory
+            'company_id' => $this->faker->numberBetween(1, 30),  // Assuming Company model has a factory
             'description' => $this->faker->paragraphs(3, true),
             'type' => $this->faker->randomElement(['fulltime', 'partime', 'internship']),
             'open_date' => $this->faker->dateTimeThisYear()->format('d-m-Y'),
