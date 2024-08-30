@@ -324,23 +324,23 @@
                                     </div>
                                     <div class="p-3 bg-light">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-5">
+                                            <div class="col-lg-6 col-md-6">
                                                 <div>
                                                     <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
                                                 </div>
                                             </div>
                                             <!--end col-->
-                                            <div class="col-lg-5 col-md-5">
-                                                <div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="text-start text-md-end">
                                                     <i class="mdi mdi-clock-outline"></i> <span class="text-muted">Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}</span>
                                                 </div>
                                             </div>
                                             <!--end col-->
-                                            <div class="col-lg-2 col-md-2">
+                                            {{-- <div class="col-lg-2 col-md-2">
                                                 <div class="text-start text-md-end">
                                                     <a href="{{ route('job-detail', $job->slug) }}" data-bs-toggle="modal" class="primary-link">Detail <i class="mdi mdi-chevron-double-right"></i></a>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <!--end col-->
                                         </div>
                                         <!--end row-->
