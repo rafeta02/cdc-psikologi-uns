@@ -11,9 +11,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card text-center mb-4">
                     <div class="card-body px-4 py-5">
-                        <div class="featured-label">
+                        {{-- <div class="featured-label">
                             <span class="featured">FEATURED <i class="mdi mdi-star-outline"></i></span>
-                        </div>
+                        </div> --}}
                         <img src="{{ asset('jobcy/images/featured-job/img-01.png') }}" alt="" class="img-fluid rounded-3">
                         <div class="mt-4">
                             <a href="{{ route('company-detail', $company->slug) }}" class="primary-link">

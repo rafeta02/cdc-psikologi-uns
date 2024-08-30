@@ -173,6 +173,58 @@
                                 <h6 class="fs-17 fw-medium mb-4">About Company</h6>
                                 <div class="text-muted">{!! $company->description !!}</div>
                             </div>
+                            <div class="mb-5">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-8">
+                                        <ul class="faq-menu nav nav-fill nav-pills justify-content-center" id="pills-tab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="general-tab" data-bs-toggle="pill"
+                                                    data-bs-target="#generalTab" type="button" role="tab" aria-controls="generalTab"
+                                                    aria-selected="true">Current Opening</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="buying-tab" data-bs-toggle="pill"
+                                                    data-bs-target="#buyingTab" type="button" role="tab" aria-controls="buying"
+                                                    aria-selected="false">Closed Jobs</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!--end col-->
+                                </div>
+                                <!--end row-->
+                                <div class="row align-items-center mt-3">
+                                    <div class="col-lg-12">
+                                        <div class="tab-content" id="pills-tabContent">
+                                            <div class="tab-pane fade show active" id="generalTab" role="tabpanel" aria-labelledby="general-tab">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        @if ($jobs->isEmpty())
+                                                            <h6 class="fs-17 fw-medium mt-5 mb-4 text-center">No Job Opening</h6>
+                                                        @else
+                                                            <div id="job-list-openings" data-opening="1">
+                                                                @include('partials.job-list', ['jobs' => $jobs])
+                                                            </div>
+                                                        @endif
+                                                    </div><!--end col-->
+                                                </div><!--end row-->
+                                            </div><!--end general-tab-->
+                                            <div class="tab-pane fade" id="buyingTab" role="tabpanel" aria-labelledby="buying-tab">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        @if ($closedjobs->isEmpty())
+                                                            <h6 class="fs-17 fw-medium mt-5 mb-4 text-center">No Closed Job</h6>
+                                                        @else
+                                                            <div id="job-list-closeds" data-opening="0">
+                                                                @include('partials.job-list', ['jobs' => $closedjobs])
+                                                            </div>
+                                                        @endif
+                                                    </div><!--end col-->
+                                                </div><!--end row-->
+                                            </div><!--end buying-tab-->
+                                        </div>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div>
 
                             {{-- <div class="candidate-portfolio mb-5">
                                 <h6 class="fs-17 fw-medium mb-4">Gallery</h6>
@@ -206,17 +258,6 @@
                                     </div><!-- end col -->
                                 </div><!-- end row -->
                             </div><!-- end portfolio --> --}}
-
-                            <div>
-                                @if ($jobs->isEmpty())
-                                    <h6 class="fs-17 fw-medium mb-4">No Job Opening</h6>
-                                @else
-                                    <h6 class="fs-17 fw-medium mb-4">Current Opening</h6>
-                                    <div id="job-list">
-                                        @include('partials.job-list', ['jobs' => $jobs])
-                                    </div>
-                                @endif
-                            </div>
                         </div><!-- card body end -->
                     </div><!--end card-->
                 </div><!--end col-->
@@ -228,17 +269,26 @@
 
 @section('scripts')
 <script>
-    // AJAX Filtering Function
-    function filterJobs(page = 1) {
+    function filterJobs(divId, page = 1) {
+        // Get data attributes from the specific div
+        let $jobListDiv = $('#' + divId);
+        let opening = $jobListDiv.data('opening');
+
         $.ajax({
-            url: '{{ route('jobs') }}',
+            url: '{{ route('job-ajax') }}',
             type: 'GET',
             data: {
                 company: {{ $company->id }},
-                page: page // Include the current page number for pagination
+                page: page, // Include the current page number for pagination
+                opening: opening // Include the opening data attribute
             },
             success: function(data) {
-                $('#job-list').html(data);
+                // Update the content of the div
+                $jobListDiv.html(data);
+
+                $('html, body').animate({
+                    scrollTop: $jobListDiv.offset().top
+                }, 500);
             }
         });
     }
@@ -246,8 +296,15 @@
     // Handle pagination link clicks
     $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
-        let page = $(this).attr('href').split('page=')[1];
-        filterCompanies(page);
+
+        // Determine which pagination links are clicked by checking their parent or context
+        let divId = $(this).closest('[id^=job-list]').attr('id');
+
+        if (divId) {
+            let page = $(this).attr('href').split('page=')[1];
+            filterJobs(divId, page);
+        }
     });
 </script>
 @endsection
+

@@ -30,7 +30,7 @@ class Vacancy extends Model implements HasMedia
 
     public const TYPE_SELECT = [
         'fulltime'   => 'Fulltime',
-        'partime'    => 'Parttime',
+        'parttime'    => 'Parttime',
         'internship' => 'Internship',
     ];
 

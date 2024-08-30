@@ -31,7 +31,7 @@ class CompanyFactory extends Factory
             'number_of_employee' => $this->faker->numberBetween(10, 1000),
             'ownership' => $this->faker->randomElement(['negara', 'swasta']),
             'industry_id' => $this->faker->numberBetween(1, 3),
-            'regency_id' => $this->faker->numberBetween(1, 200),
+            'regency_id' => $this->faker->numberBetween(1, 300),
             'location' => $this->faker->city,
         ];
     }

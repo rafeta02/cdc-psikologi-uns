@@ -68,6 +68,45 @@
                                     {{ __('Dashboard') }}
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('frontend.tracer-alumnus.index') }}">
+                                    Tracer Alumni
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="prestasiDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Prestasi <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-center" aria-labelledby="prestasiDropdown">
+                                    @can('prestasi_mahasiswa_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.prestasi-mahasiswas.index') }}">
+                                            {{ trans('cruds.prestasiMahasiswa.title') }}
+                                        </a>
+                                    @endcan
+                                    @can('prestasi_maba_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.prestasi-mabas.index') }}">
+                                            {{ trans('cruds.prestasiMaba.title') }}
+                                        </a>
+                                    @endcan
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="assessmentDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Assessment <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-center" aria-labelledby="assessmentDropdown">
+                                    @can('result_assessment_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.assessments.index') }}">
+                                            Career Assessment
+                                        </a>
+                                    @endcan
+                                    @can('result_competence_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.competences.index') }}">
+                                            Competence Assessment
+                                        </a>
+                                    @endcan
+                                </div>
+                            </li>
                         @endguest
                     </ul>
 

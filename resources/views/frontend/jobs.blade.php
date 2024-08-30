@@ -105,7 +105,7 @@
                                     <div class="accordion-body">
                                         <div class="side-title form-check-all">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="onlyopen" value="open" checked />
+                                                <input class="form-check-input" type="checkbox" id="onlyopen" value="open" />
                                                 <label class="form-check-label ms-2 text-muted" for="onlyopen">
                                                     Only Open Jobs
                                                 </label>

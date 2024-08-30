@@ -24,9 +24,9 @@ class VacancyFactory extends Factory
             'slug' => Str::slug($name),
             'company_id' => $this->faker->numberBetween(1, 30),  // Assuming Company model has a factory
             'description' => $this->faker->paragraphs(3, true),
-            'type' => $this->faker->randomElement(['fulltime', 'partime', 'internship']),
-            'open_date' => $this->faker->dateTimeThisYear()->format('d-m-Y'),
-            'close_date' => $this->faker->dateTimeThisYear()->format('d-m-Y'),
+            'type' => $this->faker->randomElement(['fulltime', 'parttime', 'internship']),
+            'open_date' => $this->faker->dateTimeBetween('-2 month', 'now')->format('d-m-Y'),
+            'close_date' => $this->faker->dateTimeBetween('-1 week', '+3 months')->format('d-m-Y'),
             'persyaratan_umum' => $this->faker->paragraph(),
             'persyaratan_khusus' => $this->faker->paragraph(),
             'registration' => $this->faker->sentence(),

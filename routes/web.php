@@ -5,6 +5,7 @@ use Mews\Captcha\Captcha;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('jobs', 'HomeController@job')->name('jobs');
 Route::get('jobs/{slug}', 'HomeController@jobDetail')->name('job-detail');
+Route::get('job-ajax', 'HomeController@jobAjax')->name('job-ajax');
 Route::get('companies', 'HomeController@company')->name('companies');
 Route::get('companies/{slug}', 'HomeController@companyDetail')->name('company-detail');
 Route::get('news/{category?}', 'HomeController@news')->name('news');

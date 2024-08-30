@@ -105,7 +105,7 @@ class HomeController extends Controller
     {
         $job = Vacancy::where('slug', $slug)->first();
         $company = Company::find($job->company_id);
-        $relatedJobs = Vacancy::where('company_id', $job->company_id)->where('close_date', '>=', now())->latest()->take(3)->get();
+        $relatedJobs = Vacancy::where('company_id', $job->company_id)->where('position_id', $job->position_id)->where('close_date', '>=', now())->latest()->take(3)->get();
         return view('frontend.job_detail', compact('job', 'company', 'relatedJobs'));
     }
 
@@ -146,11 +146,71 @@ class HomeController extends Controller
         return view('frontend.companies', compact('companies', 'industries'));
     }
 
+    public function jobAjax(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Vacancy::query();
+
+            if (!empty($request->name)) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            if (!empty($request->city)) {
+                $query->where('regency_id', $request->city);
+            }
+
+            if (!empty($request->industry)) {
+                $query->where('industry_id', $request->industry);
+            }
+
+            if (!empty($request->position)) {
+                $query->where('position_id', $request->position);
+            }
+
+            if (!empty($request->job_type)) {
+                $query->where('type', $request->job_type);
+            }
+
+            if (!empty($request->education)) {
+                $query->whereHas('education', function ($query) use ($request) {
+                    $query->whereIn('education_id', $request->education);
+                });
+            }
+
+            if (!empty($request->department)) {
+                $query->whereHas('departments', function ($query) use ($request) {
+                    $query->whereIn('department_id', $request->department);
+                });
+            }
+
+            if (!empty($request->opening)) {
+                if ($request->opening == 1) {
+                    $query->where('close_date', '>=', now());
+                } else {
+                    $query->where('close_date', '<', now());
+                }
+            }
+
+            if (!empty($request->company)) {
+                $query->where('company_id', $request->company);
+            }
+
+            // Paginate results
+            $jobs = $query->orderBy('open_date', 'desc')->paginate(5);
+            // Return partial view with filtered and paginated results
+            return view('partials.job-list', compact('jobs'))->render();
+        }
+
+        return redirect()->back();
+    }
+
+
     public function companyDetail($slug)
     {
         $company = Company::where('slug', $slug)->first();
-        $jobs = Vacancy::where('company_id', $company->id)->where('close_date', '>=', now())->paginate(5);
-        return view('frontend.company_detail', compact('company', 'jobs'));
+        $jobs = Vacancy::where('company_id', $company->id)->where('close_date', '>=', now())->orderBy('open_date', 'desc')->paginate(5);;
+        $closedjobs = Vacancy::where('company_id', $company->id)->where('close_date', '<', now())->orderBy('open_date', 'desc')->paginate(5);;
+        return view('frontend.company_detail', compact('company', 'jobs', 'closedjobs'));
     }
 
     public function news(Request $request, $category = null)

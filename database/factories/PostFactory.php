@@ -25,7 +25,8 @@ class PostFactory extends Factory
             'excerpt' => $this->faker->text(200),
             'meta_title' => $this->faker->sentence,
             'meta_description' => $this->faker->text(160),
-            'status' => $this->faker->randomElement(['draft', 'published']),
+            // 'status' => $this->faker->randomElement(['draft', 'published']),
+            'status' => 'published',
             'author_id' => 1,
             'created_by_id' => 1,
         ];
