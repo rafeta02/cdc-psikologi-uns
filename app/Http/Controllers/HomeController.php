@@ -14,6 +14,7 @@ use App\Models\Post;
 use App\Models\ArticleCategory;
 use App\Models\ArticleTag;
 use App\Models\TracerStakeholder;
+use App\Models\TracerAlumnu;
 use SEOMeta;
 use Alert;
 
@@ -346,5 +347,43 @@ class HomeController extends Controller
         Alert::success('Success', 'Data tersimpan, Terima kasih.')->autoclose(4000);
 
         return redirect()->route('tracer-study')->with('success', 'Data tersimpan, Terima kasih.');
+    }
+
+    public function tracerAlumni()
+    {
+        return view('frontend.tracer_alumni');
+    }
+
+    public function tracerAlumniStore(Request $request)
+    {
+         // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'nim' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'telephone' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'kota_asal_id' => 'required|integer',
+            'kota_domisili_id' => 'required|integer',
+            'angkatan' => 'required|string|max:255',
+            'kesibukan' => 'required|string|max:255',
+            'partisipasi' => 'required|string|max:255',
+            'nama_instansi' => 'required|string|max:255',
+            'jabatan_instansi' => 'required|string|max:255',
+            'pendapatan' => 'required|string|max:255',
+            'captcha' => 'required|captcha', // Laravel Captcha validation
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $validatedData = $validator->validated();
+
+        $tracerStakeholder = TracerAlumnu::create($validatedData);
+
+        return redirect()->route('tracer-alumni')->with('success', 'Data tersimpan, Terima kasih.');
     }
 }

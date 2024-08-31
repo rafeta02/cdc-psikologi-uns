@@ -1,9 +1,8 @@
 @extends('layouts.jobcy')
 
-@section('title', 'Tracer Alumni - Career Development Center Fakultas Psikologi UNS')
+@section('title', 'Tracer Study Stokeholder - Career Development Center Fakultas Psikologi UNS')
 
 @section('styles')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <style>
     .table-radio {
         width: 100%;
@@ -55,7 +54,8 @@
                             <nav class="d-inline-block" aria-label="breadcrumb text-center">
                                 <ol class="breadcrumb justify-content-center">
                                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"> Tracer Alumni </li>
+                                    <li class="breadcrumb-item" aria-current="page"> Tracer Study </li>
+                                    <li class="breadcrumb-item active" aria-current="page"> Untuk Stakeholder </li>
                                 </ol>
                             </nav>
                         </div>
@@ -274,7 +274,6 @@
 
 
 @section('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();

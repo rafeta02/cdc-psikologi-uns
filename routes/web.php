@@ -14,6 +14,8 @@ Route::get('articles/search', 'HomeController@blogSearch')->name('blog-search');
 Route::get('articles/{slug}', 'HomeController@blogDetail')->name('blog-detail');
 Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
 Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
+Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
+Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
 
 Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
 

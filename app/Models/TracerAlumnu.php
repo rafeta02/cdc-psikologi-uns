@@ -53,6 +53,7 @@ class TracerAlumnu extends Model
 
     protected $fillable = [
         'user_id',
+        'nim',
         'nama',
         'telephone',
         'email',

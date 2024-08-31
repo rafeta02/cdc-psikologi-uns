@@ -10,6 +10,7 @@ class CreateTracerAlumnusTable extends Migration
     {
         Schema::create('tracer_alumnus', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('nim');
             $table->string('nama');
             $table->string('telephone');
             $table->string('email');

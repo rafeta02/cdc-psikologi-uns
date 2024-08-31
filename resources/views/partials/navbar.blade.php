@@ -25,6 +25,9 @@
                         <li><a class="dropdown-item" href="{{ route('companies') }}">Find By Company</a></li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Magang MBKM</a>
+                </li>
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="productdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         News
@@ -39,10 +42,17 @@
                 <li class="nav-item">
                     <a href="{{ route('alumni-caring') }}" class="nav-link">Alumni Caring</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('tracer-study') }}" class="nav-link">Tracer Study</a>
-                </li>
                 <li class="nav-item dropdown dropdown-hover">
+                    <a class="nav-link" href="javascript:void(0)" id="tracer-study" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tracer Study
+                        <div class="arrow-down"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="tracer-study">
+                        <li><a class="dropdown-item" href="{{ route('tracer-alumni') }}">Untuk Alumni</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tracer-study') }}">Untuk Stakeholder</a></li>
+                    </ul>
+                </li><!--end dropdown-->
+                {{-- <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="productdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         About Us
                         <div class="arrow-down"></div>
@@ -51,7 +61,7 @@
                         <li><a class="dropdown-item" href="#">Privacy Policy</a></li>
                         <li><a class="dropdown-item" href="#">About Us</a></li>
                     </ul>
-                </li><!--end dropdown-->
+                </li><!--end dropdown--> --}}
             </ul><!--end navbar-nav-->
         </div>
         <!--end navabar-collapse-->
