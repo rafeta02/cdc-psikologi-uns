@@ -46,9 +46,10 @@
             <div class="form-group">
                 <label for="regency_id">{{ trans('cruds.company.fields.regency') }}</label>
                 <select class="form-control select2 {{ $errors->has('regency') ? 'is-invalid' : '' }}" name="regency_id" id="regency_id">
-                    @foreach($regencies as $id => $entry)
+                    <option value="{{ $company->regency->id ?? '' }}">{{ $company->regency->name ?? '' }}</option>
+                    {{-- @foreach($regencies as $id => $entry)
                         <option value="{{ $id }}" {{ (old('regency_id') ? old('regency_id') : $company->regency->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
+                    @endforeach --}}
                 </select>
                 @if($errors->has('regency'))
                     <span class="text-danger">{{ $errors->first('regency') }}</span>
@@ -258,6 +259,27 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    $('#regency_id').select2({
+        placeholder: 'Search for a location',
+        ajax: {
+            url: '{{ route("admin.provinces.getProvincesWithRegencies") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 3 // minimum chars to search
     });
 });
 </script>

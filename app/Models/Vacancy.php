@@ -41,6 +41,7 @@ class Vacancy extends Model implements HasMedia
         'description',
         'type',
         'open_date',
+        'close_date_exist',
         'close_date',
         'persyaratan_umum',
         'persyaratan_khusus',
@@ -50,7 +51,6 @@ class Vacancy extends Model implements HasMedia
         'minimum_gpa',
         'position_id',
         'industry_id',
-        'location_id',
         'featured',
         'created_at',
         'updated_at',
@@ -130,14 +130,19 @@ class Vacancy extends Model implements HasMedia
         return $this->belongsTo(Position::class, 'position_id');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(VacancyTag::class);
+    }
+
     public function industry()
     {
         return $this->belongsTo(Industry::class, 'industry_id');
     }
 
-    public function location()
+    public function locations()
     {
-        return $this->belongsTo(Regency::class, 'location_id');
+        return $this->belongsToMany(Regency::class);
     }
 
     public function created_by()

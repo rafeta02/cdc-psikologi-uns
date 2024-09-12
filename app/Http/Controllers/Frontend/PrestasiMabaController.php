@@ -128,4 +128,12 @@ class PrestasiMabaController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
+
+    public function printBukti(Request $request)
+    {
+        $pinjam = Pinjam::with('kendaraan', 'borrowed_by', 'processed_by', 'driver', 'satpam', 'created_by')->find($request->id);
+        $log = LogPeminjaman::where('peminjaman_id', $request->id)->where('jenis', 'diproses')->orderBy('created_at', 'asc')->first();
+        $pdf = PDF::loadView('pdf.bukti', compact('pinjam', 'log'));
+        return $pdf->download('bukti.pdf');
+    }
 }

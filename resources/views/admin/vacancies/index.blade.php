@@ -100,7 +100,7 @@
         { data: 'type', name: 'type', class: 'text-center' },
         { data: 'close_date', name: 'close_date', class: 'text-center' },
         { data: 'industry_name', name: 'industry.name', class: 'text-center' },
-        { data: 'location_name', name: 'location.name', class: 'text-center' },
+        { data: 'location', name: 'location', class: 'text-center' },
         { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
     ],
     orderCellsTop: true,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyTracerAlumnuRequest;
 use App\Http\Requests\StoreTracerAlumnuRequest;
 use App\Http\Requests\UpdateTracerAlumnuRequest;
+use App\Exports\TracerAlumnuExport;
 use App\Models\Regency;
 use App\Models\TracerAlumnu;
 use App\Models\User;
@@ -13,6 +14,8 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class TracerAlumniController extends Controller
 {
@@ -42,6 +45,9 @@ class TracerAlumniController extends Controller
                 ));
             });
 
+            $table->editColumn('nim', function ($row) {
+                return $row->nim ? $row->nim : '';
+            });
             $table->editColumn('nama', function ($row) {
                 return $row->nama ? $row->nama : '';
             });
@@ -135,5 +141,13 @@ class TracerAlumniController extends Controller
         }
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function export(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        return Excel::download(new TracerAlumnuExport($startDate, $endDate), 'tracer_alumni_' . $startDate . '_to_' . $endDate . '.xlsx');
     }
 }

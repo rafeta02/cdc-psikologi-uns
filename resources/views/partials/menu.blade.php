@@ -162,7 +162,7 @@
                     </li>
                 @endcan
                 @can('vacancy_master_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/industries*") ? "menu-open" : "" }} {{ request()->is("admin/positions*") ? "menu-open" : "" }} {{ request()->is("admin/educations*") ? "menu-open" : "" }} {{ request()->is("admin/departments*") ? "menu-open" : "" }} {{ request()->is("admin/experiences*") ? "menu-open" : "" }}">
+                    <li class="nav-item has-treeview {{ request()->is("admin/industries*") ? "menu-open" : "" }} {{ request()->is("admin/positions*") ? "menu-open" : "" }} {{ request()->is("admin/educations*") ? "menu-open" : "" }} {{ request()->is("admin/departments*") ? "menu-open" : "" }} {{ request()->is("admin/experiences*") ? "menu-open" : "" }} {{ request()->is("admin/vacancy-tags*") ? "menu-open" : "" }}">
                         <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/industries*") ? "active" : "" }} {{ request()->is("admin/positions*") ? "active" : "" }} {{ request()->is("admin/educations*") ? "active" : "" }} {{ request()->is("admin/departments*") ? "active" : "" }} {{ request()->is("admin/experiences*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-asterisk">
 
@@ -229,6 +229,18 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.experience.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('vacancy_tag_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.vacancy-tags.index") }}" class="nav-link {{ request()->is("admin/vacancy-tags") || request()->is("admin/vacancy-tags/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-tags">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.vacancyTag.title') }}
                                         </p>
                                     </a>
                                 </li>

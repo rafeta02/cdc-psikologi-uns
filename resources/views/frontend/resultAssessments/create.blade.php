@@ -285,14 +285,14 @@
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
                                         <div class="custom-radio-group">
-                                            <span class="agree">Yes</span>
+                                            <span class="agree">Suka</span>
                                             <input type="radio" id="id_HCI_{{ $question->code }}_1" name="HCI_{{ $question->code }}" value="1">
                                             <label for="id_HCI_{{ $question->code }}_1"></label>
 
                                             <input type="radio" id="id_HCI_{{ $question->code }}_0" name="HCI_{{ $question->code }}" value="0">
                                             <label for="id_HCI_{{ $question->code }}_0"></label>
 
-                                            <span class="disagree">No</span>
+                                            <span class="disagree">Tidak Suka</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -305,24 +305,24 @@
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
                                         <div class="radio-group">
-                                            <span class="agree">Agree</span>
-
-                                            <input type="radio" id="id_WR_{{ $question->code }}_1" name="WR_{{ $question->code }}" value="1">
-                                            <label for="id_WR_{{ $question->code }}_1"></label>
-
-                                            <input type="radio" id="id_WR_{{ $question->code }}_2" name="WR_{{ $question->code }}" value="2">
-                                            <label for="id_WR_{{ $question->code }}_2"></label>
-
-                                            <input type="radio" id="id_WR_{{ $question->code }}_3" name="WR_{{ $question->code }}" value="3">
-                                            <label for="id_WR_{{ $question->code }}_3"></label>
-
-                                            <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
-                                            <label for="id_WR_{{ $question->code }}_4"></label>
+                                            <span class="agree">Sangat Sesuai</span>
 
                                             <input type="radio" id="id_WR_{{ $question->code }}_5" name="WR_{{ $question->code }}" value="5">
                                             <label for="id_WR_{{ $question->code }}_5"></label>
 
-                                            <span class="disagree">Disagree</span>
+                                            <input type="radio" id="id_WR_{{ $question->code }}_4" name="WR_{{ $question->code }}" value="4">
+                                            <label for="id_WR_{{ $question->code }}_4"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_3" name="WR_{{ $question->code }}" value="3">
+                                            <label for="id_WR_{{ $question->code }}_3"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_2" name="WR_{{ $question->code }}" value="2">
+                                            <label for="id_WR_{{ $question->code }}_2"></label>
+
+                                            <input type="radio" id="id_WR_{{ $question->code }}_1" name="WR_{{ $question->code }}" value="1">
+                                            <label for="id_WR_{{ $question->code }}_1"></label>
+
+                                            <span class="disagree">Sangat Tidak Sesuai</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -335,24 +335,24 @@
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
                                         <div class="radio-group">
-                                            <span class="agree">Agree</span>
-
-                                            <input type="radio" id="id_CCI_{{ $question->code }}_1" name="CCI_{{ $question->code }}" value="1">
-                                            <label for="id_CCI_{{ $question->code }}_1"></label>
-
-                                            <input type="radio" id="id_CCI_{{ $question->code }}_2" name="CCI_{{ $question->code }}" value="2">
-                                            <label for="id_CCI_{{ $question->code }}_2"></label>
-
-                                            <input type="radio" id="id_CCI_{{ $question->code }}_3" name="CCI_{{ $question->code }}" value="3">
-                                            <label for="id_CCI_{{ $question->code }}_3"></label>
-
-                                            <input type="radio" id="id_CCI_{{ $question->code }}_4" name="CCI_{{ $question->code }}" value="4">
-                                            <label for="id_CCI_{{ $question->code }}_4"></label>
+                                            <span class="agree">Sangat Percaya Diri</span>
 
                                             <input type="radio" id="id_CCI_{{ $question->code }}_5" name="CCI_{{ $question->code }}" value="5">
                                             <label for="id_CCI_{{ $question->code }}_5"></label>
 
-                                            <span class="disagree">Disagree</span>
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_4" name="CCI_{{ $question->code }}" value="4">
+                                            <label for="id_CCI_{{ $question->code }}_4"></label>
+
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_3" name="CCI_{{ $question->code }}" value="3">
+                                            <label for="id_CCI_{{ $question->code }}_3"></label>
+
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_2" name="CCI_{{ $question->code }}" value="2">
+                                            <label for="id_CCI_{{ $question->code }}_2"></label>
+
+                                            <input type="radio" id="id_CCI_{{ $question->code }}_1" name="CCI_{{ $question->code }}" value="1">
+                                            <label for="id_CCI_{{ $question->code }}_1"></label>
+
+                                            <span class="disagree">Sangat Tidak Percaya Diri</span>
                                         </div>
                                     </div>
                                 @endforeach

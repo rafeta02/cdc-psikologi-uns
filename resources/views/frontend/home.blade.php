@@ -280,7 +280,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-md-2">
                                                 <div class="text-center mb-4 mb-md-0">
-                                                    <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ asset('jobcy/images/featured-job/img-02.png') }}" alt="" class="img-fluid rounded-3"></a>
+                                                    <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ $job->company->image ? $job->company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3" style="width: 90px; height: 90px; object-fit: cover;"></a>
                                                 </div>
                                             </div>
                                             <!--end col-->
@@ -293,12 +293,29 @@
                                             </div>
                                             <!--end col-->
                                             <div class="col-md-3">
-                                                <div class="d-flex mb-2">
-                                                    <div class="flex-shrink-0">
-                                                        <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                                @forelse ($job->locations as $location)
+                                                    <div class="d-flex mb-1">
+                                                        <div class="flex-shrink-0">
+                                                            <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                                        </div>
+                                                        <p class="text-muted mb-0">
+                                                            @if ($job->locations->count() > 1)
+                                                                {{ $location->name ?? '' }}
+                                                            @else
+                                                                {{ $location->regency_with_province_name ?? '' }}
+                                                            @endif
+                                                        </p>
                                                     </div>
-                                                    <p class="text-muted mb-0">{{ ucwords($job->location->regency_with_province_name ?? '')}}</p>
-                                                </div>
+                                                @empty
+                                                    <div class="d-flex mb-1">
+                                                        <div class="flex-shrink-0">
+                                                            <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                                        </div>
+                                                        <p class="text-muted mb-0">
+                                                            To be determined/ Flexible/ Remote options available.
+                                                        </p>
+                                                    </div>
+                                                @endforelse
                                             </div>
                                             <!--end col-->
                                             <div class="col-md-2">
@@ -310,12 +327,16 @@
                                             <div class="col-md-2">
                                                 <div>
                                                     @if ($job->type == 'fulltime')
-                                                        <span class="badge bg-success-subtle text-success  mt-1">Full Time</span>
+                                                        <span class="badge bg-success-subtle text-success mt-1">Full Time</span>
                                                     @elseif ($job->type == 'parttime')
-                                                        <span class="badge bg-danger-subtle text-danger  mt-1">Part Time</span>
+                                                        <span class="badge bg-danger-subtle text-danger mt-1">Part Time</span>
                                                     @else
-                                                        <span class="badge bg-primary-subtle text-primary  mt-1">Internship</span>
+                                                        <span class="badge bg-primary-subtle text-primary mt-1">Internship</span>
                                                     @endif
+
+                                                    @foreach ($job->tags as $tag)
+                                                        <span class="badge bg-info-subtle text-info mt-1">{{ $tag->name }}</span>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                             <!--end col-->
@@ -324,15 +345,27 @@
                                     </div>
                                     <div class="p-3 bg-light">
                                         <div class="row">
-                                            <div class="col-lg-6 col-md-6">
+                                            <div class="col-lg-4 col-md-4">
                                                 <div>
                                                     <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <div class="text-center">
+                                                    <i class="mdi mdi-alpha-e-circle-outline"></i> <span class="text-muted">Experience : {{ ucwords($job->experience->name ?? '') }}</span>
+                                                </div>
+                                            </div>
                                             <!--end col-->
-                                            <div class="col-lg-6 col-md-6">
+                                            <div class="col-lg-4 col-md-4">
                                                 <div class="text-start text-md-end">
-                                                    <i class="mdi mdi-clock-outline"></i> <span class="text-muted">Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}</span>
+                                                    <i class="mdi mdi-clock-outline"></i>
+                                                    <span class="text-muted">
+                                                        @if ($job->close_date_exist == 1)
+                                                            Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}
+                                                        @else
+                                                            Close without prior notice.
+                                                        @endif
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!--end col-->
@@ -357,80 +390,113 @@
 
                         <div class="tab-pane fade" id="freelancer" role="tabpanel" aria-labelledby="freelancer-tab">
                             @foreach ($interns as $job)
-                                <div class="job-box card mt-4">
-                                    {{-- <div class="bookmark-label text-center">
-                                        <a href="javascript:void(0)" class="text-white align-middle"><i class="mdi mdi-star"></i></a>
-                                    </div> --}}
-                                    <div class="p-4">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-2">
-                                                <div class="text-center mb-4 mb-md-0">
-                                                    <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ asset('jobcy/images/featured-job/img-02.png') }}" alt="" class="img-fluid rounded-3"></a>
-                                                </div>
+                            <div class="job-box card mt-4">
+                                {{-- <div class="bookmark-label text-center">
+                                    <a href="javascript:void(0)" class="text-white align-middle"><i class="mdi mdi-star"></i></a>
+                                </div> --}}
+                                <div class="p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <div class="text-center mb-4 mb-md-0">
+                                                <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ $job->company->image ? $job->company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3" style="width: 90px; height: 90px; object-fit: cover;"></a>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-md-3">
-                                                <div class="mb-2 mb-md-0">
-                                                    <h5 class="fs-18 mb-1"><a href="{{ route('job-detail', $job->slug) }}" class="text-dark">{{ $job->name }}</a>
-                                                    </h5>
-                                                    <p class="text-muted fs-14 mb-0">{{ $job->company->name }}</p>
-                                                </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-3">
+                                            <div class="mb-2 mb-md-0">
+                                                <h5 class="fs-18 mb-1"><a href="{{ route('job-detail', $job->slug) }}" class="text-dark">{{ $job->name }}</a>
+                                                </h5>
+                                                <p class="text-muted fs-14 mb-0">{{ $job->company->name }}</p>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-md-3">
-                                                <div class="d-flex mb-2">
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-3">
+                                            @forelse ($job->locations as $location)
+                                                <div class="d-flex mb-1">
                                                     <div class="flex-shrink-0">
                                                         <i class="mdi mdi-map-marker text-primary me-1"></i>
                                                     </div>
-                                                    <p class="text-muted mb-0">{{ ucwords($job->location->regency_with_province_name ?? '')}}</p>
+                                                    <p class="text-muted mb-0">
+                                                        @if ($job->locations->count() > 1)
+                                                            {{ $location->name ?? '' }}
+                                                        @else
+                                                            {{ $location->regency_with_province_name ?? '' }}
+                                                        @endif
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-md-2">
-                                                <div>
-                                                    <p class="text-muted mb-2"><i class="mdi mdi-domain"></i> {{ ucwords($job->industry->name ?? '') }}</p>
+                                            @empty
+                                                <div class="d-flex mb-1">
+                                                    <div class="flex-shrink-0">
+                                                        <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                                    </div>
+                                                    <p class="text-muted mb-0">
+                                                        To be determined/ Flexible/ Remote options available.
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-md-2">
-                                                <div>
-                                                    @if ($job->type == 'fulltime')
-                                                        <span class="badge bg-success-subtle text-success  mt-1">Full Time</span>
-                                                    @elseif ($job->type == 'parttime')
-                                                        <span class="badge bg-danger-subtle text-danger  mt-1">Part Time</span>
-                                                    @else
-                                                        <span class="badge bg-primary-subtle text-primary  mt-1">Internship</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <!--end col-->
+                                            @endforelse
                                         </div>
-                                        <!--end row-->
-                                    </div>
-                                    <div class="p-3 bg-light">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-5">
-                                                <div>
-                                                    <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
-                                                </div>
+                                        <!--end col-->
+                                        <div class="col-md-2">
+                                            <div>
+                                                <p class="text-muted mb-2"><i class="mdi mdi-domain"></i> {{ ucwords($job->industry->name ?? '') }}</p>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-lg-5 col-md-5">
-                                                <div>
-                                                    <i class="mdi mdi-clock-outline"></i> <span class="text-muted">Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}</span>
-                                                </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-2 col-md-2">
-                                                <div class="text-start text-md-end">
-                                                    <a href="{{ route('job-detail', $job->slug) }}" data-bs-toggle="modal" class="primary-link">Detail <i class="mdi mdi-chevron-double-right"></i></a>
-                                                </div>
-                                            </div>
-                                            <!--end col-->
                                         </div>
-                                        <!--end row-->
+                                        <!--end col-->
+                                        <div class="col-md-2">
+                                            <div>
+                                                @if ($job->type == 'fulltime')
+                                                    <span class="badge bg-success-subtle text-success mt-1">Full Time</span>
+                                                @elseif ($job->type == 'parttime')
+                                                    <span class="badge bg-danger-subtle text-danger mt-1">Part Time</span>
+                                                @else
+                                                    <span class="badge bg-primary-subtle text-primary mt-1">Internship</span>
+                                                @endif
+
+                                                @foreach ($job->tags as $tag)
+                                                    <span class="badge bg-info-subtle text-info mt-1">{{ $tag->name }}</span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <!--end col-->
                                     </div>
+                                    <!--end row-->
                                 </div>
+                                <div class="p-3 bg-light">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4">
+                                            <div>
+                                                <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="text-center">
+                                                <i class="mdi mdi-alpha-e-circle-outline"></i> <span class="text-muted">Experience : {{ ucwords($job->experience->name ?? '') }}</span>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="text-start text-md-end">
+                                                <i class="mdi mdi-clock-outline"></i>
+                                                <span class="text-muted">
+                                                    @if ($job->close_date_exist == 1)
+                                                        Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}
+                                                    @else
+                                                        Close without prior notice.
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        {{-- <div class="col-lg-2 col-md-2">
+                                            <div class="text-start text-md-end">
+                                                <a href="{{ route('job-detail', $job->slug) }}" data-bs-toggle="modal" class="primary-link">Detail <i class="mdi mdi-chevron-double-right"></i></a>
+                                            </div>
+                                        </div> --}}
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                            </div>
                                 <!--end job-box-->
                             @endforeach
 
@@ -442,80 +508,113 @@
 
                         <div class="tab-pane fade" id="full-time" role="tabpanel" aria-labelledby="full-time-tab">
                             @foreach ($fulltimes as $job)
-                                <div class="job-box card mt-4">
-                                    {{-- <div class="bookmark-label text-center">
-                                        <a href="javascript:void(0)" class="text-white align-middle"><i class="mdi mdi-star"></i></a>
-                                    </div> --}}
-                                    <div class="p-4">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-2">
-                                                <div class="text-center mb-4 mb-md-0">
-                                                    <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ asset('jobcy/images/featured-job/img-02.png') }}" alt="" class="img-fluid rounded-3"></a>
-                                                </div>
+                            <div class="job-box card mt-4">
+                                {{-- <div class="bookmark-label text-center">
+                                    <a href="javascript:void(0)" class="text-white align-middle"><i class="mdi mdi-star"></i></a>
+                                </div> --}}
+                                <div class="p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <div class="text-center mb-4 mb-md-0">
+                                                <a href="{{ route('job-detail', $job->slug) }}"><img src="{{ $job->company->image ? $job->company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3" style="width: 90px; height: 90px; object-fit: cover;"></a>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-md-3">
-                                                <div class="mb-2 mb-md-0">
-                                                    <h5 class="fs-18 mb-1"><a href="{{ route('job-detail', $job->slug) }}" class="text-dark">{{ $job->name }}</a>
-                                                    </h5>
-                                                    <p class="text-muted fs-14 mb-0">{{ $job->company->name }}</p>
-                                                </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-3">
+                                            <div class="mb-2 mb-md-0">
+                                                <h5 class="fs-18 mb-1"><a href="{{ route('job-detail', $job->slug) }}" class="text-dark">{{ $job->name }}</a>
+                                                </h5>
+                                                <p class="text-muted fs-14 mb-0">{{ $job->company->name }}</p>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-md-3">
-                                                <div class="d-flex mb-2">
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-md-3">
+                                            @forelse ($job->locations as $location)
+                                                <div class="d-flex mb-1">
                                                     <div class="flex-shrink-0">
                                                         <i class="mdi mdi-map-marker text-primary me-1"></i>
                                                     </div>
-                                                    <p class="text-muted mb-0">{{ ucwords($job->location->regency_with_province_name ?? '')}}</p>
+                                                    <p class="text-muted mb-0">
+                                                        @if ($job->locations->count() > 1)
+                                                            {{ $location->name ?? '' }}
+                                                        @else
+                                                            {{ $location->regency_with_province_name ?? '' }}
+                                                        @endif
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-md-2">
-                                                <div>
-                                                    <p class="text-muted mb-2"><i class="mdi mdi-domain"></i> {{ ucwords($job->industry->name ?? '') }}</p>
+                                            @empty
+                                                <div class="d-flex mb-1">
+                                                    <div class="flex-shrink-0">
+                                                        <i class="mdi mdi-map-marker text-primary me-1"></i>
+                                                    </div>
+                                                    <p class="text-muted mb-0">
+                                                        To be determined/ Flexible/ Remote options available.
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-md-2">
-                                                <div>
-                                                    @if ($job->type == 'fulltime')
-                                                        <span class="badge bg-success-subtle text-success  mt-1">Full Time</span>
-                                                    @elseif ($job->type == 'parttime')
-                                                        <span class="badge bg-danger-subtle text-danger  mt-1">Part Time</span>
-                                                    @else
-                                                        <span class="badge bg-primary-subtle text-primary  mt-1">Internship</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <!--end col-->
+                                            @endforelse
                                         </div>
-                                        <!--end row-->
-                                    </div>
-                                    <div class="p-3 bg-light">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-5">
-                                                <div>
-                                                    <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
-                                                </div>
+                                        <!--end col-->
+                                        <div class="col-md-2">
+                                            <div>
+                                                <p class="text-muted mb-2"><i class="mdi mdi-domain"></i> {{ ucwords($job->industry->name ?? '') }}</p>
                                             </div>
-                                            <!--end col-->
-                                            <div class="col-lg-5 col-md-5">
-                                                <div>
-                                                    <i class="mdi mdi-clock-outline"></i> <span class="text-muted">Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}</span>
-                                                </div>
-                                            </div>
-                                            <!--end col-->
-                                            <div class="col-lg-2 col-md-2">
-                                                <div class="text-start text-md-end">
-                                                    <a href="{{ route('job-detail', $job->slug) }}" data-bs-toggle="modal" class="primary-link">Detail <i class="mdi mdi-chevron-double-right"></i></a>
-                                                </div>
-                                            </div>
-                                            <!--end col-->
                                         </div>
-                                        <!--end row-->
+                                        <!--end col-->
+                                        <div class="col-md-2">
+                                            <div>
+                                                @if ($job->type == 'fulltime')
+                                                    <span class="badge bg-success-subtle text-success mt-1">Full Time</span>
+                                                @elseif ($job->type == 'parttime')
+                                                    <span class="badge bg-danger-subtle text-danger mt-1">Part Time</span>
+                                                @else
+                                                    <span class="badge bg-primary-subtle text-primary mt-1">Internship</span>
+                                                @endif
+
+                                                @foreach ($job->tags as $tag)
+                                                    <span class="badge bg-info-subtle text-info mt-1">{{ $tag->name }}</span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <!--end col-->
                                     </div>
+                                    <!--end row-->
                                 </div>
+                                <div class="p-3 bg-light">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4">
+                                            <div>
+                                                <i class="mdi mdi-alarm"></i> <span class="text-muted">Open {{ \Carbon\Carbon::parse($job->open_date)->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="text-center">
+                                                <i class="mdi mdi-alpha-e-circle-outline"></i> <span class="text-muted">Experience : {{ ucwords($job->experience->name ?? '') }}</span>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        <div class="col-lg-4 col-md-4">
+                                            <div class="text-start text-md-end">
+                                                <i class="mdi mdi-clock-outline"></i>
+                                                <span class="text-muted">
+                                                    @if ($job->close_date_exist == 1)
+                                                        Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}
+                                                    @else
+                                                        Close without prior notice.
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!--end col-->
+                                        {{-- <div class="col-lg-2 col-md-2">
+                                            <div class="text-start text-md-end">
+                                                <a href="{{ route('job-detail', $job->slug) }}" data-bs-toggle="modal" class="primary-link">Detail <i class="mdi mdi-chevron-double-right"></i></a>
+                                            </div>
+                                        </div> --}}
+                                        <!--end col-->
+                                    </div>
+                                    <!--end row-->
+                                </div>
+                            </div>
                                 <!--end job-box-->
                             @endforeach
 
@@ -621,81 +720,8 @@
     </section>
     <!--END CTA-->
 
-    <!-- START TESTIMONIAL -->
-    <section class="section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <div class="section-title text-center mb-4 pb-2">
-                        <h3 class="title mb-3">Happy Candidates</h3>
-                        <p class="text-muted">Post a job to tell us about your project. We'll quickly match you with the
-                            right freelancers.</p>
-                    </div>
-                </div>
-                <!--end col-->
-            </div>
-            <!--end row-->
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="swiper testimonialSlider pb-5">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="card testi-box">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <img src="assets/images/logo/mailchimp.svg" height="50" alt="">
-                                        </div>
-                                        <p class="testi-content lead text-muted mb-4">" Very well thought out and articulate communication.
-                                            Clear milestones, deadlines and fast work. Patience. Infinite patience. No
-                                            shortcuts. Even if the client is being careless. "</p>
-                                        <h5 class="mb-0">Jeffrey Montgomery</h5>
-                                        <p class="text-muted mb-0">Product Manager</p>
-                                    </div>
-                                </div>
-                            </div><!--end swiper-slide-->
-                            <div class="swiper-slide">
-                                <div class="card testi-box">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <img src="assets/images/logo/wordpress.svg" height="50" alt="">
-                                        </div>
-                                        <p class="testi-content lead text-muted mb-4">" Very well thought out and articulate communication.
-                                            Clear milestones, deadlines and fast work. Patience. Infinite patience. No
-                                            shortcuts. Even if the client is being careless. "</p>
-                                        <h5 class="mb-0">Rebecca Swartz</h5>
-                                        <p class="text-muted mb-0">Creative Designer</p>
-                                    </div>
-                                </div>
-                            </div><!--end swiper-slide-->
-                            <div class="swiper-slide">
-                                <div class="card testi-box">
-                                    <div class="card-body">
-                                        <div class="mb-4">
-                                            <img src="assets/images/logo/Instagram.svg" height="50" alt="">
-                                        </div>
-                                        <p class="testi-content lead text-muted mb-4">" Very well thought out and articulate communication.
-                                            Clear milestones, deadlines and fast work. Patience. Infinite patience. No
-                                            shortcuts. Even if the client is being careless. "</p>
-                                        <h5 class="mb-0">Charles Dickens</h5>
-                                        <p class="text-muted mb-0">Store Assistant</p>
-                                    </div>
-                                </div>
-                            </div><!--end swiper-slide-->
-                        </div>
-                        <!--end swiper-wrapper-->
-                        <div class="swiper-pagination"></div>
-                    </div>
-                    <!--end swiper-container  -->
-                </div>
-                <!--end col-->
-            </div>
-            <!--end row-->
-        </div>
-    </section>
-    <!-- END TESTIMONIAL -->
-
     <!-- START BLOG -->
-    <section class="section bg-light">
+    <section class="section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
@@ -733,7 +759,7 @@
                                 <h5 class="fs-17">{{ $post->title }}</h5>
                             </a>
                             <p class="text-muted">{!! $post->excerpt !!}</p>
-                            <a href="{{ route('blog-detail', $post->slug) }}" class="form-text text-primary">Read more <i class="mdi mdi-chevron-right align-middle"></i></a>
+                            <a href="{{ route('alumni-caring-detail', $post->slug) }}" class="form-text text-primary">Read more <i class="mdi mdi-chevron-right align-middle"></i></a>
                         </div>
                     </div><!--end blog-box-->
                 </div><!--end col-->
@@ -801,39 +827,6 @@
         <!--end container-->
     </div>
     <!-- END CLIENT -->
-
-    <!-- START APPLY MODAL -->
-    <div class="modal fade" id="applyNow" tabindex="-1" aria-labelledby="applyNow" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body p-5">
-                    <div class="text-center mb-4">
-                        <h5 class="modal-title" id="staticBackdropLabel">Apply For This Job</h5>
-                    </div>
-                    <div class="position-absolute end-0 top-0 p-3">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nameControlInput" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="nameControlInput" placeholder="Enter your name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="emailControlInput2" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="emailControlInput2" placeholder="Enter your email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="messageControlTextarea" class="form-label">Message</label>
-                        <textarea class="form-control" id="messageControlTextarea" rows="4" placeholder="Enter your message"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label" for="inputGroupFile01">Resume Upload</label>
-                        <input type="file" class="form-control" id="inputGroupFile01">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Send Application</button>
-                </div>
-            </div>
-        </div>
-    </div><!-- END APPLY MODAL -->
 @endsection
 
 @section('scripts')

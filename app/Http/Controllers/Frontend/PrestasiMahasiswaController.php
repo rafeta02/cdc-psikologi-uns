@@ -12,6 +12,7 @@ use App\Models\PrestasiMahasiswa;
 use App\Models\PrestasiMahasiswaDetail;
 use App\Models\User;
 use Gate;
+use PDF;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
@@ -206,5 +207,12 @@ class PrestasiMahasiswaController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function printBukti(Request $request)
+    {
+        $prestasi = PrestasiMahasiswa::with('pesertas')->find($request->id);
+        $pdf = PDF::loadView('pdf.bukti', compact('prestasi'));
+        return $pdf->download('bukti-prestasi.pdf');
     }
 }

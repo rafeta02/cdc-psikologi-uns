@@ -15,6 +15,7 @@ use App\Models\Industry;
 use App\Models\Position;
 use App\Models\Regency;
 use App\Models\Vacancy;
+use App\Models\VacancyTag;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -32,7 +33,7 @@ class VacancyController extends Controller
         abort_if(Gate::denies('vacancy_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->select(sprintf('%s.*', (new Vacancy)->table));
+            $query = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'locations', 'created_by'])->select(sprintf('%s.*', (new Vacancy)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -71,6 +72,9 @@ class VacancyController extends Controller
             });
 
             $table->editColumn('close_date', function ($row) {
+                if (!$row->close_date_exist){
+                    return $row->close_date ? '<span class="badge badge-warning">ASAP</span><br>'. Carbon::parse($row->close_date)->format('j F Y') : '';
+                }
                 return $row->close_date ? Carbon::parse($row->close_date)->format('j F Y') : '';
             });
 
@@ -78,11 +82,16 @@ class VacancyController extends Controller
                 return $row->industry ? $row->industry->name : '';
             });
 
-            $table->addColumn('location_name', function ($row) {
-                return $row->location ? $row->location->name.' - '. $row->location->province->name : '';
+            $table->editColumn('location', function ($row) {
+                $labels = [];
+                foreach ($row->locations as $location) {
+                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $location->name);
+                }
+
+                return implode('<br>', $labels);
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'company', 'industry', 'location', 'type']);
+            $table->rawColumns(['actions', 'placeholder', 'company', 'industry', 'location', 'type', 'close_date']);
 
             return $table->make(true);
         }
@@ -108,7 +117,9 @@ class VacancyController extends Controller
 
         $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions'));
+        $tags = VacancyTag::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.vacancies.create', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions', 'tags'));
     }
 
     public function store(StoreVacancyRequest $request)
@@ -121,6 +132,9 @@ class VacancyController extends Controller
         $vacancy = Vacancy::create($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
+        $vacancy->locations()->sync($request->input('location_id', []));
+        $vacancy->tags()->sync($request->input('tags', []));
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $vacancy->id]);
         }
@@ -146,11 +160,11 @@ class VacancyController extends Controller
 
         $industries = Industry::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $locations = Regency::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $tags = VacancyTag::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
+        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'locations', 'created_by');
 
-        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'experiences', 'industries', 'locations', 'positions', 'vacancy'));
+        return view('admin.vacancies.edit', compact('companies', 'departments', 'education', 'experiences', 'industries', 'positions', 'tags', 'vacancy'));
     }
 
     public function update(UpdateVacancyRequest $request, Vacancy $vacancy)
@@ -161,6 +175,8 @@ class VacancyController extends Controller
         $vacancy->update($request->all());
         $vacancy->education()->sync($request->input('education', []));
         $vacancy->departments()->sync($request->input('departments', []));
+        $vacancy->locations()->sync($request->input('location_id', []));
+        $vacancy->tags()->sync($request->input('tags', []));
 
         Alert::success('Success', 'Vacancy updated successfully.');
 

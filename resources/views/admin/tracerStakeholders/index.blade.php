@@ -37,10 +37,10 @@
                         {{ trans('cruds.tracerStakeholder.fields.tingkat_instansi') }}
                     </th>
                     <th>
-                        {{ trans('cruds.tracerStakeholder.fields.ketersediaan_campus_hiring') }}
+                        Kepuasan Alumni
                     </th>
                     <th>
-                        {{ trans('cruds.tracerStakeholder.fields.tanda_tangan') }}
+                        Tanda Tangan
                     </th>
                     <th>
                         &nbsp;
@@ -97,15 +97,15 @@
     aaSorting: [],
     ajax: "{{ route('admin.tracer-stakeholders.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'nama', name: 'nama' },
-{ data: 'nama_instansi', name: 'nama_instansi' },
-{ data: 'nama_alumni', name: 'nama_alumni' },
-{ data: 'tahun_lulus', name: 'tahun_lulus' },
-{ data: 'tingkat_instansi', name: 'tingkat_instansi' },
-{ data: 'ketersediaan_campus_hiring', name: 'ketersediaan_campus_hiring' },
-{ data: 'tanda_tangan', name: 'tanda_tangan', sortable: false, searchable: false },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'nama', name: 'nama', class : 'text-center' },
+        { data: 'nama_instansi', name: 'nama_instansi', class : 'text-center' },
+        { data: 'nama_alumni', name: 'nama_alumni', class : 'text-center' },
+        { data: 'tahun_lulus', name: 'tahun_lulus', class : 'text-center' },
+        { data: 'tingkat_instansi', name: 'tingkat_instansi', class : 'text-center' },
+        { data: 'kepuasan_alumni', name: 'kepuasan_alumni', class : 'text-center' },
+        { data: 'tanda_tangan', name: 'tanda_tangan', sortable: false, searchable: false },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -116,7 +116,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

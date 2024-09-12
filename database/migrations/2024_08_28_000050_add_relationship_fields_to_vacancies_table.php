@@ -17,8 +17,6 @@ class AddRelationshipFieldsToVacanciesTable extends Migration
             $table->foreign('position_id', 'position_fk_9976921')->references('id')->on('positions');
             $table->unsignedBigInteger('industry_id')->nullable();
             $table->foreign('industry_id', 'industry_fk_9976922')->references('id')->on('industries');
-            $table->unsignedBigInteger('location_id')->nullable();
-            $table->foreign('location_id', 'location_fk_9976923')->references('id')->on('regencies');
             $table->unsignedBigInteger('created_by_id')->nullable();
             $table->foreign('created_by_id', 'created_by_fk_9976927')->references('id')->on('users');
         });

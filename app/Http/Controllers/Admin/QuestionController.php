@@ -12,6 +12,8 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class QuestionController extends Controller
 {
@@ -74,6 +76,13 @@ class QuestionController extends Controller
     public function store(StoreQuestionRequest $request)
     {
         $question = Question::create($request->all());
+
+        // // Check if the column doesn't exist already to avoid errors
+        // if (!Schema::hasColumn('table_name', 'new_column')) {
+        //     Schema::table('table_name', function (Blueprint $table) {
+        //         $table->integer('new_column')->nullable()->default(0);
+        //     });
+        // }
 
         return redirect()->route('admin.questions.index');
     }

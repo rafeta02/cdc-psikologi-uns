@@ -45,9 +45,9 @@
             <div class="form-group">
                 <label for="regency_id">{{ trans('cruds.company.fields.regency') }}</label>
                 <select class="form-control select2 {{ $errors->has('regency') ? 'is-invalid' : '' }}" name="regency_id" id="regency_id">
-                    @foreach($regencies as $id => $entry)
+                    {{-- @foreach($regencies as $id => $entry)
                         <option value="{{ $id }}" {{ old('regency_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
+                    @endforeach --}}
                 </select>
                 @if($errors->has('regency'))
                     <span class="text-danger">{{ $errors->first('regency') }}</span>
@@ -78,7 +78,7 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.company.fields.website_helper') }}</span>
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label>{{ trans('cruds.company.fields.scale') }}</label>
                 <select class="form-control {{ $errors->has('scale') ? 'is-invalid' : '' }}" name="scale" id="scale">
                     <option value disabled {{ old('scale', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
@@ -90,7 +90,7 @@
                     <span class="text-danger">{{ $errors->first('scale') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.company.fields.scale_helper') }}</span>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <label for="number_of_employee">{{ trans('cruds.company.fields.number_of_employee') }}</label>
                 <input class="form-control {{ $errors->has('number_of_employee') ? 'is-invalid' : '' }}" type="number" name="number_of_employee" id="number_of_employee" value="{{ old('number_of_employee', '0') }}" step="1">
@@ -257,6 +257,27 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+
+    $('#regency_id').select2({
+        placeholder: 'Search for a location',
+        ajax: {
+            url: '{{ route("admin.provinces.getProvincesWithRegencies") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        },
+        minimumInputLength: 3 // minimum chars to search
     });
 });
 </script>

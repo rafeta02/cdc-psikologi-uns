@@ -23,6 +23,9 @@ class TracerStakeholder extends Model implements HasMedia
 
     public const KOMPETENSI_IT_RADIO = [
         'sangat_baik' => 'Sangat Baik',
+        'baik'        => 'Baik',
+        'cukup'       => 'Cukup',
+        'kurang'      => 'Kurang',
     ];
 
     protected $dates = [
@@ -79,7 +82,7 @@ class TracerStakeholder extends Model implements HasMedia
 
     public const TINGKAT_INSTANSI_RADIO = [
         'lokal'         => 'Lokal',
-        'nasiona'       => 'Nasional',
+        'nasional'       => 'Nasional',
         'internasional' => 'Internasional',
     ];
 

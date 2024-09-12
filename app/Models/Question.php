@@ -32,9 +32,9 @@ class Question extends Model
     ];
 
     public const TYPE_SELECT = [
-        'HCI' => 'Holland Carrer Interest',
-        'WR'  => 'Work Readiness',
-        'CCI' => 'Career Confidence Inventory',
+        'hci' => 'Holland Carrer Interest',
+        'wr'  => 'Work Readiness',
+        'cci' => 'Career Confidence Inventory',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

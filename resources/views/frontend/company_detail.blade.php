@@ -48,18 +48,18 @@
                     <div class="card side-bar">
                         <div class="card-body p-4">
                             <div class="candidate-profile text-center">
-                                <img src="{{ $company->image ?? asset('jobcy/images/featured-job/img-02.png') }}" alt="" class="avatar-lg rounded-circle">
+                                <img src="{{ $company->image ? $company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="avatar-lg rounded-circle">
                                 <h6 class="fs-18 mb-1 mt-4">{{ $company->name }} </h6>
-                                <p class="text-muted mb-4">{{ $company->location }}</p>
+                                <p class="text-muted mb-3">{{ $company->regency->regency_with_province_name }}</p>
                                 <ul class="candidate-detail-social-menu list-inline mb-0">
                                     <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="social-link"><i class="uil uil-twitter-alt"></i></a>
+                                        <a href="https://api.whatsapp.com/send?phone={{ $company->telephone }}" target="_blank" class="social-link"><i class="uil uil-whatsapp"></i></a>
                                     </li>
                                     <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="social-link"><i class="uil uil-whatsapp"></i></a>
+                                        <a href="{{ $company->website }}" target="_blank" class="social-link"><i class="uil uil-globe"></i></a>
                                     </li>
                                     <li class="list-inline-item">
-                                        <a href="javascript:void(0)" class="social-link"><i class="uil uil-phone-alt"></i></a>
+                                        <a href="mailto:{{ $company->email }}" class="social-link" target="_blank"><i class="uil uil-fast-mail"></i></a>
                                     </li>
                                 </ul>
                             </div>
@@ -84,14 +84,14 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <div class="d-flex">
                                         <label class="text-dark">Scale</label>
                                         <div>
                                             <p class="text-muted mb-0">{{ ucwords($company->scale) ?? '' }}</p>
                                         </div>
                                     </div>
-                                </li>
+                                </li> --}}
                                 <li>
                                     <div class="d-flex">
                                         <label class="text-dark">Employees</label>

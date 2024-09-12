@@ -45,6 +45,16 @@
                         <span class="help-block">{{ trans('cruds.vacancy.fields.description_helper') }}</span>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="close_date_exist">Close Date Exist ?</label>
+                        <div class="form-check {{ $errors->has('close_date_exist') ? 'is-invalid' : '' }}">
+                            <input type="hidden" name="close_date_exist" value="0">
+                            <input class="form-check-input" type="checkbox" name="close_date_exist" id="close_date_exist" value="1" {{ old('close_date_exist', 0) == 1 ? 'checked' : '' }}>
+                            <label class="form-check-label" for="close_date_exist">Exist</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label class="required" for="open_date">{{ trans('cruds.vacancy.fields.open_date') }}</label>
@@ -67,7 +77,7 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="persyaratan_umum">{{ trans('cruds.vacancy.fields.persyaratan_umum') }}</label>
+                        <label for="persyaratan_umum">Requirement</label>
                         <textarea class="form-control ckeditor {{ $errors->has('persyaratan_umum') ? 'is-invalid' : '' }}" name="persyaratan_umum" id="persyaratan_umum">{!! old('persyaratan_umum') !!}</textarea>
                         @if($errors->has('persyaratan_umum'))
                             <span class="text-danger">{{ $errors->first('persyaratan_umum') }}</span>
@@ -75,7 +85,7 @@
                         <span class="help-block">{{ trans('cruds.vacancy.fields.persyaratan_umum_helper') }}</span>
                     </div>
                 </div>
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <div class="form-group">
                         <label for="persyaratan_khusus">{{ trans('cruds.vacancy.fields.persyaratan_khusus') }}</label>
                         <textarea class="form-control ckeditor {{ $errors->has('persyaratan_khusus') ? 'is-invalid' : '' }}" name="persyaratan_khusus" id="persyaratan_khusus">{!! old('persyaratan_khusus') !!}</textarea>
@@ -84,17 +94,7 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.vacancy.fields.persyaratan_khusus_helper') }}</span>
                     </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="registration">{{ trans('cruds.vacancy.fields.registration') }}</label>
-                        <textarea class="form-control ckeditor {{ $errors->has('registration') ? 'is-invalid' : '' }}" name="registration" id="registration">{!! old('registration') !!}</textarea>
-                        @if($errors->has('registration'))
-                            <span class="text-danger">{{ $errors->first('registration') }}</span>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.vacancy.fields.registration_helper') }}</span>
-                    </div>
-                </div>
+                </div> --}}
                 <div class="col-12">
                     <div class="form-group">
                         <label for="job_description">{{ trans('cruds.vacancy.fields.job_description') }}</label>
@@ -103,6 +103,16 @@
                             <span class="text-danger">{{ $errors->first('job_description') }}</span>
                         @endif
                         <span class="help-block">{{ trans('cruds.vacancy.fields.job_description_helper') }}</span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="registration">How To Register</label>
+                        <textarea class="form-control ckeditor {{ $errors->has('registration') ? 'is-invalid' : '' }}" name="registration" id="registration">{!! old('registration') !!}</textarea>
+                        @if($errors->has('registration'))
+                            <span class="text-danger">{{ $errors->first('registration') }}</span>
+                        @endif
+                        <span class="help-block">{{ trans('cruds.vacancy.fields.registration_helper') }}</span>
                     </div>
                 </div>
                 <div class="col-6">
@@ -137,8 +147,8 @@
             </div>
 
             <div class="form-group">
-                <label class="required" for="location_id">{{ trans('cruds.vacancy.fields.location') }}</label>
-                <select class="select2 {{ $errors->has('location') ? 'is-invalid' : '' }}" name="location_id" id="location_id" required>
+                <label for="location_id">{{ trans('cruds.vacancy.fields.location') }}</label>
+                <select class="select2 {{ $errors->has('location') ? 'is-invalid' : '' }}" name="location_id[]" id="location_id" multiple>
                     {{-- @foreach($locations as $id => $entry)
                         <option value="{{ $id }}" {{ old('location_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach --}}
@@ -149,8 +159,8 @@
                 <span class="help-block">{{ trans('cruds.vacancy.fields.location_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="experience_id">{{ trans('cruds.vacancy.fields.experience') }}</label>
-                <select class="form-control select2 {{ $errors->has('experience') ? 'is-invalid' : '' }}" name="experience_id" id="experience_id">
+                <label class="required" for="experience_id">{{ trans('cruds.vacancy.fields.experience') }}</label>
+                <select class="form-control select2 {{ $errors->has('experience') ? 'is-invalid' : '' }}" name="experience_id" id="experience_id" required>
                     @foreach($experiences as $id => $entry)
                         <option value="{{ $id }}" {{ old('experience_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach
@@ -159,6 +169,22 @@
                     <span class="text-danger">{{ $errors->first('experience') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.vacancy.fields.experience_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="tags">{{ trans('cruds.vacancy.fields.tag') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('tags') ? 'is-invalid' : '' }}" name="tags[]" id="tags" multiple>
+                    @foreach($tags as $id => $tag)
+                        <option value="{{ $id }}" {{ in_array($id, old('tags', [])) ? 'selected' : '' }}>{{ $tag }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('tags'))
+                    <span class="text-danger">{{ $errors->first('tags') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.vacancy.fields.tag_helper') }}</span>
             </div>
             <div class="form-group">
                 <label for="education">{{ trans('cruds.vacancy.fields.education') }}</label>
@@ -192,14 +218,14 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.vacancy.fields.department_helper') }}</span>
             </div>
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="minimum_gpa">{{ trans('cruds.vacancy.fields.minimum_gpa') }}</label>
                 <input class="form-control {{ $errors->has('minimum_gpa') ? 'is-invalid' : '' }}" type="number" name="minimum_gpa" id="minimum_gpa" value="{{ old('minimum_gpa', '') }}" step="0.01" max="4">
                 @if($errors->has('minimum_gpa'))
                     <span class="text-danger">{{ $errors->first('minimum_gpa') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.vacancy.fields.minimum_gpa_helper') }}</span>
-            </div>
+            </div> --}}
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
@@ -376,6 +402,12 @@ $(function () {
             return;
         }
         $('#close_date').data('DateTimePicker').minDate(e.date);
+
+        if (!$('#close_date_exist').is(':checked')) {
+            // Automatically set close_date to 2 months after open_date
+            var twoMonthsAfter = e.date.clone().add(2, 'months');
+            $('#close_date').data('DateTimePicker').date(twoMonthsAfter);
+        }
     });
 
     $('#close_date').datetimepicker().on('dp.change', function (e) {
@@ -384,7 +416,6 @@ $(function () {
             return;
         }
         $('#open_date').data('DateTimePicker').maxDate(e.date);
-        $('#close_date').data('DateTimePicker').minDate($('#open_date').val());
     });
 });
 </script>

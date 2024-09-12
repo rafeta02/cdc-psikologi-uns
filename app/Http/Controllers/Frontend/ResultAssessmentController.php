@@ -16,6 +16,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Alert;
+use DB;
 
 class ResultAssessmentController extends Controller
 {
@@ -26,6 +27,18 @@ class ResultAssessmentController extends Controller
         $resultAssessments = ResultAssessment::with(['user'])->get();
 
         return view('frontend.resultAssessments.index', compact('resultAssessments'));
+    }
+
+    public function takeTest($test)
+    {
+        $questions = Question::where('type', $test)->orderBy('number', 'ASC')->get();
+
+        if ($questions->count() <= 0) {
+            Alert::error('Oops!', 'Test tidak tersedia.');
+            return redirect()->back();
+        }
+
+        return view("frontend.resultAssessments.{$test}", compact('questions'));
     }
 
     public function create()
@@ -40,6 +53,53 @@ class ResultAssessmentController extends Controller
     }
 
     public function store(StoreResultAssessmentRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $resultAssessmentData = $request->only(['initial', 'age', 'gender', 'field', 'test_name']);
+            $resultAssessmentData['user_id'] = auth()->id();
+
+            $resultAssessment = ResultAssessment::create($resultAssessmentData);
+
+            $questions = Question::where('type', $request->test_name)->get();
+
+            if ($questions->count() <= 0) {
+                Alert::error('Oops!', 'Test tidak tersedia.');
+                throw new \Exception('Test tidak tersedia');
+            }
+
+            $testData = [
+                'user_id' => auth()->id(),
+                'result_id' => $resultAssessment->id,
+            ];
+
+            foreach ($questions as $question) {
+                $testData[$question->code] = $request->input($question->code);
+            }
+
+            if ($request->test_name == 'hci') {
+                HollandTest::create($testData);
+            } else if ($request->test_name == 'cci') {
+                CareerConfidenceTest::create($testData);
+            } else if ($request->test_name == 'wr') {
+                WorkReadinessTest::create($testData);
+            }
+
+            DB::commit();
+
+            Alert::success('Assessment Career Berhasil Disimpan. Terima kasih');
+
+            return redirect()->route('frontend.assessments.index');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            Alert::error('Oops!', $e);
+
+            return redirect()->back()->with('error-message', $e->getMessage())->withInput();
+        }
+    }
+
+    public function bukanstore(StoreResultAssessmentRequest $request)
     {
         $resultAssessmentData = $request->only(['initial', 'age', 'gender', 'field']);
         $resultAssessmentData['user_id'] = auth()->id();

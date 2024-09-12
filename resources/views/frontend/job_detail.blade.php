@@ -48,9 +48,9 @@
                 <div class="col-lg-8">
                     <div class="card job-detail overflow-hidden">
                         <div>
-                            <img src="{{ asset('jobcy/images/job-detail.jpg') }}" alt="" class="img-fluid">
+                            <img src="{{ asset('jobcy/images/jobs/img-' . str_pad(rand(1, 7), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="" class="img-fluid" style="width: 100%; height: 320px; object-fit: cover;">
                             <div class="job-details-compnay-profile">
-                                <img src="{{ asset('jobcy/images/featured-job/img-10.png') }}" alt="" class="img-fluid rounded-3 rounded-3">
+                                <img src="{{ $job->company->image ? $job->company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3 rounded-3" style="width: 120px; height: 120px; object-fit: cover;">
                             </div>
                         </div>
                         <div class="card-body p-4">
@@ -86,30 +86,41 @@
 
                             <div class="mt-4">
                                 <div class="row g-2">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="border rounded-start p-3">
                                             <p class="text-muted mb-0 fs-13">Position</p>
                                             <p class="fw-medium fs-15 mb-0">{{ $job->position->name }}</p>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="border p-3">
-                                            <p class="text-muted fs-13 mb-0">Industry</p>
-                                            <p class="fw-medium mb-0">{{ $job->industry->name }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="border p-3">
                                             <p class="text-muted fs-13 mb-0">Type of Employment</p>
                                             <p class="fw-medium mb-0">{{ \App\Models\Vacancy::TYPE_SELECT[$job->type] }}</p>
                                         </div>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <div class="border p-3">
+                                            <p class="text-muted fs-13 mb-0">Industry</p>
+                                            <p class="fw-medium mb-0">{{ $job->industry->name }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="border p-3">
+                                            <p class="text-muted fs-13 mb-0">Experience</p>
+                                            <p class="fw-medium mb-0">{{ $job->experience->name }}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-lg-12">
                                         <div class="border p-3">
                                             <p class="text-muted fs-13 mb-0">Location</p>
-                                            <p class="fw-medium mb-0">{{ ucwords($job->location->regency_with_province_name ?? '')}}</p>
+                                            @forelse ($job->locations as $location)
+                                                <p class="fw-medium mb-0">{{ ucwords($location->regency_with_province_name ?? '')}}</p>
+                                            @empty
+                                                <p class="fw-medium mb-0">To be determined/ Flexible/ Remote options available.</p>
+                                            @endforelse
                                         </div>
                                     </div>
+
                                     <div class="col-lg-6">
                                         <div class="border rounded-start p-3">
                                             <p class="text-muted mb-0 fs-13">Education</p>
@@ -122,10 +133,20 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="border p-3">
-                                            <p class="text-muted fs-13 mb-0">Education Department</p>
+                                            <p class="text-muted fs-13 mb-0">Department</p>
                                             <p class="fw-medium mb-0">
                                                 @foreach($job->departments as $key => $department)
                                                     <span class="badge bg-success">{{ $department->name }}</span>
+                                                @endforeach
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="border p-3">
+                                            <p class="text-muted fs-13 mb-0">Additional Tags</p>
+                                            <p class="fw-medium mb-0">
+                                                @foreach($job->tags as $key => $tag)
+                                                    <span class="badge bg-info">{{ $tag->name }}</span>
                                                 @endforeach
                                             </p>
                                         </div>
@@ -134,23 +155,16 @@
                             </div><!--end Experience-->
 
                             <div class="mt-4">
-                                <h5 class="mb-3">Job Description</h5>
-                                <div class="job-detail-desc">
-                                    <p class="text-muted mb-0">{!! $job->description !!}</p>
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5 class="mb-3">General Qualification</h5>
+                                <h5 class="mb-3">Requirements </h5>
                                 <div class="job-detail-desc mt-2">
                                     {!! $job->persyaratan_umum !!}
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                <h5 class="mb-3">Requirements </h5>
-                                <div class="job-detail-desc mt-2">
-                                    {!! $job->persyaratan_khusus !!}
+                                <h5 class="mb-3">Job Description</h5>
+                                <div class="job-detail-desc">
+                                    <p class="text-muted mb-0">{!! $job->description !!}</p>
                                 </div>
                             </div>
 
@@ -161,19 +175,19 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 pt-3">
+                            <div class="mt-5 pt-3">
                                 <ul class="list-inline mb-0">
                                     <li class="list-inline-item mt-1">
                                         Share this job:
                                     </li>
                                     <li class="list-inline-item mt-1">
-                                        <a href="javascript:void(0)" class="btn btn-primary btn-hover"><i class="uil uil-facebook-f"></i> Facebook</a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-primary btn-hover"><i class="uil uil-facebook-f"></i> Facebook</a>
                                     </li>
                                     <li class="list-inline-item mt-1">
-                                        <a href="javascript:void(0)" class="btn btn-danger btn-hover"><i class="uil uil-google"></i> Google+</a>
+                                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($job->name) }}" target="_blank" class="btn btn-info btn-hover"><i class="uil uil-twitter-alt"></i> Twitter</a>
                                     </li>
                                     <li class="list-inline-item mt-1">
-                                        <a href="javascript:void(0)" class="btn btn-success btn-hover"><i class="uil uil-linkedin-alt"></i> linkedin</a>
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" class="btn btn-success btn-hover"><i class="uil uil-linkedin-alt"></i> linkedin</a>
                                     </li>
                                 </ul>
                             </div>
@@ -232,7 +246,11 @@
                                             <i class="uil uil-location-point icon bg-primary-subtle text-primary"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Location</h6>
-                                                <p class="text-muted mb-0"> {{ ucwords($job->location->regency_with_province_name ?? '')}}</p>
+                                                @forelse ($job->locations as $location)
+                                                    <p class="fw-medium mb-0">{{ ucwords($location->name ?? '')}}</p>
+                                                @empty
+                                                    <p class="fw-medium mb-0">To be determined.</p>
+                                                @endforelse
                                             </div>
                                         </div>
                                     </li>
@@ -262,10 +280,23 @@
                                         <div class="d-flex mt-4">
                                             <i class="uil uil-vertical-distribute-bottom icon bg-primary-subtle text-primary"></i>
                                             <div class="ms-3">
-                                                <h6 class="fs-14 mb-2">Education Department</h6>
+                                                <h6 class="fs-14 mb-2">Department</h6>
                                                 <p class="text-muted mb-0">
                                                     @foreach($job->departments as $key => $department)
                                                         <span class="badge bg-success">{{ $department->name }}</span>
+                                                    @endforeach
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex mt-4">
+                                            <i class="uil uil-tag icon bg-primary-subtle text-primary"></i>
+                                            <div class="ms-3">
+                                                <h6 class="fs-14 mb-2">Additional Tag</h6>
+                                                <p class="text-muted mb-0">
+                                                    @foreach($job->tags as $key => $tag)
+                                                        <span class="badge bg-info">{{ $tag->name }}</span>
                                                     @endforeach
                                                 </p>
                                             </div>
@@ -280,13 +311,18 @@
                                             </div>
                                         </div>
                                     </li>
-
                                     <li>
                                         <div class="d-flex mt-4">
                                             <i class="uil uil-history-alt icon bg-primary-subtle text-primary"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Close Date</h6>
-                                                <p class="text-muted mb-0">{{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}</p>
+                                                <p class="text-muted mb-0">
+                                                    @if ($job->close_date_exist == 1)
+                                                        Closed on {{ \Carbon\Carbon::parse($job->close_date)->format('j F, Y') }}
+                                                    @else
+                                                        Close without prior notice.
+                                                    @endif
+                                                </p>
                                             </div>
                                         </div>
                                     </li>
@@ -301,11 +337,12 @@
                         <div class="card company-profile mt-4">
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <img src="{{ $company->image ?? asset('jobcy/images/featured-job/img-02.png') }}" alt="" class="img-fluid rounded-3">
+                                    <img src="{{ $company->image ? $company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3" style="width: 120px; height: 120px; object-fit: cover;">
 
                                     <div class="mt-4">
-                                        <h6 class="fs-17 mb-1">{{ $company->name }}</h6>
-                                        <p class="text-muted">{{ $company->location }}</p>
+                                        <h6 class="fs-19 mb-1">{{ $company->name }}</h6>
+                                        <p class="fs-14 text-muted">{{ $company->regency->regency_with_province_name }}</p>
+                                        <p class="fs-6 text-muted">{!! Str::words($company->description, 42, ' ...') !!}</p>
                                     </div>
                                 </div>
                                 <ul class="list-unstyled mt-4">

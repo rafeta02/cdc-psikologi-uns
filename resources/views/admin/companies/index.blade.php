@@ -35,9 +35,6 @@
                         {{ trans('cruds.company.fields.telephone') }}
                     </th>
                     <th>
-                        {{ trans('cruds.company.fields.scale') }}
-                    </th>
-                    <th>
                         {{ trans('cruds.company.fields.industry') }}
                     </th>
                     <th>
@@ -98,8 +95,7 @@ $(function () {
         { data: 'placeholder', name: 'placeholder' },
         { data: 'name', name: 'name', class : 'text-center' },
         { data: 'address', name: 'address' },
-        { data: 'telephone', name: 'telephone' },
-        { data: 'scale', name: 'scale', class : 'text-center' },
+        { data: 'telephone', name: 'telephone', class : 'text-center' },
         { data: 'industry_name', name: 'industry.name', class : 'text-center' },
         { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],

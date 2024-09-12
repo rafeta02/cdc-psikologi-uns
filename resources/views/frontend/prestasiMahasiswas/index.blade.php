@@ -72,16 +72,22 @@
                                         </td>
                                         <td class="text-center">
                                             @can('prestasi_mahasiswa_show')
-                                                <a class="btn btn-xs btn-primary" href="{{ route('frontend.prestasi-mahasiswas.show', $prestasiMahasiswa->id) }}">
+                                                <a class="btn btn-sm btn-primary" href="{{ route('frontend.prestasi-mahasiswas.show', $prestasiMahasiswa->id) }}">
                                                     {{ trans('global.view') }}
                                                 </a>
                                             @endcan
 
                                             @can('prestasi_mahasiswa_edit')
-                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.prestasi-mahasiswas.edit', $prestasiMahasiswa->id) }}">
+                                                <a class="btn btn-sm btn-info" href="{{ route('frontend.prestasi-mahasiswas.edit', $prestasiMahasiswa->id) }}">
                                                     {{ trans('global.edit') }}
                                                 </a>
                                             @endcan
+
+                                            <form action="{{ route('frontend.prestasi-mahasiswas.printBukti') }}" method="POST">
+                                                <input type="hidden" name="id" value="{{ $prestasiMahasiswa->id }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="submit" class="btn btn-sm btn-block mb-1 btn-success" value="Print Bukti">
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

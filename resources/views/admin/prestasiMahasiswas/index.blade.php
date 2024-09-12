@@ -22,19 +22,14 @@
 
                     </th>
                     <th>
-                        {{ trans('cruds.prestasiMahasiswa.fields.skim') }}
+                        {{ trans('cruds.prestasiMahasiswa.fields.nama_kegiatan') }}
                     </th>
                     <th>
                         {{ trans('cruds.prestasiMahasiswa.fields.tingkat') }}
                     </th>
-                    <th>
-                        {{ trans('cruds.prestasiMahasiswa.fields.nama_kegiatan') }}
-                    </th>
+
                     <th>
                         {{ trans('cruds.prestasiMahasiswa.fields.kategori') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.prestasiMahasiswa.fields.jumlah_peserta') }}
                     </th>
                     <th>
                         {{ trans('cruds.prestasiMahasiswa.fields.perolehan_juara') }}
@@ -46,7 +41,7 @@
                         {{ trans('cruds.prestasiMahasiswa.fields.tempat_penyelenggara') }}
                     </th>
                     <th>
-                        {{ trans('cruds.prestasiMahasiswa.fields.no_wa') }}
+                        No WA
                     </th>
                     <th>
                         &nbsp;
@@ -103,17 +98,15 @@
     aaSorting: [],
     ajax: "{{ route('admin.prestasi-mahasiswas.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'skim', name: 'skim' },
-{ data: 'tingkat', name: 'tingkat' },
-{ data: 'nama_kegiatan', name: 'nama_kegiatan' },
-{ data: 'kategori_name', name: 'kategori.name' },
-{ data: 'jumlah_peserta', name: 'jumlah_peserta' },
-{ data: 'perolehan_juara', name: 'perolehan_juara' },
-{ data: 'nama_penyelenggara', name: 'nama_penyelenggara' },
-{ data: 'tempat_penyelenggara', name: 'tempat_penyelenggara' },
-{ data: 'no_wa', name: 'no_wa' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'nama_kegiatan', name: 'nama_kegiatan', class : 'text-center' },
+        { data: 'tingkat', name: 'tingkat', class : 'text-center' },
+        { data: 'kategori_name', name: 'kategori.name', class : 'text-center' },
+        { data: 'perolehan_juara', name: 'perolehan_juara', class : 'text-center' },
+        { data: 'nama_penyelenggara', name: 'nama_penyelenggara', class : 'text-center' },
+        { data: 'tempat_penyelenggara', name: 'tempat_penyelenggara', class : 'text-center' },
+        { data: 'no_wa', name: 'no_wa', class : 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -124,7 +117,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

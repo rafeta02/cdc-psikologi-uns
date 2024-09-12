@@ -34,14 +34,19 @@
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="productdropdown">
-                        @foreach ($categoryMenus = categoryMenu() as $categoryMenu)
+                        {{-- @foreach ($categoryMenus = categoryMenu() as $categoryMenu)
                             <li><a class="dropdown-item" href="{{ route('news', ['category' => $categoryMenu->slug]) }}">{{ $categoryMenu->name }}</a></li>
-                        @endforeach
+                        @endforeach --}}
+                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">Acara & Berita</a></li>
+                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li>
+                        <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis</a></li>
                     </ul>
                 </li><!--end dropdown-->
+                @auth
                 <li class="nav-item">
                     <a href="{{ route('alumni-caring') }}" class="nav-link">Alumni Caring</a>
                 </li>
+                @endauth
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="tracer-study" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Tracer Study
@@ -50,6 +55,7 @@
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="tracer-study">
                         <li><a class="dropdown-item" href="{{ route('tracer-alumni') }}">Untuk Alumni</a></li>
                         <li><a class="dropdown-item" href="{{ route('tracer-study') }}">Untuk Stakeholder</a></li>
+                        <li><a class="dropdown-item" target="_blank" href="https://tracer.uns.ac.id/">Tracer Study Universitas</a></li>
                     </ul>
                 </li><!--end dropdown-->
                 {{-- <li class="nav-item dropdown dropdown-hover">

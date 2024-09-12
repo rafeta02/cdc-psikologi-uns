@@ -22,6 +22,9 @@
 
                     </th>
                     <th>
+                        NIM
+                    </th>
+                    <th>
                         {{ trans('cruds.tracerAlumnu.fields.nama') }}
                     </th>
                     <th>
@@ -91,13 +94,14 @@
     aaSorting: [],
     ajax: "{{ route('admin.tracer-alumnus.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'nama', name: 'nama' },
-{ data: 'telephone', name: 'telephone' },
-{ data: 'email', name: 'email' },
-{ data: 'angkatan', name: 'angkatan' },
-{ data: 'kota_asal_name', name: 'kota_asal.name' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'nim', name: 'nim', class : 'text-center' },
+        { data: 'nama', name: 'nama', class : 'text-center' },
+        { data: 'telephone', name: 'telephone', class : 'text-center' },
+        { data: 'email', name: 'email', class : 'text-center' },
+        { data: 'angkatan', name: 'angkatan', class : 'text-center' },
+        { data: 'kota_asal_name', name: 'kota_asal.name', class : 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -108,7 +112,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

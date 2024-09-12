@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\TracerStakeholderExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TracerStakeholderController extends Controller
 {
@@ -59,8 +61,8 @@ class TracerStakeholderController extends Controller
             $table->editColumn('tingkat_instansi', function ($row) {
                 return $row->tingkat_instansi ? TracerStakeholder::TINGKAT_INSTANSI_RADIO[$row->tingkat_instansi] : '';
             });
-            $table->editColumn('ketersediaan_campus_hiring', function ($row) {
-                return $row->ketersediaan_campus_hiring ? TracerStakeholder::KETERSEDIAAN_CAMPUS_HIRING_RADIO[$row->ketersediaan_campus_hiring] : '';
+            $table->editColumn('kepuasan_alumni', function ($row) {
+                return $row->kepuasan_alumni ?? '';
             });
             $table->editColumn('tanda_tangan', function ($row) {
                 return $row->tanda_tangan ? '<a href="' . $row->tanda_tangan->getUrl() . '" target="_blank">' . trans('global.downloadFile') . '</a>' : '';
@@ -158,5 +160,13 @@ class TracerStakeholderController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function export(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        return Excel::download(new TracerStakeholderExport($startDate, $endDate), 'tracer_stakeholders_' . $startDate . '_to_' . $endDate . '.xlsx');
     }
 }

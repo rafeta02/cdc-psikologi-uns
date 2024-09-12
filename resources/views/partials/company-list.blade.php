@@ -14,13 +14,14 @@
                         {{-- <div class="featured-label">
                             <span class="featured">FEATURED <i class="mdi mdi-star-outline"></i></span>
                         </div> --}}
-                        <img src="{{ asset('jobcy/images/featured-job/img-01.png') }}" alt="" class="img-fluid rounded-3">
+                        <img src="{{ $company->image ? $company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="img-fluid rounded-3" style="width: 108px; height: 108px; object-fit: cover;">
                         <div class="mt-4">
                             <a href="{{ route('company-detail', $company->slug) }}" class="primary-link">
                                 <h6 class="fs-18 mb-2">{{ $company->name }}</h6>
                             </a>
-                            <p class="text-muted mb-3">{{ $company->location }}</p>
-                            <p class="mb-4"><small class="text-muted">Perusahaan</small> {{ ucfirst($company->ownership) }}; <small class="text-muted">skala</small> {{ ucfirst($company->scale) }};<br><small class="text-muted">bidang industri</small> {{ ucwords($company->industry->name ?? '') }}</small></p>
+                            <p class="fs-14 text-muted mb-2">{{ $company->regency->regency_with_province_name }}</p>
+                            <p class="fs-6 text-muted">{!! Str::words($company->description, 42, ' ...') !!}</p>
+                            <p class="mb-4"><small class="text-muted">Perusahaan</small> {{ ucfirst($company->ownership) }}; <br><small class="text-muted">Bidang industri</small> {{ ucwords($company->industry->name ?? '') }}</small></p>
 
                             <a href="{{ route('company-detail', $company->slug) }}" class="btn btn-primary">
                                 {{ openingJobs($company->id) }} Opening Jobs

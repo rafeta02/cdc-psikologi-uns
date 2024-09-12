@@ -6,8 +6,14 @@
             @can('result_assessment_create')
                 <div style="margin-bottom: 10px;" class="row">
                     <div class="col-lg-12">
-                        <a class="btn btn-success" href="{{ route('frontend.assessments.create') }}">
-                            Take Assessment
+                        <a class="btn btn-primary" href="{{ route('frontend.assessments.takeTest', 'hci') }}">
+                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['hci'] }} Assessment
+                        </a>
+                        <a class="btn btn-success" href="{{ route('frontend.assessments.takeTest', 'wr') }}">
+                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['wr'] }} Assessment
+                        </a>
+                        <a class="btn btn-warning" href="{{ route('frontend.assessments.takeTest', 'cci') }}">
+                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['cci'] }} Assessment
                         </a>
                     </div>
                 </div>
@@ -24,6 +30,9 @@
                                 <tr>
                                     <th class="text-center">
                                         Tanggal Test
+                                    </th>
+                                    <th class="text-center" width="1%">
+                                        Jenis Test
                                     </th>
                                     <th class="text-center">
                                         {{ trans('cruds.resultAssessment.fields.initial') }}
@@ -47,6 +56,24 @@
                                     <tr data-entry-id="{{ $resultAssessment->id }}">
                                         <td class="text-center">
                                             {{ \carbon\Carbon::parse($resultAssessment->created_at)->diffForHumans() ?? '' }}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge
+                                            @php
+                                               switch ($resultAssessment->test_name) {
+                                                   case 'hci':
+                                                       echo 'badge-primary';
+                                                       break;
+                                                   case 'wr':
+                                                       echo 'badge-success';
+                                                       break;
+                                                   case 'cci':
+                                                       echo 'badge-warning';
+                                                       break;
+                                               }
+                                            @endphp">
+                                                {{ App\Models\ResultAssessment::TEST_NAME_SELECT[$resultAssessment->test_name] ?? '' }}
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             {{ $resultAssessment->initial ?? '' }}

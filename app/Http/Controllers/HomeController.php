@@ -10,6 +10,8 @@ use App\Models\Industry;
 use App\Models\Position;
 use App\Models\Department;
 use App\Models\Education;
+use App\Models\Experience;
+use App\Models\VacancyTag;
 use App\Models\Post;
 use App\Models\ArticleCategory;
 use App\Models\ArticleTag;
@@ -17,6 +19,7 @@ use App\Models\TracerStakeholder;
 use App\Models\TracerAlumnu;
 use SEOMeta;
 use Alert;
+use App\Charts\MonthlyUsersChart;
 
 
 
@@ -34,9 +37,8 @@ class HomeController extends Controller
         $interns = Vacancy::where('type', 'internship')->latest()->take(5)->get();
         $fulltimes = Vacancy::where('type', 'fulltime')->latest()->take(5)->get();
 
-        $articleCategory = ArticleCategory::where('slug', 'alumni-caring')->first();
-        $posts = $posts = Post::whereHas('categories', function ($query) use ($articleCategory) {
-            $query->where('id', $articleCategory->id);
+        $posts = $posts = Post::whereHas('categories', function ($query) {
+            $query->where('slug', 'alumni-caring');
         })->where('status', 'published')->latest()->take(3)->get();
 
         return view('frontend.home', compact('positions', 'recentJobs', 'interns', 'fulltimes','posts'));
@@ -67,6 +69,16 @@ class HomeController extends Controller
                 $query->where('type', $request->job_type);
             }
 
+            if (!empty($request->experience)) {
+                $query->where('experience_id', $request->experience);
+            }
+
+            if (!empty($request->tag)) {
+                $query->whereHas('tags', function ($query) use ($request) {
+                    $query->whereIn('vacancy_tag_id', $request->tag);
+                });
+            }
+
             if (!empty($request->education)) {
                 $query->whereHas('education', function ($query) use ($request) {
                     $query->whereIn('education_id', $request->education);
@@ -80,7 +92,9 @@ class HomeController extends Controller
             }
 
             if (!empty($request->onlyopen)) {
-                $query->where('close_date', '>=', now());
+                $query->where(function($q) {
+                    $q->where('close_date', '>=', now())->orWhere('close_date_exist', 0);
+                });
             }
 
             if (!empty($request->company)) {
@@ -88,7 +102,7 @@ class HomeController extends Controller
             }
 
             // Paginate results
-            $jobs = $query->paginate(7);
+            $jobs = $query->latest()->paginate(7);
             // Return partial view with filtered and paginated results
             return view('partials.job-list', compact('jobs'))->render();
         }
@@ -99,14 +113,16 @@ class HomeController extends Controller
         $industries = Industry::pluck('name', 'id');
         $educations = Education::pluck('name', 'id');
         $departments = Department::pluck('name', 'id');
-        return view('frontend.jobs', compact('jobs', 'positions', 'industries', 'educations', 'departments'));
+        $experiences = Experience::pluck('name', 'id');
+        $tags = VacancyTag::pluck('name', 'id');
+        return view('frontend.jobs', compact('jobs', 'positions', 'industries', 'educations', 'departments', 'experiences', 'tags'));
     }
 
     public function jobDetail($slug)
     {
         $job = Vacancy::where('slug', $slug)->first();
         $company = Company::find($job->company_id);
-        $relatedJobs = Vacancy::where('company_id', $job->company_id)->where('position_id', $job->position_id)->where('close_date', '>=', now())->latest()->take(3)->get();
+        $relatedJobs = Vacancy::whereNot('slug', $slug)->where('company_id', $job->company_id)->where('position_id', $job->position_id)->where('close_date', '>=', now())->latest()->take(3)->get();
         return view('frontend.job_detail', compact('job', 'company', 'relatedJobs'));
     }
 
@@ -172,6 +188,16 @@ class HomeController extends Controller
                 $query->where('type', $request->job_type);
             }
 
+            if (!empty($request->experience)) {
+                $query->where('experience_id', $request->experience);
+            }
+
+            if (!empty($request->tag)) {
+                $query->whereHas('tags', function ($query) use ($request) {
+                    $query->whereIn('vacancy_tag_id', $request->tag);
+                });
+            }
+
             if (!empty($request->education)) {
                 $query->whereHas('education', function ($query) use ($request) {
                     $query->whereIn('education_id', $request->education);
@@ -186,7 +212,10 @@ class HomeController extends Controller
 
             if (!empty($request->opening)) {
                 if ($request->opening == 1) {
-                    $query->where('close_date', '>=', now());
+                    $query->where(function($q) {
+                        $q->where('close_date', '>=', now())
+                          ->orWhere('close_date_exist', 0);
+                    });
                 } else {
                     $query->where('close_date', '<', now());
                 }
@@ -231,6 +260,36 @@ class HomeController extends Controller
         return view('frontend.blog', compact('posts', 'featured'))->with('category', $articleCategory->name ?? null);
     }
 
+    public function acara(Request $request)
+    {
+        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+
+        $query = Post::query();
+        $query->whereHas('categories', function ($query) {
+            $query->whereNotIn('slug', ['alumni-caring', 'beasiswa']);
+        });
+        $posts = $query->where('status', 'published')->latest()->paginate(10);
+
+        return view('frontend.blog', compact('posts', 'featured'))->with('category', $articleCategory->name ?? null);
+    }
+
+    public function beasiswa(Request $request)
+    {
+        $articleCategory = ArticleCategory::where('slug', 'beasiswa')->first();
+
+        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+
+        $query = Post::query();
+        if ($articleCategory) {
+            $query->whereHas('categories', function ($query) use ($articleCategory) {
+                $query->where('id', $articleCategory->id);
+            });
+        }
+        $posts = $query->where('status', 'published')->latest()->paginate(10);
+
+        return view('frontend.blog', compact('posts', 'featured'))->with('category', $articleCategory->name ?? null);
+    }
+
     public function alumniCaring()
     {
         $articleCategory = ArticleCategory::where('slug', 'alumni-caring')->first();
@@ -244,6 +303,32 @@ class HomeController extends Controller
         })->where('status', 'published')->latest()->paginate(10);
 
         return view('frontend.blog', compact('posts', 'featured'))->with('category', 'Alumni Caring' ?? null);
+    }
+
+    public function alumniCaringDetail($slug)
+    {
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        $tags = $post->tags->pluck('name')->toArray(); // Get tags as an array of names
+        $tagsString = implode(', ', $tags);
+
+        // Set SEO meta tags
+        SEOMeta::setTitle($post->title);
+        SEOMeta::setDescription($post->excerpt);
+        SEOMeta::setKeywords($tags); // Set tags as keywords
+        SEOMeta::setCanonical(url()->current());
+
+        $popularPosts = Post::where('status', 'published')->latest()->take(7)->get();
+        $relatedPosts = Post::whereHas('categories', function ($query) use ($post) {
+                            $query->whereIn('id', $post->categories->pluck('id')); // Same categories
+                        })
+                        ->where('posts.id', '!=', $post->id) // Exclude the current post
+                        ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, posts.created_at, ?))', [$post->created_at]) // Order by nearest creation time
+                        ->take(6) // Limit the number of related posts
+                        ->get();
+
+        $tags = ArticleTag::take(10)->get();
+        return view('frontend.blog_detail', compact('post', 'popularPosts', 'relatedPosts', 'tags'));
     }
 
     public function blogSearch(Request $request)
@@ -271,6 +356,9 @@ class HomeController extends Controller
     public function blogDetail($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
+        if ($post->categories->contains('slug', 'alumni-caring')) {
+            return redirect()->route('alumni-caring-detail', $slug);
+        }
 
         $tags = $post->tags->pluck('name')->toArray(); // Get tags as an array of names
         $tagsString = implode(', ', $tags);
@@ -319,7 +407,7 @@ class HomeController extends Controller
             'kepuasan_alumni' => 'required|string',
             'saran' => 'required|string',
             'ketersediaan_campus_hiring' => 'required',
-            'tanda_tangan' => 'required|file',
+            'tanda_tangan' => 'required|file|mimes:pdf,png,jpg,jpeg|max:5120',
             'captcha' => 'required|captcha',
         ]);
 
@@ -385,5 +473,16 @@ class HomeController extends Controller
         $tracerStakeholder = TracerAlumnu::create($validatedData);
 
         return redirect()->route('tracer-alumni')->with('success', 'Data tersimpan, Terima kasih.');
+    }
+
+    public function tracerUns()
+    {
+        return view('frontend.about');
+    }
+
+    public function grafik(MonthlyUsersChart $chart)
+    {
+
+        return view('frontend.grafik', ['chart' => $chart->build()]);
     }
 }

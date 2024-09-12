@@ -8,14 +8,19 @@ Route::get('jobs/{slug}', 'HomeController@jobDetail')->name('job-detail');
 Route::get('job-ajax', 'HomeController@jobAjax')->name('job-ajax');
 Route::get('companies', 'HomeController@company')->name('companies');
 Route::get('companies/{slug}', 'HomeController@companyDetail')->name('company-detail');
+Route::get('news/acara-berita', 'HomeController@acara')->name('news.acara-berita');
+Route::get('news/beasiswa', 'HomeController@beasiswa')->name('news.beasiswa');
 Route::get('news/{category?}', 'HomeController@news')->name('news');
-Route::get('alumni-caring', 'HomeController@alumniCaring')->name('alumni-caring');
+Route::get('alumni-caring/{slug}', 'HomeController@alumniCaringDetail')->name('alumni-caring-detail')->middleware(['auth']);
+Route::get('alumni-caring', 'HomeController@alumniCaring')->name('alumni-caring')->middleware(['auth']);
 Route::get('articles/search', 'HomeController@blogSearch')->name('blog-search');
 Route::get('articles/{slug}', 'HomeController@blogDetail')->name('blog-detail');
 Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
 Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
 Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
 Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
+// Route::get('tracer-uns', 'HomeController@tracerUns')->name('tracer-uns');
+Route::get('infografis', 'HomeController@grafik')->name('infografis');
 
 Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
 
@@ -116,12 +121,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Tracer Alumni
     Route::delete('tracer-alumnus/destroy', 'TracerAlumniController@massDestroy')->name('tracer-alumnus.massDestroy');
+    Route::post('tracer-alumnus/export', 'TracerAlumniController@export')->name('tracer-alumnus.export');
     Route::resource('tracer-alumnus', 'TracerAlumniController');
 
     // Tracer Stakeholder
     Route::delete('tracer-stakeholders/destroy', 'TracerStakeholderController@massDestroy')->name('tracer-stakeholders.massDestroy');
     Route::post('tracer-stakeholders/media', 'TracerStakeholderController@storeMedia')->name('tracer-stakeholders.storeMedia');
     Route::post('tracer-stakeholders/ckmedia', 'TracerStakeholderController@storeCKEditorImages')->name('tracer-stakeholders.storeCKEditorImages');
+    Route::post('tracer-stakeholders/export', 'TracerStakeholderController@export')->name('tracer-stakeholders.export');
     Route::resource('tracer-stakeholders', 'TracerStakeholderController');
 
     // Prestasi Mahasiswa
@@ -194,6 +201,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('experiences/parse-csv-import', 'ExperienceController@parseCsvImport')->name('experiences.parseCsvImport');
     Route::post('experiences/process-csv-import', 'ExperienceController@processCsvImport')->name('experiences.processCsvImport');
     Route::resource('experiences', 'ExperienceController');
+
+    // Vacancy Tag
+    Route::delete('vacancy-tags/destroy', 'VacancyTagController@massDestroy')->name('vacancy-tags.massDestroy');
+    Route::post('vacancy-tags/parse-csv-import', 'VacancyTagController@parseCsvImport')->name('vacancy-tags.parseCsvImport');
+    Route::post('vacancy-tags/process-csv-import', 'VacancyTagController@processCsvImport')->name('vacancy-tags.processCsvImport');
+    Route::resource('vacancy-tags', 'VacancyTagController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -227,10 +240,12 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('prestasi-mahasiswas/destroy', 'PrestasiMahasiswaController@massDestroy')->name('prestasi-mahasiswas.massDestroy');
     Route::post('prestasi-mahasiswas/media', 'PrestasiMahasiswaController@storeMedia')->name('prestasi-mahasiswas.storeMedia');
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
+    Route::post('prestasi-mahasiswas/print-bukti', 'PrestasiMahasiswaController@printBukti')->name('prestasi-mahasiswas.printBukti');
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
      // Result Assessment
      Route::delete('assessments/destroy', 'ResultAssessmentController@massDestroy')->name('assessments.massDestroy');
+     Route::get('assessments/take-test/{test}', 'ResultAssessmentController@takeTest')->name('assessments.takeTest');
      Route::resource('assessments', 'ResultAssessmentController')->names('assessments');
 
     // Result Competence

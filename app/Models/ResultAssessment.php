@@ -26,7 +26,9 @@ class ResultAssessment extends Model
     ];
 
     public const TEST_NAME_SELECT = [
-        'karir' => 'Career Assessment',
+        'hci' => 'Minat Pekerjaan',
+        'wr' => 'Kesiapan Kerja',
+        'cci' => 'Kepercayaan Diri dalam Karier',
     ];
 
     protected $fillable = [

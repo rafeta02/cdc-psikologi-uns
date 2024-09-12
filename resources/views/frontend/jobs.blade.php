@@ -116,25 +116,6 @@
                             </div><!-- end accordion-item -->
 
                             <div class="accordion-item mt-4">
-                                <h2 class="accordion-header" id="industryAccordion">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#industryArea" aria-expanded="true" aria-controls="industryArea">
-                                        Industry Area
-                                    </button>
-                                </h2>
-                                <div id="industryArea" class="accordion-collapse collapse show" aria-labelledby="industryArea">
-                                <div class="accordion-body">
-                                    <div class="side-title">
-                                        <select class="form-select " data-trigger name="industry" id="industry">
-                                            <option value="" selected>All</option>
-                                            @foreach($industries as $id => $entry)
-                                                <option value="{{ $id }}" {{ old('industry') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div><!-- end accordion-item -->
-
-                            <div class="accordion-item mt-4">
                                 <h2 class="accordion-header" id="jobType">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#jobtype" aria-expanded="false" aria-controls="jobtype">
                                         Type of employment
@@ -173,6 +154,63 @@
                             </div><!-- end accordion-item -->
 
                             <div class="accordion-item mt-4">
+                                <h2 class="accordion-header" id="industryAccordion">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#industryArea" aria-expanded="true" aria-controls="industryArea">
+                                        Industry Area
+                                    </button>
+                                </h2>
+                                <div id="industryArea" class="accordion-collapse collapse show" aria-labelledby="industryArea">
+                                <div class="accordion-body">
+                                    <div class="side-title">
+                                        <select class="form-select " data-trigger name="industry" id="industry">
+                                            <option value="" selected>All</option>
+                                            @foreach($industries as $id => $entry)
+                                                <option value="{{ $id }}" {{ old('industry') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div><!-- end accordion-item -->
+
+                            <div class="accordion-item mt-4">
+                                <h2 class="accordion-header" id="experienceAccordion">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#experienceAccordion" aria-expanded="true" aria-controls="experienceAccordion">
+                                        Job Experience
+                                    </button>
+                                </h2>
+                                <div id="experienceAccordion" class="accordion-collapse collapse show" aria-labelledby="experienceAccordion">
+                                <div class="accordion-body">
+                                    <div class="side-title">
+                                        <select class="form-select" data-trigger name="experience" id="experience">
+                                            <option value="" selected>All</option>
+                                            @foreach($experiences as $id => $entry)
+                                                <option value="{{ $id }}" {{ old('experience') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div><!-- end accordion-item -->
+
+                            <div class="accordion-item mt-4">
+                                <h2 class="accordion-header" id="tagAccordion">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tagAccordion" aria-expanded="false" aria-controls="tagAccordion">
+                                        Additional Tag
+                                    </button>
+                                </h2>
+                                <div id="tagAccordion" class="accordion-collapse collapse show" aria-labelledby="tagAccordion">
+                                    <div class="accordion-body">
+                                        <div class="side-title">
+                                            <select class="form-select" data-trigger name="tag[]" id="tag" multiple>
+                                                @foreach($tags as $id => $entry)
+                                                    <option value="{{ $id }}" {{ old('tag') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- end accordion-item -->
+
+                            <div class="accordion-item mt-4">
                                 <h2 class="accordion-header" id="educationAccordion">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#educationTags" aria-expanded="false" aria-controls="tagcloud">
                                         Education
@@ -194,7 +232,7 @@
                             <div class="accordion-item mt-4">
                                 <h2 class="accordion-header" id="departmentAccordion">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#departmentOne" aria-expanded="true" aria-controls="departmentOne">
-                                        Education Department
+                                        Department
                                     </button>
                                 </h2>
                                 <div id="departmentOne" class="accordion-collapse collapse show" aria-labelledby="departmentOne">
@@ -271,6 +309,23 @@
         shouldSort: false,
     });
 
+    const experienceChoices = new Choices('#experience', {
+        placeholder: true,
+        placeholderValue: 'All Experiences',
+        searchEnabled: true,
+        searchResultLimit: 10,
+        shouldSort: false,
+    });
+
+    const tagChoices = new Choices('#tag', {
+        placeholder: true,
+        placeholderValue: 'Filter Tags',
+        searchEnabled: true,
+        searchResultLimit: 10,
+        shouldSort: false,
+        removeItemButton: true
+    });
+
     const departmentChoices = new Choices('#department', {
         placeholder: true,
         placeholderValue: 'Filter Departments',
@@ -295,9 +350,11 @@
         let city = document.getElementById('city').value;
         let position = document.getElementById('position').value;
         let industry = document.getElementById('industry').value;
+        let experience = document.getElementById('experience').value;
         let jobType = document.querySelector('input[name="job_type"]:checked').value;
         let education = Array.from(document.getElementById('education').selectedOptions).map(option => option.value);
         let departments = Array.from(document.getElementById('department').selectedOptions).map(option => option.value);
+        let tags = Array.from(document.getElementById('tag').selectedOptions).map(option => option.value);
         let onlyOpen = document.getElementById('onlyopen').checked ? 'open' : '';
 
         $.ajax({
@@ -308,9 +365,11 @@
                 city: city,
                 position: position,
                 industry: industry,
+                experience: experience,
                 job_type: jobType,
                 department: departments,
                 education: education,
+                tag: tags,
                 onlyopen: onlyOpen,
                 page: page // Include the current page number for pagination
             },
@@ -321,7 +380,7 @@
     }
 
     // Handle sidebar filters change events
-    document.querySelectorAll('#industry, input[name="job_type"], #onlyopen, #department, #education').forEach(element => {
+    document.querySelectorAll('#industry, input[name="job_type"], #onlyopen, #department, #education, #experience, #tag').forEach(element => {
         element.addEventListener('change', function() {
             console.log('clicked')
             filterJobs();

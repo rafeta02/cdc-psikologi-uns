@@ -19,17 +19,17 @@ class StoreResultAssessmentRequest extends FormRequest
         return [
             'initial' => [
                 'string',
-                'nullable',
+                'required',
             ],
             'age' => [
-                'nullable',
+                'required',
                 'integer',
                 'min:0',
                 'max:120',
             ],
             'field' => [
                 'string',
-                'nullable',
+                'required',
             ],
         ];
     }

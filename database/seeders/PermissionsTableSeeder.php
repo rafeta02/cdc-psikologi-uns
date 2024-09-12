@@ -572,6 +572,26 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 141,
+                'title' => 'vacancy_tag_create',
+            ],
+            [
+                'id'    => 142,
+                'title' => 'vacancy_tag_edit',
+            ],
+            [
+                'id'    => 143,
+                'title' => 'vacancy_tag_show',
+            ],
+            [
+                'id'    => 144,
+                'title' => 'vacancy_tag_delete',
+            ],
+            [
+                'id'    => 145,
+                'title' => 'vacancy_tag_access',
+            ],
+            [
+                'id'    => 146,
                 'title' => 'profile_password_edit',
             ],
         ];

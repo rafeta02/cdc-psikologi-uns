@@ -100,7 +100,7 @@
         { data: 'category', name: 'categories.name', class : 'text-center' },
         { data: 'tag', name: 'tags.name', class : 'text-center' },
         { data: 'status', name: 'status', class : 'text-center' },
-        { data: 'created_at', name: 'created_at', class : 'text-right'  },
+        { data: 'created_at', name: 'created_at', class : 'text-center'  },
         { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center'}
     ],
     orderCellsTop: true,

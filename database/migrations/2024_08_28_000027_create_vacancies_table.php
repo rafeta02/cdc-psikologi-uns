@@ -15,6 +15,7 @@ class CreateVacanciesTable extends Migration
             $table->longText('description')->nullable();
             $table->string('type')->nullable();
             $table->date('open_date')->nullable();
+            $table->boolean('close_date_exist')->default(0)->nullable();
             $table->date('close_date')->nullable();
             $table->longText('persyaratan_umum')->nullable();
             $table->longText('persyaratan_khusus')->nullable();

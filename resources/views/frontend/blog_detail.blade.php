@@ -54,7 +54,7 @@
                         <div class="swiper blogdetailSlider">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
-                                    <img src="{{ $post->image ? $post->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="" class="img-fluid rounded-3">
+                                    <img src="{{ $post->image ? $post->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="" class="img-fluid rounded-3" style="width: 100%; height: auto; object-fit: cover;">
                                 </div>
                             </div>
                         </div>
@@ -67,6 +67,20 @@
                                     </div>
                                     <div class="ms-2 flex-grow-1">
                                         <p class="mb-0"> Posted By {{ $post->author->name }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-inline-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="uil uil-browser"></i>
+                                    </div>
+                                    <div class="ms-2 flex-grow-1">
+                                        <p class="mb-0">
+                                            @foreach ($post->categories as $category)
+                                                {{ $category->name }} {{ $loop->last ? '' : ', ' }}
+                                            @endforeach
+                                        </p>
                                     </div>
                                 </div>
                             </li>
@@ -109,23 +123,23 @@
                                     <b>Share post:</b>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="social-link bg-primary-subtle text-primary">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="social-link bg-primary-subtle text-primary">
                                         <i class="uil uil-facebook-f"></i>
                                     </a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="social-link bg-success-subtle text-success">
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($post->title) }}" target="_blank" class="social-link bg-info-subtle text-info">
+                                        <i class="uil uil-twitter-alt"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' ' . $post->url) }}" target="_blank" class="social-link bg-success-subtle text-success">
                                         <i class="uil uil-whatsapp"></i>
                                     </a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="social-link bg-primary-subtle text-primary">
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" class="social-link bg-primary-subtle text-primary">
                                         <i class="uil uil-linkedin-alt"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0)" class="social-link bg-danger-subtle text-danger">
-                                        <i class="uil uil-envelope"></i>
                                     </a>
                                 </li>
                             </ul>

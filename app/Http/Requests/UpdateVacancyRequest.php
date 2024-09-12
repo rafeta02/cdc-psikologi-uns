@@ -41,11 +41,6 @@ class UpdateVacancyRequest extends FormRequest
             'departments' => [
                 'array',
             ],
-            'minimum_gpa' => [
-                'numeric',
-                'min:0',
-                'max:4',
-            ],
         ];
     }
 }
