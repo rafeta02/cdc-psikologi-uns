@@ -12,6 +12,7 @@ use App\Models\Department;
 use App\Models\Company;
 use App\Models\Post;
 use App\Models\Vacancy;
+use App\Models\Regency;
 
 class DatabaseSeeder extends Seeder
 {
@@ -39,6 +40,7 @@ class DatabaseSeeder extends Seeder
         // $vacancies = Vacancy::all();
         // $educations = Education::all(); // Fetch all available tags
         // $departments = Department::all(); // Fetch all available tags
+        // $locations = Regency::all(); // Fetch all available tags
 
         // foreach ($vacancies as $vacancy) {
         //     $vacancy->education()->attach(
@@ -47,10 +49,13 @@ class DatabaseSeeder extends Seeder
         //     $vacancy->departments()->attach(
         //         $departments->random(2)->pluck('id')->toArray() // Attaching 3 random tags
         //     );
+        //     $vacancy->locations()->attach(
+        //         $locations->random(2)->pluck('id')->toArray() // Attaching 3 random tags
+        //     );
         // }
 
 
-        Post::factory()->count(50)->create();
+        // Post::factory()->count(50)->create();
 
         // // Assuming you want to assign tags to each post
         // $posts = Post::all();

@@ -35,7 +35,6 @@ class VacancyFactory extends Factory
             'experience_id' => $this->faker->numberBetween(1, 6),
             'position_id' => $this->faker->numberBetween(1, 3),  // Assuming Position model has a factory
             'industry_id' => $this->faker->numberBetween(1, 3),  // Assuming Industry model has a factor // Assuming Industry model has a factory
-            'location_id' => $this->faker->numberBetween(1, 200),
             'created_by_id' => 1,
         ];
     }
