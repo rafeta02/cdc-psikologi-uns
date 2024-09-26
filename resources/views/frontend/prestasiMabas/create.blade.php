@@ -1,4 +1,24 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa Baru - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa Baru</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.prestasi-mabas.index') }}">Prestasi Mahasiswa Baru</a></li>
+                <li class="breadcrumb-item active">Tambah Prestasi</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -164,7 +184,7 @@
 
 @section('scripts')
 <script>
-    var uploadedBuktiKegiatanMap = {}
+var uploadedBuktiKegiatanMap = {}
 Dropzone.options.buktiKegiatanDropzone = {
     url: '{{ route('frontend.prestasi-mabas.storeMedia') }}',
     maxFilesize: 5, // MB

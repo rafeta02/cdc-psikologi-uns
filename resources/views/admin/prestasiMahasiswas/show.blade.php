@@ -211,7 +211,7 @@
     </ul>
     <div class="tab-content">
         <div class="tab-pane" role="tabpanel" id="prestasi_mahasiswa_prestasi_mahasiswa_details">
-            @includeIf('admin.prestasiMahasiswas.relationships.prestasiMahasiswaPrestasiMahasiswaDetails', ['prestasiMahasiswaDetails' => $prestasiMahasiswa->prestasiMahasiswaPrestasiMahasiswaDetails])
+            @includeIf('admin.prestasiMahasiswas.relationships.prestasiMahasiswaPrestasiMahasiswaDetails', ['prestasiMahasiswaDetails' => $prestasiMahasiswa->pesertas])
         </div>
     </div>
 </div>

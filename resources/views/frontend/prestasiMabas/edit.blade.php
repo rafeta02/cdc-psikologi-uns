@@ -1,10 +1,27 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa Baru - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa Baru</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.prestasi-mabas.index') }}">Prestasi Mahasiswa Baru</a></li>
+                <li class="breadcrumb-item active">Edit Prestasi</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa</h3>
-        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -16,20 +33,6 @@
                     <form method="POST" action="{{ route("frontend.prestasi-mabas.update", [$prestasiMaba->id]) }}" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
-                        <div class="form-group">
-                            <label for="user_id">{{ trans('cruds.prestasiMaba.fields.user') }}</label>
-                            <select class="form-control select2" name="user_id" id="user_id">
-                                @foreach($users as $id => $entry)
-                                    <option value="{{ $id }}" {{ (old('user_id') ? old('user_id') : $prestasiMaba->user->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('user'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('user') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.prestasiMaba.fields.user_helper') }}</span>
-                        </div>
                         <div class="form-group">
                             <label class="required">{{ trans('cruds.prestasiMaba.fields.tingkat') }}</label>
                             @foreach(App\Models\PrestasiMaba::TINGKAT_RADIO as $key => $label)

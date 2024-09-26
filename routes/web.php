@@ -29,6 +29,8 @@ Route::get('select/regencies', 'Admin\ProvinceController@getRegencies')->name('s
 
 Auth::routes();
 
+Route::get('/login/sso', 'Auth\LoginController@loginSSO')->name('auth.login.sso');
+
 Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
@@ -135,6 +137,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('prestasi-mahasiswas/destroy', 'PrestasiMahasiswaController@massDestroy')->name('prestasi-mahasiswas.massDestroy');
     Route::post('prestasi-mahasiswas/media', 'PrestasiMahasiswaController@storeMedia')->name('prestasi-mahasiswas.storeMedia');
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
+    Route::post('prestasi-mahasiswas/export', 'PrestasiMahasiswaController@export')->name('prestasi-mahasiswas.export');
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
     // Prestasi Mahasiswa Detail
@@ -184,6 +187,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('prestasi-mabas/destroy', 'PrestasiMabaController@massDestroy')->name('prestasi-mabas.massDestroy');
     Route::post('prestasi-mabas/media', 'PrestasiMabaController@storeMedia')->name('prestasi-mabas.storeMedia');
     Route::post('prestasi-mabas/ckmedia', 'PrestasiMabaController@storeCKEditorImages')->name('prestasi-mabas.storeCKEditorImages');
+    Route::post('prestasi-mabas/export', 'PrestasiMabaController@export')->name('prestasi-mabas.export');
     Route::resource('prestasi-mabas', 'PrestasiMabaController');
 
     // Kategori Prestasi
@@ -228,12 +232,14 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('tracer-stakeholders/destroy', 'TracerStakeholderController@massDestroy')->name('tracer-stakeholders.massDestroy');
     Route::post('tracer-stakeholders/media', 'TracerStakeholderController@storeMedia')->name('tracer-stakeholders.storeMedia');
     Route::post('tracer-stakeholders/ckmedia', 'TracerStakeholderController@storeCKEditorImages')->name('tracer-stakeholders.storeCKEditorImages');
+    Route::post('tracer-stakeholders/export', 'TracerStakeholderController@export')->name('tracer-stakeholders.export');
     Route::resource('tracer-stakeholders', 'TracerStakeholderController');
 
     // Prestasi Maba
     Route::delete('prestasi-mabas/destroy', 'PrestasiMabaController@massDestroy')->name('prestasi-mabas.massDestroy');
     Route::post('prestasi-mabas/media', 'PrestasiMabaController@storeMedia')->name('prestasi-mabas.storeMedia');
     Route::post('prestasi-mabas/ckmedia', 'PrestasiMabaController@storeCKEditorImages')->name('prestasi-mabas.storeCKEditorImages');
+    Route::post('prestasi-mabas/print-bukti', 'PrestasiMabaController@printBukti')->name('prestasi-mabas.printBukti');
     Route::resource('prestasi-mabas', 'PrestasiMabaController');
 
     // Prestasi Mahasiswa

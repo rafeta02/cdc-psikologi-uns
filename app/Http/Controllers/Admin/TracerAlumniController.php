@@ -14,7 +14,9 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
 
 
 class TracerAlumniController extends Controller
@@ -145,9 +147,14 @@ class TracerAlumniController extends Controller
 
     public function export(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->has('date') && $request->date && $dates = explode(' - ', $request->date)) {
+            $start = Date::parse($dates[0])->startOfDay();
+            $end = !isset($dates[1]) ? $start->clone()->endOfMonth() : Date::parse($dates[1])->endOfDay();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now();
+        }
 
-        return Excel::download(new TracerAlumnuExport($startDate, $endDate), 'tracer_alumni_' . $startDate . '_to_' . $endDate . '.xlsx');
+        return Excel::download(new TracerAlumnuExport($start , $end), 'Tracer Alumni dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 }

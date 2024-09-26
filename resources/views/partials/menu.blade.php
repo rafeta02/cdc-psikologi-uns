@@ -335,18 +335,6 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            @can('prestasi_mahasiswa_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.prestasi-mahasiswas.index") }}" class="nav-link {{ request()->is("admin/prestasi-mahasiswas") || request()->is("admin/prestasi-mahasiswas/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-trophy">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.prestasiMahasiswa.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('kategori_prestasi_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.kategori-prestasis.index") }}" class="nav-link {{ request()->is("admin/kategori-prestasis") || request()->is("admin/kategori-prestasis/*") ? "active" : "" }}">
@@ -355,6 +343,18 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.kategoriPrestasi.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('prestasi_mahasiswa_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.prestasi-mahasiswas.index") }}" class="nav-link {{ request()->is("admin/prestasi-mahasiswas") || request()->is("admin/prestasi-mahasiswas/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-trophy">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.prestasiMahasiswa.title') }}
                                         </p>
                                     </a>
                                 </li>
@@ -371,7 +371,7 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('prestasi_mahasiswa_detail_access')
+                            {{-- @can('prestasi_mahasiswa_detail_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.prestasi-mahasiswa-details.index") }}" class="nav-link {{ request()->is("admin/prestasi-mahasiswa-details") || request()->is("admin/prestasi-mahasiswa-details/*") ? "active" : "" }}">
                                         <i class="fa-fw nav-icon fas fa-info">
@@ -382,13 +382,13 @@
                                         </p>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                         </ul>
                     </li>
                 @endcan
                 @can('kompetensi_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/competences*") ? "menu-open" : "" }} {{ request()->is("admin/competence-items*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/competences*") ? "active" : "" }} {{ request()->is("admin/competence-items*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/result-competences*") ? "menu-open" : "" }} {{ request()->is("admin/competences*") ? "menu-open" : "" }} {{ request()->is("admin/competence-items*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/result-competences*") ? "active" : "" }} {{ request()->is("admin/competences*") ? "active" : "" }} {{ request()->is("admin/competence-items*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fab fa-kickstarter-k">
 
                             </i>
@@ -422,21 +422,6 @@
                                     </a>
                                 </li>
                             @endcan
-                        </ul>
-                    </li>
-                @endcan
-                @can('result_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/result-competences*") ? "menu-open" : "" }} {{ request()->is("admin/result-assessments*") ? "menu-open" : "" }} {{ request()->is("admin/holland-tests*") ? "menu-open" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "menu-open" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "menu-open" : "" }} {{ request()->is("admin/questions*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/result-competences*") ? "active" : "" }} {{ request()->is("admin/result-assessments*") ? "active" : "" }} {{ request()->is("admin/holland-tests*") ? "active" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "active" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "active" : "" }} {{ request()->is("admin/questions*") ? "active" : "" }}" href="#">
-                            <i class="fa-fw nav-icon fas fa-chart-area">
-
-                            </i>
-                            <p>
-                                {{ trans('cruds.result.title') }}
-                                <i class="right fa fa-fw fa-angle-left nav-icon"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
                             @can('result_competence_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.result-competences.index") }}" class="nav-link {{ request()->is("admin/result-competences") || request()->is("admin/result-competences/*") ? "active" : "" }}">
@@ -445,6 +430,33 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.resultCompetence.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
+                @can('result_access')
+                    <li class="nav-item has-treeview {{ request()->is("admin/result-assessments*") ? "menu-open" : "" }} {{ request()->is("admin/holland-tests*") ? "menu-open" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "menu-open" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "menu-open" : "" }} {{ request()->is("admin/questions*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/result-assessments*") ? "active" : "" }} {{ request()->is("admin/holland-tests*") ? "active" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "active" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "active" : "" }} {{ request()->is("admin/questions*") ? "active" : "" }}" href="#">
+                            <i class="fa-fw nav-icon fas fa-chart-area">
+
+                            </i>
+                            <p>
+                                Assessment
+                                <i class="right fa fa-fw fa-angle-left nav-icon"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('question_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.questions.index") }}" class="nav-link {{ request()->is("admin/questions") || request()->is("admin/questions/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-question">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.question.title') }}
                                         </p>
                                     </a>
                                 </li>
@@ -493,18 +505,6 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.careerConfidenceTest.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('question_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.questions.index") }}" class="nav-link {{ request()->is("admin/questions") || request()->is("admin/questions/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-question">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.question.title') }}
                                         </p>
                                     </a>
                                 </li>

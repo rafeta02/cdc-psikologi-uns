@@ -86,10 +86,10 @@
     aaSorting: [],
     ajax: "{{ route('admin.competences.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'name', name: 'name' },
-{ data: 'image', name: 'image', sortable: false, searchable: false },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'name', name: 'name', class : 'text-center' },
+        { data: 'image', name: 'image', sortable: false, searchable: false, class : 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -100,7 +100,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

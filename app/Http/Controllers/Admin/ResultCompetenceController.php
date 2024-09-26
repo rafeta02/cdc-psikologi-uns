@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 class ResultCompetenceController extends Controller
 {
@@ -25,7 +26,7 @@ class ResultCompetenceController extends Controller
         abort_if(Gate::denies('result_competence_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = ResultCompetence::with(['user', 'competence'])->select(sprintf('%s.*', (new ResultCompetence)->table));
+            $query = ResultCompetence::with(['user', 'competence'])->select(sprintf('%s.*', (new ResultCompetence)->table))->latest();
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -54,11 +55,15 @@ class ResultCompetenceController extends Controller
                 return $row->competence ? $row->competence->name : '';
             });
 
-            $table->editColumn('description', function ($row) {
-                return $row->description ? $row->description : '';
+            $table->editColumn('created_at', function ($row) {
+                return $row->created_at ? $row->created_at->diffForHumans() : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'user', 'competence']);
+            $table->editColumn('certificate', function ($row) {
+                return $row->certificate ? '<a href="' . $row->certificate->getUrl() . '" target="_blank">' . trans('global.downloadFile') . '</a>' : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'user', 'competence', 'certificate']);
 
             return $table->make(true);
         }

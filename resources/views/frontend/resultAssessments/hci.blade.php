@@ -190,7 +190,25 @@
         margin-bottom: 20px;
     }
 </style>
+@endsection
 
+@section('title', 'Assesment Minat Pekerjaan - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Assesment Minat Pekerjaan</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.assessments.index') }}">Assessment</a></li>
+                <li class="breadcrumb-item active">Assesment Minat Pekerjaan</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
 @endsection
 
 @section('content')
@@ -271,12 +289,12 @@
 
                         @foreach ($questions->chunk(10) as $index => $questionPair)
                             <div class="step {{ $index === 0 ? 'active' : '' }}">
-                                <div class="step-number-label">Step {{ $index + 1 }} of {{ count($questions->chunk(10)) }}</div>
+                                <div class="step-number-label">Step {{ $index + 1 }} of {{ count($questions->chunk(10)) }} &nbsp; &nbsp; </div>
                                 @foreach ($questionPair as $question)
                                     <div class="card mb-3">
                                         <p class="question text-center">{{ $question->text }}</p>
                                         <div class="custom-radio-group">
-                                            <span class="agree"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Suka</span>
+                                            <span class="agree"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Suka</span>
                                             <input type="radio" id="id_{{ $question->code }}_1" name="{{ $question->code }}" value="1">
                                             <label for="id_{{ $question->code }}_1"></label>
 

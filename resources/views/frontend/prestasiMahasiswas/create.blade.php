@@ -1,10 +1,27 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.prestasi-mahasiswas.index') }}">Prestasi Mahasiswa</a></li>
+                <li class="breadcrumb-item active">Tambah Prestasi Mahasiswa</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa</h3>
-        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -159,8 +176,10 @@
                         <!-- Dynamic Nama Peserta and NIM Peserta -->
                         <div id="peserta-wrapper">
                             <div class="card mb-3 peserta-group">
-                                <div class="card-body">
+                                <div class="card-header">
                                     <h5 class="card-title">Peserta 1</h5>
+                                </div>
+                                <div class="card-body">
                                     <div class="form-group">
                                         <label for="nama_peserta">
                                             Nama Peserta

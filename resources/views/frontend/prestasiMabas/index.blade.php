@@ -1,20 +1,34 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa Baru - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa Baru</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Prestasi Mahasiswa Baru</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa Baru</h3>
-        </div>
         <div class="col-md-12">
-            @can('prestasi_maba_create')
-                <div style="margin-bottom: 10px;" class="row">
-                    <div class="col-lg-12">
-                        <a class="btn btn-success" href="{{ route('frontend.prestasi-mabas.create') }}">
-                            Tambah Data Prestasi
-                        </a>
-                    </div>
+            <div style="margin-bottom: 10px;" class="row">
+                <div class="col-lg-12">
+                    <a class="btn btn-success" href="{{ route('frontend.prestasi-mabas.create') }}">
+                        Tambah Data Prestasi
+                    </a>
                 </div>
-            @endcan
+            </div>
             <div class="card">
                 <div class="card-header">
                     {{ trans('cruds.prestasiMaba.title_singular') }} {{ trans('global.list') }}
@@ -33,9 +47,6 @@
                                     </th>
                                     <th class="text-center">
                                         {{ trans('cruds.prestasiMaba.fields.kategori') }}
-                                    </th>
-                                    <th class="text-center">
-                                        {{ trans('cruds.prestasiMaba.fields.jumlah_peserta') }}
                                     </th>
                                     <th class="text-center">
                                         {{ trans('cruds.prestasiMaba.fields.perolehan_juara') }}
@@ -61,26 +72,24 @@
                                             {{ $prestasiMaba->kategori->name ?? '' }}
                                         </td>
                                         <td class="text-center">
-                                            {{ App\Models\PrestasiMaba::JUMLAH_PESERTA_RADIO[$prestasiMaba->jumlah_peserta] ?? '' }}
-                                        </td>
-                                        <td class="text-center">
                                             {{ App\Models\PrestasiMaba::PEROLEHAN_JUARA_SELECT[$prestasiMaba->perolehan_juara] ?? '' }}
                                         </td>
                                         <td class="text-center">
                                             {{ $prestasiMaba->nama_penyelenggara ?? '' }}
                                         </td>
                                         <td class="text-center">
-                                            @can('prestasi_maba_show')
-                                                <a class="btn btn-xs btn-primary" href="{{ route('frontend.prestasi-mabas.show', $prestasiMaba->id) }}">
-                                                    {{ trans('global.view') }}
-                                                </a>
-                                            @endcan
+                                            <a class="btn btn-xs btn-primary" href="{{ route('frontend.prestasi-mabas.show', $prestasiMaba->id) }}">
+                                                {{ trans('global.view') }}
+                                            </a>
+                                            <a class="btn btn-xs btn-info" href="{{ route('frontend.prestasi-mabas.edit', $prestasiMaba->id) }}">
+                                                {{ trans('global.edit') }}
+                                            </a>
 
-                                            @can('prestasi_maba_edit')
-                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.prestasi-mabas.edit', $prestasiMaba->id) }}">
-                                                    {{ trans('global.edit') }}
-                                                </a>
-                                            @endcan
+                                            <form action="{{ route('frontend.prestasi-mabas.printBukti') }}" method="POST">
+                                                <input type="hidden" name="id" value="{{ $prestasiMaba->id }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <input type="submit" class="btn btn-xs btn-danger" value="Print Bukti">
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -97,50 +106,23 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
-  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('prestasi_maba_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('frontend.prestasi-mabas.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
+$(function () {
+    let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
-
-  $.extend(true, $.fn.dataTable.defaults, {
-    orderCellsTop: true,
-    order: [[ 1, 'desc' ]],
-    pageLength: 50,
-  });
-  let table = $('.datatable-PrestasiMaba:not(.ajaxTable)').DataTable({ buttons: dtButtons })
-  $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
-      $($.fn.dataTable.tables(true)).DataTable()
-          .columns.adjust();
-  });
-
+    $.extend(true, $.fn.dataTable.defaults, {
+        orderCellsTop: true,
+        order: [
+            [1, 'desc']
+        ],
+        pageLength: 50,
+    });
+    let table = $('.datatable-PrestasiMaba:not(.ajaxTable)').DataTable({
+        buttons: dtButtons
+    })
+    $('a[data-toggle="tab"]').on('shown.bs.tab click', function (e) {
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+    });
 })
-
 </script>
 @endsection

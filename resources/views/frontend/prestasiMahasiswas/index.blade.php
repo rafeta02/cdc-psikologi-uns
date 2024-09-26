@@ -1,11 +1,26 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Prestasi Mahasiswa</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa</h3>
-        </div>
-
         <div class="col-md-12">
             @can('prestasi_mahasiswa_create')
                 <div style="margin-bottom: 10px;" class="row">
@@ -36,9 +51,6 @@
                                         {{ trans('cruds.prestasiMahasiswa.fields.kategori') }}
                                     </th>
                                     <th class="text-center">
-                                        Jumlah Peserta
-                                    </th>
-                                    <th class="text-center">
                                         {{ trans('cruds.prestasiMahasiswa.fields.perolehan_juara') }}
                                     </th>
                                     <th class="text-center">
@@ -62,31 +74,23 @@
                                             {{ $prestasiMahasiswa->kategori->name ?? '' }}
                                         </td>
                                         <td class="text-center">
-                                            {{ App\Models\PrestasiMahasiswa::JUMLAH_PESERTA_RADIO[$prestasiMahasiswa->jumlah_peserta] ?? '' }}
-                                        </td>
-                                        <td class="text-center">
                                             {{ App\Models\PrestasiMahasiswa::PEROLEHAN_JUARA_SELECT[$prestasiMahasiswa->perolehan_juara] ?? '' }}
                                         </td>
                                         <td class="text-center">
                                             {{ $prestasiMahasiswa->nama_penyelenggara ?? '' }}
                                         </td>
                                         <td class="text-center">
-                                            @can('prestasi_mahasiswa_show')
-                                                <a class="btn btn-sm btn-primary" href="{{ route('frontend.prestasi-mahasiswas.show', $prestasiMahasiswa->id) }}">
-                                                    {{ trans('global.view') }}
-                                                </a>
-                                            @endcan
-
-                                            @can('prestasi_mahasiswa_edit')
-                                                <a class="btn btn-sm btn-info" href="{{ route('frontend.prestasi-mahasiswas.edit', $prestasiMahasiswa->id) }}">
-                                                    {{ trans('global.edit') }}
-                                                </a>
-                                            @endcan
+                                            <a class="btn btn-xs btn-primary" href="{{ route('frontend.prestasi-mahasiswas.show', $prestasiMahasiswa->id) }}">
+                                                {{ trans('global.view') }}
+                                            </a>
+                                            <a class="btn btn-xs btn-info" href="{{ route('frontend.prestasi-mahasiswas.edit', $prestasiMahasiswa->id) }}">
+                                                {{ trans('global.edit') }}
+                                            </a>
 
                                             <form action="{{ route('frontend.prestasi-mahasiswas.printBukti') }}" method="POST">
                                                 <input type="hidden" name="id" value="{{ $prestasiMahasiswa->id }}">
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="submit" class="btn btn-sm btn-block mb-1 btn-success" value="Print Bukti">
+                                                <input type="submit" class="btn btn-xs btn-danger" value="Print Bukti">
                                             </form>
                                         </td>
                                     </tr>

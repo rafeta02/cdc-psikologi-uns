@@ -1,13 +1,13 @@
 @extends('layouts.frontend')
 @section('styles')
 <style>
-    .job-box {
+    .competence-box {
         overflow: hidden;
         -webkit-transition: all 0.5s ease;
         transition: all 0.5s ease;
     }
 
-    .job-box:hover {
+    .competence-box:hover {
         -webkit-transform: translateY(-8px);
         transform: translateY(-8px);
         border-color: purple;
@@ -17,6 +17,25 @@
     }
 </style>
 @endsection
+
+@section('title', 'Kompetensi Mahasiswa - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Kompetensi Mahasiswa</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Kompetensi Mahasiswa</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -32,12 +51,12 @@
                             $resultCompetence = $resultCompetences->where('competence_id', $competence->id)->first();
                         @endphp
                         <div class="col-12">
-                            <div class="job-box card mt-4 shadow-sm border-0">
+                            <div class="competence-box card mt-4 shadow-sm border-0">
                                 <div class="p-4">
                                     <div class="row align-items-center">
                                         <div class="col-md-2 text-center">
                                             <a href="company-details.html">
-                                                <img src="{{ asset('jobcy/images/featured-job/img-02.png') }}" alt="Image" class="img-fluid rounded-3 mb-3 mb-md-0">
+                                                <img src="{{ $competence->image ? $competence->image->getUrl() : asset('jobcy/images/competence.jpg') }}" alt="Image" class="img-fluid rounded-3" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50px;">
                                             </a>
                                         </div>
                                         <!--end col-->

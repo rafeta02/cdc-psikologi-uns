@@ -217,3 +217,7 @@ table.dataTable thead .sorting_desc {
     color: #dc3545; /* Ensure error messages are easily distinguishable */
     font-weight: bold; /* Make error messages stand out */
 }
+
+.daterangepicker {
+    min-width: 575px;
+}

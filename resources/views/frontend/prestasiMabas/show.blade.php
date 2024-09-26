@@ -1,10 +1,27 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa Baru - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa Baru</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.prestasi-mabas.index') }}">Prestasi Mahasiswa Baru</a></li>
+                <li class="breadcrumb-item active">Show Prestasi</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa Baru</h3>
-        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -14,21 +31,8 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="form-group">
-                            <a class="btn btn-default" href="{{ route('frontend.prestasi-mabas.index') }}">
-                                {{ trans('global.back_to_list') }}
-                            </a>
-                        </div>
                         <table class="table table-bordered table-striped">
                             <tbody>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.prestasiMaba.fields.user') }}
-                                    </th>
-                                    <td>
-                                        {{ $prestasiMaba->user->name ?? '' }}
-                                    </td>
-                                </tr>
                                 <tr>
                                     <th>
                                         {{ trans('cruds.prestasiMaba.fields.tingkat') }}

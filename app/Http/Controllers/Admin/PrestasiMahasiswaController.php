@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\PrestasiMahasiswaExport;
+use Excel;
+use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
 
 class PrestasiMahasiswaController extends Controller
 {
@@ -216,7 +220,7 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $prestasiMahasiswa->load('user', 'kategori', 'prestasiMahasiswaPrestasiMahasiswaDetails');
+        $prestasiMahasiswa->load('user', 'kategori', 'pesertas');
 
         return view('admin.prestasiMahasiswas.show', compact('prestasiMahasiswa'));
     }
@@ -251,5 +255,18 @@ class PrestasiMahasiswaController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function export(Request $request)
+    {
+        if ($request->has('date') && $request->date && $dates = explode(' - ', $request->date)) {
+            $start = Date::parse($dates[0])->startOfDay();
+            $end = !isset($dates[1]) ? $start->clone()->endOfMonth() : Date::parse($dates[1])->endOfDay();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now();
+        }
+
+        return Excel::download(new PrestasiMahasiswaExport($start , $end), 'Prestasi Mahasiswa dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 }

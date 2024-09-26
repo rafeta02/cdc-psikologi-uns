@@ -12,8 +12,10 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use App\Exports\AssessmentExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AssessmentTypeExport;
+use Excel;
+use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
 
 class ResultAssessmentController extends Controller
 {
@@ -60,7 +62,19 @@ class ResultAssessmentController extends Controller
                 return $row->field ? $row->field : '';
             });
             $table->editColumn('test_name', function ($row) {
-                return $row->test_name ? ResultAssessment::TEST_NAME_SELECT[$row->test_name] : '';
+                $type = 'badge-info';
+                switch ($row->test_name) {
+                    case 'hci':
+                        $type = 'badge-primary';
+                        break;
+                    case 'wr':
+                        $type = 'badge-success';
+                        break;
+                    case 'cci':
+                        $type =  'badge-warning';
+                        break;
+                }
+                return $row->test_name ? '<span class="badge ' . $type . '">' . ResultAssessment::TEST_NAME_SELECT[$row->test_name] .'</span>' : '';
             });
             $table->editColumn('result_text', function ($row) {
                 return $row->result_text ? $row->result_text : '';
@@ -69,7 +83,7 @@ class ResultAssessmentController extends Controller
                 return $row->result_description ? $row->result_description : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'user']);
+            $table->rawColumns(['actions', 'placeholder', 'user', 'test_name']);
 
             return $table->make(true);
         }
@@ -140,8 +154,18 @@ class ResultAssessmentController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new AssessmentExport, 'assessments.xlsx');
+        if ($request->has('date') && $request->date && $dates = explode(' - ', $request->date)) {
+            $start = Date::parse($dates[0])->startOfDay();
+            $end = !isset($dates[1]) ? $start->clone()->endOfMonth() : Date::parse($dates[1])->endOfDay();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now();
+        }
+
+        $type = $request->has('type') ? $request->type : 'hci';
+
+        return Excel::download(new AssessmentTypeExport($start , $end, $type), 'Assessment Mahasiswa dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 }

@@ -14,7 +14,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use App\Exports\TracerStakeholderExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
 
 class TracerStakeholderController extends Controller
 {
@@ -164,9 +166,14 @@ class TracerStakeholderController extends Controller
 
     public function export(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        if ($request->has('date') && $request->date && $dates = explode(' - ', $request->date)) {
+            $start = Date::parse($dates[0])->startOfDay();
+            $end = !isset($dates[1]) ? $start->clone()->endOfMonth() : Date::parse($dates[1])->endOfDay();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now();
+        }
 
-        return Excel::download(new TracerStakeholderExport($startDate, $endDate), 'tracer_stakeholders_' . $startDate . '_to_' . $endDate . '.xlsx');
+        return Excel::download(new TracerStakeholderExport($start , $end), 'Tracer Stakeholders dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 }

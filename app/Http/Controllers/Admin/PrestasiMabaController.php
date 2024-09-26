@@ -15,6 +15,11 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\PrestasiMabaExport;
+use Excel;
+use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
+
 
 class PrestasiMabaController extends Controller
 {
@@ -176,5 +181,18 @@ class PrestasiMabaController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function export(Request $request)
+    {
+        if ($request->has('date') && $request->date && $dates = explode(' - ', $request->date)) {
+            $start = Date::parse($dates[0])->startOfDay();
+            $end = !isset($dates[1]) ? $start->clone()->endOfMonth() : Date::parse($dates[1])->endOfDay();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now();
+        }
+
+        return Excel::download(new PrestasiMabaExport($start , $end), 'Prestasi Mahasiswa Maba dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 }

@@ -14,6 +14,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
+use PDF;
 
 class PrestasiMabaController extends Controller
 {
@@ -57,6 +58,10 @@ class PrestasiMabaController extends Controller
     public function edit(PrestasiMaba $prestasiMaba)
     {
         abort_if(Gate::denies('prestasi_maba_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        if ($prestasiMaba->user_id != auth()->id()) {
+            abort(404);
+        }
 
         $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -131,9 +136,8 @@ class PrestasiMabaController extends Controller
 
     public function printBukti(Request $request)
     {
-        $pinjam = Pinjam::with('kendaraan', 'borrowed_by', 'processed_by', 'driver', 'satpam', 'created_by')->find($request->id);
-        $log = LogPeminjaman::where('peminjaman_id', $request->id)->where('jenis', 'diproses')->orderBy('created_at', 'asc')->first();
-        $pdf = PDF::loadView('pdf.bukti', compact('pinjam', 'log'));
-        return $pdf->download('bukti.pdf');
+        $prestasi = PrestasiMaba::find($request->id);
+        $pdf = PDF::loadView('pdf.bukti_maba', compact('prestasi'));
+        return $pdf->download('bukti-prestasi.pdf');
     }
 }

@@ -15,6 +15,31 @@
     </div>
 
     <div class="card-body">
+        <form method="POST" action="{{ route("admin.tracer-stakeholders.export") }}" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label>Export Tracer Stokeholders</label>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control float-right" name="date" id="date" value="">
+                </div>
+                <!-- /.input group -->
+            </div>
+            <div class="form-group">
+                <button class="btn btn-warning" type="submit">
+                    Export
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="card-body">
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-TracerStakeholder">
             <thead>
                 <tr>
@@ -57,7 +82,7 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('tracer_stakeholder_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
@@ -115,6 +140,12 @@
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
+  });
+
+  $('#date').daterangepicker({
+    locale: {
+      format: 'YYYY-MM-DD'
+    },
   });
 
 });

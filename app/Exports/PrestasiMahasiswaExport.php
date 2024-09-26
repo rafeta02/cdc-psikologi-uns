@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Exports;
+
 use App\Models\PrestasiMahasiswa;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -53,10 +55,9 @@ class PrestasiMahasiswaExport implements FromCollection, WithHeadings, WithMappi
 
     public function map($prestasi): array
     {
-        $pesertas = $prestasiMahasiswa->pesertas->map(function($peserta) {
+        $pesertas = $prestasi->pesertas->map(function($peserta) {
             return $peserta->nim . ' - ' . $peserta->nama;
-        })->implode('\n'); // or "\n" for newline
-
+        })->implode('; '); // or "\n" for newline
 
         return [
             PrestasiMahasiswa::SKIM_RADIO[$prestasi->skim] ?? '',

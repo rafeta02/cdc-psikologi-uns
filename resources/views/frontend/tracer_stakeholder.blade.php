@@ -197,13 +197,13 @@
                                     </thead>
                                     <tbody>
                                         @foreach([
-                                            'integritas' => 'Integritas (etika & moral)',
-                                            'keahlian' => 'Keahlian berdasarkan bidang ilmu (profesionalisme)',
-                                            'bahasa_inggris' => 'Kemampuan Bahasa Inggris',
-                                            'teknologi_informasi' => 'Penggunaan teknologi informasi',
-                                            'komunikasi' => 'Komunikasi',
-                                            'kerjasama' => 'Kerjasama tim',
-                                            'pengembangan_diri' => 'Pengembangan Diri'
+                                            'kompetensi_integritas' => 'Integritas (etika & moral)',
+                                            'kompetensi_profesionalisme' => 'Keahlian berdasarkan bidang ilmu (profesionalisme)',
+                                            'kompetensi_inggris' => 'Kemampuan Bahasa Inggris',
+                                            'kompetensi_it' => 'Penggunaan teknologi informasi',
+                                            'kompetensi_komunikasi' => 'Komunikasi',
+                                            'kompetensi_kerjasama' => 'Kerjasama tim',
+                                            'kompetensi_pengembangan' => 'Pengembangan Diri'
                                         ] as $name => $label)
                                             <tr>
                                                 <td style="text-align: left">- {{ $label }}</td>
@@ -363,7 +363,7 @@
 
     function validateStep2() {
         // Check radio buttons
-        const radioGroups = ['integritas', 'keahlian', 'bahasa_inggris', 'teknologi_informasi', 'komunikasi', 'kerjasama', 'pengembangan_diri'];
+        const radioGroups = ['kompetensi_integritas', 'kompetensi_profesionalisme', 'kompetensi_inggris', 'kompetensi_it', 'kompetensi_komunikasi', 'kompetensi_kerjasama', 'kompetensi_pengembangan'];
         let valid = true;
 
         radioGroups.forEach(group => {

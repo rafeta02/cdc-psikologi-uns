@@ -15,6 +15,30 @@
     </div>
 
     <div class="card-body">
+        <form method="POST" action="{{ route("admin.prestasi-mabas.export") }}" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label>Export Prestasi Mahasiswa Baru</label>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control float-right" name="date" id="date" value="">
+                </div>
+                <!-- /.input group -->
+            </div>
+            <div class="form-group">
+                <button class="btn btn-warning" type="submit">
+                    Export
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-body">
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-PrestasiMaba">
             <thead>
                 <tr>
@@ -29,9 +53,6 @@
                     </th>
                     <th>
                         {{ trans('cruds.prestasiMaba.fields.kategori') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.prestasiMaba.fields.jumlah_peserta') }}
                     </th>
                     <th>
                         {{ trans('cruds.prestasiMaba.fields.perolehan_juara') }}
@@ -57,7 +78,7 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('prestasi_maba_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
@@ -97,15 +118,14 @@
     aaSorting: [],
     ajax: "{{ route('admin.prestasi-mabas.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'tingkat', name: 'tingkat' },
-{ data: 'nama_kegiatan', name: 'nama_kegiatan' },
-{ data: 'kategori_name', name: 'kategori.name' },
-{ data: 'jumlah_peserta', name: 'jumlah_peserta' },
-{ data: 'perolehan_juara', name: 'perolehan_juara' },
-{ data: 'nama_penyelenggara', name: 'nama_penyelenggara' },
-{ data: 'tempat_penyelenggara', name: 'tempat_penyelenggara' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'tingkat', name: 'tingkat', class : 'text-center' },
+        { data: 'nama_kegiatan', name: 'nama_kegiatan', class : 'text-center' },
+        { data: 'kategori_name', name: 'kategori.name', class : 'text-center' },
+        { data: 'perolehan_juara', name: 'perolehan_juara', class : 'text-center' },
+        { data: 'nama_penyelenggara', name: 'nama_penyelenggara', class : 'text-center' },
+        { data: 'tempat_penyelenggara', name: 'tempat_penyelenggara', class : 'text-center'},
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 2, 'desc' ]],
@@ -116,7 +136,13 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
+  $('#date').daterangepicker({
+    locale: {
+      format: 'YYYY-MM-DD'
+    },
+  });
+
 });
 
 </script>

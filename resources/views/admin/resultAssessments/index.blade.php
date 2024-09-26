@@ -1,25 +1,41 @@
 @extends('layouts.admin')
 @section('content')
-@can('result_assessment_create')
-    <div style="margin-bottom: 10px;" class="row">
-        {{-- <div class="col-lg-2">
-            <a class="btn btn-success" href="{{ route('admin.result-assessments.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.resultAssessment.title_singular') }}
-            </a>
-        </div> --}}
-        <div class="col-lg-12">
-            <form method="POST" action="{{ route('admin.result-assessments.export') }}" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                <button type="submit" class="btn btn-primary">
-                    Export
-                </button>
-            </form>
-        </div>
-    </div>
-@endcan
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.resultAssessment.title_singular') }} {{ trans('global.list') }}
+    </div>
+
+    <div class="card-body">
+        <form method="POST" action="{{ route("admin.result-assessments.export") }}" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label class="required">Export Assessment</label>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control float-right" name="date" id="date" value="" required>
+                </div>
+                <!-- /.input group -->
+            </div>
+            <div class="form-group">
+                <label class="required">{{ trans('cruds.question.fields.type') }} Assessment</label>
+                <select class="form-control {{ $errors->has('type') ? 'is-invalid' : '' }}" name="type" id="type" required>
+                    <option value disabled {{ old('type', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                    @foreach(App\Models\Question::TYPE_SELECT as $key => $label)
+                        <option value="{{ $key }}" {{ old('type', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-warning" type="submit">
+                    Export
+                </button>
+            </div>
+        </form>
     </div>
 
     <div class="card-body">
@@ -47,15 +63,9 @@
                     <th>
                         {{ trans('cruds.resultAssessment.fields.test_name') }}
                     </th>
-                    <th>
-                        {{ trans('cruds.resultAssessment.fields.result_text') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.resultAssessment.fields.result_description') }}
-                    </th>
-                    <th>
+                    {{-- <th>
                         &nbsp;
-                    </th>
+                    </th> --}}
                 </tr>
             </thead>
         </table>
@@ -68,37 +78,8 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('result_assessment_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.result-assessments.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-          return entry.id
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
 
   let dtOverrideGlobals = {
     buttons: dtButtons,
@@ -108,16 +89,14 @@
     aaSorting: [],
     ajax: "{{ route('admin.result-assessments.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'user_name', name: 'user.name' },
-{ data: 'initial', name: 'initial' },
-{ data: 'age', name: 'age' },
-{ data: 'gender', name: 'gender' },
-{ data: 'field', name: 'field' },
-{ data: 'test_name', name: 'test_name' },
-{ data: 'result_text', name: 'result_text' },
-{ data: 'result_description', name: 'result_description' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'user_name', name: 'user.name', class: 'text-center' },
+        { data: 'initial', name: 'initial', class: 'text-center' },
+        { data: 'age', name: 'age', class: 'text-center' },
+        { data: 'gender', name: 'gender', class: 'text-center' },
+        { data: 'field', name: 'field', class: 'text-center' },
+        { data: 'test_name', name: 'test_name', class: 'text-center' },
+        // { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 2, 'desc' ]],
@@ -130,6 +109,12 @@
   });
 
 });
+
+$('#date').daterangepicker({
+    locale: {
+      format: 'YYYY-MM-DD'
+    },
+  });
 
 </script>
 @endsection

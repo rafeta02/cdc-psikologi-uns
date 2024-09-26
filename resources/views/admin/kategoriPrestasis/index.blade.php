@@ -39,7 +39,7 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('kategori_prestasi_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
@@ -79,9 +79,9 @@
     aaSorting: [],
     ajax: "{{ route('admin.kategori-prestasis.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'name', name: 'name' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'name', name: 'name', class : 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -92,7 +92,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

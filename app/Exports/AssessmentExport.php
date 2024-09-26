@@ -11,6 +11,24 @@ use Maatwebsite\Excel\Events\AfterSheet;
 
 class AssessmentExport implements FromCollection, WithHeadings, WithMapping, WithEvents
 {
+    protected $startDate;
+    protected $endDate;
+    protected $type;
+
+    public function __construct($startDate, $endDate, $type)
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->type = $type;
+    }
+
+    public function query()
+    {
+        return ResultAssessment::query()
+            ->with(['user', 'hollandTest', 'workReadinessTest', 'careerConfidenceTest'])
+            ->whereBetween('created_at', [$this->startDate, $this->endDate]);
+    }
+
     public function collection()
     {
         return ResultAssessment::with(['user', 'hollandTest', 'workReadinessTest', 'careerConfidenceTest'])->get();

@@ -1,12 +1,24 @@
 @extends('layouts.frontend')
-@section('styles')
-<style>
-    .bg-purple {
-        background-color: #6f42c1; /* Bootstrap's purple color */
-        color: white;
-    }
-</style>
+
+@section('title', 'Kompetensi Mahasiswa - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0">Upload Sertifikat Kompetensi Mahasiswa </h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.competences.index') }}">Kompetensi Mahasiswa</a></li>
+                <li class="breadcrumb-item active">Upload Sertifikat Kompetensi Mahasiswa</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
 @endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

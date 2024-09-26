@@ -1,23 +1,51 @@
 @extends('layouts.frontend')
+
+@section('title', 'Assessment Karir & Kepribadian - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Assessment Karir & Kepribadian </h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Assessment Karir & Kepribadian</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @can('result_assessment_create')
-                <div style="margin-bottom: 10px;" class="row">
-                    <div class="col-lg-12">
-                        <a class="btn btn-primary" href="{{ route('frontend.assessments.takeTest', 'hci') }}">
-                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['hci'] }} Assessment
-                        </a>
-                        <a class="btn btn-success" href="{{ route('frontend.assessments.takeTest', 'wr') }}">
-                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['wr'] }} Assessment
-                        </a>
-                        <a class="btn btn-warning" href="{{ route('frontend.assessments.takeTest', 'cci') }}">
-                            Take {{ App\Models\ResultAssessment::TEST_NAME_SELECT['cci'] }} Assessment
-                        </a>
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success">Take Assessment Test</button>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" href="{{ route('frontend.assessments.takeTest', 'hci') }}">
+                                {{ App\Models\ResultAssessment::TEST_NAME_SELECT['hci'] }}
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('frontend.assessments.takeTest', 'wr') }}">
+                                {{ App\Models\ResultAssessment::TEST_NAME_SELECT['wr'] }}
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('frontend.assessments.takeTest', 'cci') }}">
+                                {{ App\Models\ResultAssessment::TEST_NAME_SELECT['cci'] }}
+                            </a>
+                        </div>
                     </div>
                 </div>
-            @endcan
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     {{ trans('cruds.resultAssessment.title_singular') }} {{ trans('global.list') }}

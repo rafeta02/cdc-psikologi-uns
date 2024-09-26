@@ -28,7 +28,7 @@
                             {{ trans('cruds.competenceItem.fields.description') }}
                         </th>
                         <td>
-                            {{ $competenceItem->description }}
+                            {!! $competenceItem->description !!}
                         </td>
                     </tr>
                     <tr>

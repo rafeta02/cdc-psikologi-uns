@@ -69,11 +69,13 @@
                     </a>
                 </p>
             @endif
-            <p class="mb-1">
-                <a class="text-center" href="{{ route('register') }}">
-                    {{ trans('global.register') }}
+            <hr>
+            <div class="text-center mt-2 mb-3">
+                <h5 class="mb-4">Atau login dengan:</h5>
+                <a href="{{ route('auth.login.sso') }}">
+                    <img src="{{ asset('img/sso.jpg') }}" style="height:75px; width:auto">
                 </a>
-            </p>
+            </div>
         </div>
         <!-- /.login-card-body -->
     </div>

@@ -1,10 +1,27 @@
 @extends('layouts.frontend')
+
+@section('title', 'Prestasi Mahasiswa - CDC Fakultas Psikologi UNS')
+
+@section('breadcumb')
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0"> Prestasi Mahasiswa</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('frontend.prestasi-mahasiswas.index') }}">Prestasi Mahasiswa</a></li>
+                <li class="breadcrumb-item active">Show Prestasi Mahasiswa</li>
+            </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12 mb-4">
-            <h3>Data Prestasi Mahasiswa</h3>
-        </div>
         <div class="col-md-12">
 
             <div class="card">
@@ -14,15 +31,10 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="form-group">
-                            <a class="btn btn-default" href="{{ route('frontend.prestasi-mahasiswas.index') }}">
-                                {{ trans('global.back_to_list') }}
-                            </a>
-                        </div>
                         <table class="table table-bordered table-striped">
                             <tbody>
                                 <tr>
-                                    <th width="30%">
+                                    <th width="25%">
                                         {{ trans('cruds.prestasiMahasiswa.fields.skim') }}
                                     </th>
                                     <td>
@@ -115,7 +127,7 @@
                                         <table width="100%">
                                             <thead>
                                                 <tr>
-                                                    <th>No</th>
+                                                    <th width="1%">No</th>
                                                     <th>NIM Peserta</th>
                                                     <th>Nama Peserta</th>
                                                 </tr>
@@ -123,9 +135,9 @@
                                             <tbody>
                                                 @foreach ($prestasiMahasiswa->pesertas as $item)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item->nim }}</td>
-                                                    <td>{{ $item->nama }}</td>
+                                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                                    <td class="text-center">{{ $item->nim }}</td>
+                                                    <td class="text-center">{{ $item->nama }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
