@@ -423,9 +423,11 @@ class HomeController extends Controller
         $tracerStakeholder = TracerStakeholder::create($validatedData);
 
         if ($request->hasFile('tanda_tangan')) {
-            $file = $request->file('tanda_tangan');
+            // Get the uploaded file
+            $uploadedFile = $request->file('tanda_tangan');
 
-            $tracerStakeholder->addMedia($request->file('tanda_tangan')->path())->toMediaCollection('tanda_tangan');
+            // Store the file in the media collection
+            $tracerStakeholder->addMedia($uploadedFile)->toMediaCollection('tanda_tangan');
         }
 
         if ($media = $request->input('ck-media', false)) {

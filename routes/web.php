@@ -27,7 +27,7 @@ Route::get('userVerification/{token}', 'UserVerificationController@approve')->na
 //ajax for select
 Route::get('select/regencies', 'Admin\ProvinceController@getRegencies')->name('select.getRegencies');
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/login/sso', 'Auth\LoginController@loginSSO')->name('auth.login.sso');
 
