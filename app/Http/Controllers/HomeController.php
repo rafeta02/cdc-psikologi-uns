@@ -477,14 +477,35 @@ class HomeController extends Controller
         return redirect()->route('tracer-alumni')->with('success', 'Data tersimpan, Terima kasih.');
     }
 
-    public function tracerUns()
-    {
-        return view('frontend.about');
-    }
-
     public function grafik(MonthlyUsersChart $chart)
     {
 
         return view('frontend.grafik', ['chart' => $chart->build()]);
     }
+
+    public function about()
+    {
+        return view('frontend.about');
+    }
+
+    public function team()
+    {
+        return view('frontend.team');
+    }
+
+    public function help()
+    {
+        return view('frontend.help');
+    }
+
+    public function faq()
+    {
+        return view('frontend.faq');
+    }
+
+    public function privacy()
+    {
+        return view('frontend.privacy_policy');
+    }
+
 }

@@ -19,8 +19,14 @@ Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
 Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
 Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
 Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
-// Route::get('tracer-uns', 'HomeController@tracerUns')->name('tracer-uns');
+
 Route::get('infografis', 'HomeController@grafik')->name('infografis');
+
+Route::get('about-us', 'HomeController@about')->name('about-us');
+Route::get('team', 'HomeController@team')->name('team');
+Route::get('help-center', 'HomeController@help')->name('help-center');
+Route::get('faq', 'HomeController@faq')->name('faq');
+Route::get('privacy-policy', 'HomeController@privacy')->name('privacy-policy');
 
 Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
 
@@ -28,8 +34,6 @@ Route::get('userVerification/{token}', 'UserVerificationController@approve')->na
 Route::get('select/regencies', 'Admin\ProvinceController@getRegencies')->name('select.getRegencies');
 
 Auth::routes(['register' => false]);
-
-Route::get('/login/sso', 'Auth\LoginController@loginSSO')->name('auth.login.sso');
 
 Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha');
 

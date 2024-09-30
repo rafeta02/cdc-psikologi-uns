@@ -26,7 +26,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">Magang MBKM</a>
+                    <a href="#" class="nav-link">MBKM</a>
                 </li>
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="productdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

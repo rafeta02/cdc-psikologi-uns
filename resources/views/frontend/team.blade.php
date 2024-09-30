@@ -39,15 +39,32 @@
     </div>
     <!-- END SHAPE -->
 
-
-    <!-- START TEAM-PAGE -->
+    <!-- START ABOUT -->
     <section class="section">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
+            <div class="row align-items-center g-0">
+                <div class="col-lg-6">
+                    <div class="about-img mt-4 mt-lg-0">
+                        <img src="{{ asset('img/MeetTheTeam.png') }}" alt="" class="img-fluid rounded" style="width: 512px; height: auto; object-fit: cover;">
+                    </div>
+                </div><!--end col-->
+                <div class="col-lg-6">
+                    <div class="section-title me-lg-5">
+                        <h6 class="sub-title">Meet The Team</h6>
+                        <h2 class="title mb-4">Who <span class="text-warning fw-bold">(CDC FAPSI)</span> Behind The scene ?</h2>
+
+                        <p class="text-muted">
+                            Di balik semua operasional kami, terdapat tim berdedikasi yang siap mendukung perjalanan Anda. Dipimpin oleh Ibu Fadjri Kirana Anggarani, S.Psi., M.A., tim kami bekerja tanpa henti untuk memastikan pengalaman terbaik bagi Anda. Bersama dengan Florine Mulia dan Jonathan Liandres Edwan, kami berkomitmen untuk membantu Anda meraih kesuksesan.
+                        </p>
+                    </div>
+                </div><!--end col-->
+            </div><!--end row-->
+
+            <div class="row mt-5">
+                <div class="col-lg-12 col-md-12">
                     <div class="team-box card border-0 mt-4">
                         <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-01.jpg') }}" alt="" class="img-thumbnail">
+                            <img src="{{ asset('img/bu_kiki.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;"  >
                             <ul class="team-social list-unstyled">
                                 <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
                                 <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
@@ -55,16 +72,34 @@
                             </ul>
                         </div>
                         <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Rebecca Swartz</h6></a>
-                            <p class="text-muted mb-0">Founder & CEO</p>
+                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Fadjri Kirana Anggarani, S.Psi., M.A.</h6></a>
+                            <p class="text-muted mb-0">Head of Career Development Center Fakultas Psikologi UNS</p>
+                        </div>
+                    </div><!--end team-box-->
+                </div><!--end col-->
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-6 col-md-6">
+                    <div class="team-box card border-0 mt-4">
+                        <div class="team-img position-relative mx-auto">
+                            <img src="{{ asset('img/flo.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;">
+                            <ul class="team-social list-unstyled">
+                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
+                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
+                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="team-content card-body text-center">
+                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Florine Mulia</h6></a>
+                            <p class="text-muted mb-0">General Affairs and Administrative Assistant </p>
                         </div>
                     </div><!--end team-box-->
                 </div><!--end col-->
 
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-6 col-md-6">
                     <div class="team-box card border-0 mt-4">
                         <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-02.jpg') }}" alt="" class="img-thumbnail">
+                            <img src="{{ asset('img/jo.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;">
                             <ul class="team-social list-unstyled">
                                 <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
                                 <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
@@ -72,132 +107,13 @@
                             </ul>
                         </div>
                         <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">James Lemire</h6></a>
-                            <p class="text-muted mb-0">Project Manager</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-03.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Charles Dickens</h6></a>
-                            <p class="text-muted mb-0">Financial Analyst</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-04.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Jeffrey Montgomery</h6></a>
-                            <p class="text-muted mb-0">UI/UX Designer</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-05.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Brooke Hayes</h6></a>
-                            <p class="text-muted mb-0">Team Leader</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-06.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Olivia Murphy</h6></a>
-                            <p class="text-muted mb-0">Designer</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-07.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Betty Richards</h6></a>
-                            <p class="text-muted mb-0">Developer</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-08.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Gabriel Palmer</h6></a>
-                            <p class="text-muted mb-0">Back End Developer</p>
-                        </div>
-                    </div><!--end team-box-->
-                </div><!--end col-->
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="team-box card border-0 mt-4">
-                        <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('jobcy/images/user/img-09.jpg') }}" alt="" class="img-thumbnail">
-                            <ul class="team-social list-unstyled">
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
-                                <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
-                                <li><a href="javascript:void(0)"><i class="mdi mdi-skype"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-content card-body text-center">
-                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Gabriel Palmer</h6></a>
-                            <p class="text-muted mb-0">Back End Developer</p>
+                            <a href="javascript:void(0)" class="primary-link"><h6 class="fs-17 mb-1">Jonathan Liandres Edwan</h6></a>
+                            <p class="text-muted mb-0">Graphic Designer and Content Creator Assistant</p>
                         </div>
                     </div><!--end team-box-->
                 </div><!--end col-->
             </div><!--end row-->
         </div><!--end container-->
     </section>
-    <!-- START TEAM-PAGE -->
+    <!-- END ABOUT -->
 @endsection

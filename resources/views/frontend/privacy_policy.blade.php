@@ -1,6 +1,6 @@
 @extends('layouts.jobcy')
 
-@section('title', 'Privacy & Policy')
+@section('title', 'Privacy & Policy - Career Development Center Fakultas Psikologi UNS')
 
 @section('content')
     <!-- Start home -->
@@ -44,11 +44,11 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-12">
-                    <h5 class="mb-4">Use for Jobcy</h5>
+                    <h5 class="mb-4">Use for CDC Psikologi UNS</h5>
                     <ul class="about-list list-unstyled text-muted mb-4 pb-2">
                         <li>
                              At Jobcy, accessible at Website.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Jobcy and how we use
-                            If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through email at <b class="text-danger">Jobcytechnologypvt.ltd.com</b>
+                            If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us through email at <b class="text-danger">cdcfakultaspsikologiuns@gmail.com</b>
                         </li>
                         <li>
                             If you have additional questions or require more information about our Privacy Policy

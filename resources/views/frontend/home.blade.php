@@ -10,9 +10,8 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center text-white mb-5">
-                        <h1 class="display-5 fw-semibold mb-3">Search Between More Then <span class="text-warning fw-bold">10,000+</span>
-                            Open Jobs.</h1>
-                        <p class="fs-17">Find jobs, create trackable resumes and enrich your applications.</p>
+                        <h1 class="display-5 fw-semibold mb-3">Thousands of Careers, Perfectly Tailored for <span class="text-warning fw-bold">Psychology Graduates</span></h1>
+                        <p class="fs-17">Find jobs, internships, scholarships, and more opportunities!</p>
                     </div>
                 </div>
                 <!--end col-->
@@ -91,7 +90,7 @@
     <!-- END SHAPE -->
 
     <!-- START CATEGORY -->
-    <section class="section">
+    {{-- <section class="section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
@@ -228,18 +227,17 @@
             </div><!--end row-->
         </div>
         <!--end container-->
-    </section>
+    </section> --}}
     <!-- END CATEGORY -->
 
     <!-- START JOB-LIST -->
-    <section class="section bg-light">
+    <section class="section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="section-title text-center mb-4 pb-2">
-                        <h4 class="title">New & Random Jobs</h4>
-                        <p class="text-muted mb-1">Post a job to tell us about your project. We'll quickly match you
-                            with the right freelancers.</p>
+                        <h4 class="title">Find Your Dream Job Here!</h4>
+                        <p class="text-muted mb-1">Search by job type — whether it's internships or full-time positions, the choice is yours!</p>
                     </div>
                 </div><!--end col-->
             </div><!--end row-->
@@ -633,73 +631,6 @@
     </section>
     <!-- END JOB-LIST -->
 
-    <!-- START PROCESS -->
-    <section class="section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="section-title me-5">
-                        <h3 class="title">How It Work</h3>
-                        <p class="text-muted">Post a job to tell us about your project. We'll quickly match you with the
-                            right freelancers.</p>
-                        <div class="process-menu nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
-                                <div class="d-flex">
-                                    <div class="number flex-shrink-0">
-                                        1
-                                    </div>
-                                    <div class="flex-grow-1 text-start ms-3">
-                                        <h5 class="fs-18">Register an account</h5>
-                                        <p class="text-muted mb-0">Due to its widespread use as filler text for layouts, non-readability
-                                            is of great importance.</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-                                <div class="d-flex">
-                                    <div class="number flex-shrink-0">
-                                        2
-                                    </div>
-                                    <div class="flex-grow-1 text-start ms-3">
-                                        <h5 class="fs-18">Find your job</h5>
-                                        <p class="text-muted mb-0">There are many variations of passages of avaibookmark-label, but the majority
-                                            alteration in some form.</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <a class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                                <div class=" d-flex">
-                                    <div class="number flex-shrink-0">
-                                        3
-                                    </div>
-                                    <div class="flex-grow-1 text-start ms-3">
-                                        <h5 class="fs-18">Apply for job</h5>
-                                        <p class="text-muted mb-0">It is a long established fact that a reader will be distracted by the
-                                            readable content of a page.</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div><!--end col-->
-                <div class="col-lg-6">
-                    <div class="tab-content" id="v-pills-tabContent">
-                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                            <img src="assets/images/process-01.png" alt="" class="img-fluid">
-                        </div>
-                        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                            <img src="assets/images/process-02.png" alt="" class="img-fluid">
-                        </div>
-                        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
-                            <img src="assets/images/process-03.png" alt="" class="img-fluid">
-                        </div>
-                    </div>
-                </div>
-            </div> <!--end row-->
-        </div><!--end container-->
-    </section>
-    <!-- END PROCESS -->
-
     <!--START CTA-->
     <section class="section bg-light">
         <div class="container">
@@ -709,9 +640,9 @@
                         <h2 class="text-primary mb-4">Browse Our <span class="text-warning fw-bold">5,000+</span> Latest
                             Jobs</h2>
                         <p class="text-muted">Post a job to tell us about your project. We'll quickly match you with
-                            the right freelancers.</p>
+                            the right job position.</p>
                         <div class="mt-4 pt-2">
-                            <a href="javascript:void(0)" class="btn btn-primary btn-hover">Started Now <i class="uil uil-rocket align-middle ms-1"></i></a>
+                            <a href="{{ route('jobs') }}" class="btn btn-primary btn-hover">Started Now <i class="uil uil-rocket align-middle ms-1"></i></a>
                         </div>
                     </div>
                 </div><!--end col-->
@@ -724,11 +655,10 @@
     <section class="section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-6">
+                <div class="col-lg-9">
                     <div class="section-title text-center mb-5">
-                        <h3 class="title mb-3">Quick Career Tips</h3>
-                        <p class="text-muted">Post a job to tell us about your project. We'll quickly match you with the
-                            right freelancers.</p>
+                        <h3 class="title mb-3">Quick Career Tips <br> <span class="text-warning fw-bold">from Alumni: Insights for Success!</span></h3>
+                        <p class="text-muted">Get ahead in your career with practical advice straight from FAPSI alumni who have walked the path before you. From landing your first job to thriving in the workplace, these quick, actionable tips will help you navigate the world of work with confidence and clarity. Learn from their experiences and take your career to the next level!</p>
                     </div>
                 </div>
                 <!--end col-->
@@ -770,63 +700,6 @@
         <!--end container-->
     </section>
     <!-- END BLOG -->
-
-    <!-- START CLIENT -->
-    <div class="py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Woocommerce">
-                            <img src="assets/images/logo/logo-01.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Envato">
-                            <img src="assets/images/logo/logo-02.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Magento">
-                            <img src="assets/images/logo/logo-03.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Wordpress">
-                            <img src="assets/images/logo/logo-04.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-                <!--end col-->
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Generic">
-                            <img src="assets/images/logo/logo-05.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="text-center p-3">
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reveal">
-                            <img src="assets/images/logo/logo-06.png" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!--end row-->
-        </div>
-        <!--end container-->
-    </div>
-    <!-- END CLIENT -->
 @endsection
 
 @section('scripts')
