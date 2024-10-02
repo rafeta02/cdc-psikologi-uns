@@ -25,6 +25,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public const LEVEL_SELECT = [
+        'student' => 'Mahasiswa',
+        'staff'   => 'Staff',
+    ];
+
     protected $dates = [
         'email_verified_at',
         'verified_at',
@@ -37,12 +42,17 @@ class User extends Authenticatable
         'name',
         'email',
         'email_verified_at',
-        'approved',
         'password',
         'verified',
         'verified_at',
         'verification_token',
+        'approved',
         'remember_token',
+        'username',
+        'no_hp',
+        'level',
+        'identity_number',
+        'alamat',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -123,5 +133,10 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class);
     }
 }

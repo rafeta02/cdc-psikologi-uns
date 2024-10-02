@@ -46,10 +46,4 @@ class LoginController extends Controller
 
         return '/dashboard';
     }
-
-    public function loginSSO()
-    {
-        $saml2Auth = new Saml2Auth(Saml2Auth::loadOneLoginAuthFromIpdConfig('ssouns'));
-        return $saml2Auth->login(route('frontend.home'));
-    }
 }

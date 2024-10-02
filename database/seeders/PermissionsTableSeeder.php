@@ -592,6 +592,30 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 146,
+                'title' => 'assessment_access',
+            ],
+            [
+                'id'    => 147,
+                'title' => 'mahasiswa_create',
+            ],
+            [
+                'id'    => 148,
+                'title' => 'mahasiswa_edit',
+            ],
+            [
+                'id'    => 149,
+                'title' => 'mahasiswa_show',
+            ],
+            [
+                'id'    => 150,
+                'title' => 'mahasiswa_delete',
+            ],
+            [
+                'id'    => 151,
+                'title' => 'mahasiswa_access',
+            ],
+            [
+                'id'    => 152,
                 'title' => 'profile_password_edit',
             ],
         ];

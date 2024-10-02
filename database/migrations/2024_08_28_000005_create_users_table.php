@@ -13,12 +13,17 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable()->unique();
             $table->datetime('email_verified_at')->nullable();
-            $table->boolean('approved')->default(0)->nullable();
             $table->string('password')->nullable();
             $table->boolean('verified')->default(0)->nullable();
             $table->datetime('verified_at')->nullable();
             $table->string('verification_token')->nullable();
+            $table->boolean('approved')->default(0)->nullable();
             $table->string('remember_token')->nullable();
+            $table->string('username')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('level')->nullable();
+            $table->string('identity_number')->nullable();
+            $table->longText('alamat')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -57,12 +57,60 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.user.fields.approved') }}
+                        </th>
+                        <td>
+                            <input type="checkbox" disabled="disabled" {{ $user->approved ? 'checked' : '' }}>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <td>
                             @foreach($user->roles as $key => $roles)
                                 <span class="label label-info">{{ $roles->title }}</span>
                             @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.username') }}
+                        </th>
+                        <td>
+                            {{ $user->username }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.no_hp') }}
+                        </th>
+                        <td>
+                            {{ $user->no_hp }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.level') }}
+                        </th>
+                        <td>
+                            {{ App\Models\User::LEVEL_SELECT[$user->level] ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.identity_number') }}
+                        </th>
+                        <td>
+                            {{ $user->identity_number }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.alamat') }}
+                        </th>
+                        <td>
+                            {{ $user->alamat }}
                         </td>
                     </tr>
                 </tbody>

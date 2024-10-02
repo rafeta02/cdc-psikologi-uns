@@ -41,12 +41,17 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\AuthGates::class,
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\VerificationMiddleware::class,
-            // \App\Http\Middleware\ApprovalMiddleware::class,
+            \App\Http\Middleware\ApprovalMiddleware::class,
         ],
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        'saml' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
         ],
     ];
 }

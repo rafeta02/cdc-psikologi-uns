@@ -246,6 +246,40 @@ class HomeController
 
         $chart7 = new LaravelChart($settings7);
 
-        return view('admin.home', compact('chart7', 'settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6'));
+        $settings8 = [
+            'chart_title'           => 'New User',
+            'chart_type'            => 'latest_entries',
+            'report_type'           => 'group_by_date',
+            'model'                 => 'App\Models\User',
+            'group_by_field'        => 'email_verified_at',
+            'group_by_period'       => 'day',
+            'aggregate_function'    => 'count',
+            'filter_field'          => 'created_at',
+            'group_by_field_format' => 'd-m-Y H:i:s',
+            'column_class'          => 'col-md-12',
+            'entries_number'        => '10',
+            'fields'                => [
+                'name'            => '',
+                'email'           => '',
+                'approved'        => '',
+                'username'        => '',
+                'level'           => '',
+                'identity_number' => '',
+            ],
+            'translation_key' => 'user',
+        ];
+
+        $settings8['data'] = [];
+        if (class_exists($settings8['model'])) {
+            $settings8['data'] = $settings8['model']::latest()
+                ->take($settings8['entries_number'])
+                ->get();
+        }
+
+        if (! array_key_exists('fields', $settings8)) {
+            $settings8['fields'] = [];
+        }
+
+        return view('admin.home', compact('chart7', 'settings1', 'settings2', 'settings3', 'settings4', 'settings5', 'settings6', 'settings8'));
     }
 }
