@@ -76,12 +76,12 @@
                     <div class="row">
                         @forelse ($posts as $item)
                             <div class="col-md-6">
-                                <a href="#">
+                                <a href="{{ route('article-detail', $item->slug) }}">
                                     <div class="card card-widget">
                                         <div class="card-header">
                                             <div class="user-block">
                                                 <img class="img-circle"
-                                                    src="{{ asset('jobcy/images/blog/user.png') }}"
+                                                    src="{{ asset('jobcy/images/user.png') }}"
                                                     alt="User Image">
                                                 <span class="username">{{ $item->title }}</span>
                                                 <span class="description">Alumni Sharing - {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}y</span>
@@ -95,36 +95,6 @@
                                                 alt="Photo">
                                                 <p class="text-muted">
                                                     {!! $item->excerpt !!}
-                                                </p>
-                                        </div>
-                                        <!-- /.card-body -->
-                                        <div class="card-footer">
-                                        </div>
-                                        <!-- /.card-footer -->
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-md-6">
-                                <a href="#">
-                                    <div class="card card-widget">
-                                        <div class="card-header">
-                                            <div class="user-block">
-                                                <img class="img-circle"
-                                                    src="{{ asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}"
-                                                    alt="User Image">
-                                                <span class="username">Jonathan Burke Jr.</span>
-                                                <span class="description">Shared publicly - 7:30 PM Today</span>
-                                            </div>
-                                            <!-- /.user-block -->
-                                        </div>
-                                        <!-- /.card-header -->
-                                        <div class="card-body">
-                                            <img class="img-fluid pad mb-3"
-                                                src="{{ asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}"
-                                                alt="Photo">
-                                                <p class="text-muted">
-                                                    {{-- {!! $item->excerpt !!} --}}
                                                 </p>
                                         </div>
                                         <!-- /.card-body -->
