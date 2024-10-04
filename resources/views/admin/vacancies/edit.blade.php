@@ -69,15 +69,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="persyaratan_umum">Requirements</label>
-                <textarea class="form-control ckeditor {{ $errors->has('persyaratan_umum') ? 'is-invalid' : '' }}" name="persyaratan_umum" id="persyaratan_umum">{!! old('persyaratan_umum', $vacancy->persyaratan_umum) !!}</textarea>
-                @if($errors->has('persyaratan_umum'))
-                    <span class="text-danger">{{ $errors->first('persyaratan_umum') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.vacancy.fields.persyaratan_umum_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="job_description">{{ trans('cruds.vacancy.fields.job_description') }}</label>
+                <label for="job_description">Description</label>
                 <textarea class="form-control ckeditor {{ $errors->has('job_description') ? 'is-invalid' : '' }}" name="job_description" id="job_description">{!! old('job_description', $vacancy->job_description) !!}</textarea>
                 @if($errors->has('job_description'))
                     <span class="text-danger">{{ $errors->first('job_description') }}</span>
@@ -85,7 +77,7 @@
                 <span class="help-block">{{ trans('cruds.vacancy.fields.job_description_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="registration">How To Register</label>
+                <label for="registration">How To Apply</label>
                 <textarea class="form-control ckeditor {{ $errors->has('registration') ? 'is-invalid' : '' }}" name="registration" id="registration">{!! old('registration', $vacancy->registration) !!}</textarea>
                 @if($errors->has('registration'))
                     <span class="text-danger">{{ $errors->first('registration') }}</span>

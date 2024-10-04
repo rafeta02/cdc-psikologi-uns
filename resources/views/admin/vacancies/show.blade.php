@@ -71,7 +71,7 @@
                             {{ $vacancy->close_date }}
                         </td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <th>
                             {{ trans('cruds.vacancy.fields.persyaratan_umum') }}
                         </th>
@@ -86,21 +86,21 @@
                         <td>
                             {!! $vacancy->persyaratan_khusus !!}
                         </td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <th>
-                            {{ trans('cruds.vacancy.fields.registration') }}
+                            Description
                         </th>
                         <td>
-                            {!! $vacancy->registration !!}
+                            {!! $vacancy->job_description !!}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.vacancy.fields.job_description') }}
+                            How To Apply
                         </th>
                         <td>
-                            {!! $vacancy->job_description !!}
+                            {!! $vacancy->registration !!}
                         </td>
                     </tr>
                     <tr>

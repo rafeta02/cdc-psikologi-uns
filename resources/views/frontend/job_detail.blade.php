@@ -155,21 +155,14 @@
                             </div><!--end Experience-->
 
                             <div class="mt-4">
-                                <h5 class="mb-3">Requirements </h5>
+                                <h5 class="mb-3">Description</h5>
                                 <div class="job-detail-desc mt-2">
-                                    {!! $job->persyaratan_umum !!}
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5 class="mb-3">Job Description</h5>
-                                <div class="job-detail-desc">
                                     <p class="text-muted mb-0">{!! $job->description !!}</p>
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                <h5 class="mb-3">How to Register</h5>
+                                <h5 class="mb-3">How to Apply</h5>
                                 <div class="job-details-desc">
                                     {!! $job->registration !!}
                                 </div>

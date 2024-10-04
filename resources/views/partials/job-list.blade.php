@@ -48,14 +48,14 @@
                                         @endforeach
                                     </p>
                                 </li>
-                                <li class="list-inline-item">
+                                {{-- <li class="list-inline-item">
                                     <p class="text-muted fs-12 mb-0">
                                         <i class="mdi mdi-shape-plus "></i> DEPARTMENT :
                                         @foreach($job->departments as $key => $department)
                                             {{ strtoupper($department->name) }};
                                         @endforeach
                                     </p>
-                                </li>
+                                </li> --}}
                             </ul>
                             <div class="mt-2">
                                 @if ($job->type == 'fulltime')
