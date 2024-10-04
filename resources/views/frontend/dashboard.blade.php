@@ -84,7 +84,7 @@
                                                     src="{{ asset('jobcy/images/user.png') }}"
                                                     alt="User Image">
                                                 <span class="username">{{ $item->title }}</span>
-                                                <span class="description">Alumni Sharing - {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}y</span>
+                                                <span class="description">Alumni Sharing - {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
                                             </div>
                                             <!-- /.user-block -->
                                         </div>
