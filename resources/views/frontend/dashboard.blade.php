@@ -111,7 +111,7 @@
                     @if ($posts->count() > 0)
                         <div class="row mt-3">
                             <div class="offset-md-5 col-md-2">
-                                <button type="button" class="btn btn-block bg-gradient-success text-center">Show More</button>
+                                <button type="button" class="btn btn-block bg-gradient-success text-center" onclick="location.href='{{ route('alumni-caring') }}'">Show More</button>
                             </div>
                         </div>
                     @endif
