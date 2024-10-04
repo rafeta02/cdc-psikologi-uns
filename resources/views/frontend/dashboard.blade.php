@@ -76,7 +76,7 @@
                     <div class="row">
                         @forelse ($posts as $item)
                             <div class="col-md-6">
-                                <a href="{{ route('article-detail', $item->slug) }}">
+                                <a href="{{ route('blog-detail', $item->slug) }}">
                                     <div class="card card-widget">
                                         <div class="card-header">
                                             <div class="user-block">
