@@ -64,7 +64,7 @@ class SsoController extends Controller
                     'nim' => $parsedAttributes['identity_numbers'],
                 ],
                 [
-                    'angkatan' => substr($parsedAttributes['identity_numbers'], 3, 2),
+                    'angkatan' => '20'. substr($parsedAttributes['identity_numbers'], 3, 2),
                     'jurusan' => substr($parsedAttributes['identity_numbers'], 1, 2),
                 ]
             );

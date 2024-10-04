@@ -1,5 +1,18 @@
-
 .required::after {
     content: " *";
     color: red;
 }
+
+/* Start with the image hidden */
+.animate-on-view {
+    opacity: 0;
+    transform: translateX(-100px); /* Start 100px to the left */
+    transition: opacity 4s ease-out, transform 4s ease-out;
+}
+
+/* When the image becomes visible, apply this class to animate it */
+.in-view {
+    opacity: 1;
+    transform: translateX(0); /* Move to its original position */
+}
+

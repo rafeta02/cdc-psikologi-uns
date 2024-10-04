@@ -79,6 +79,24 @@
 
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
+
+   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const images = document.querySelectorAll('.animate-on-view');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view'); // Add the class to start animation
+                }
+            });
+        });
+
+        images.forEach(image => {
+            observer.observe(image); // Observe each image
+        });
+    });
+   </script>
    @yield('scripts')
 </body>
 </html>

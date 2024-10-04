@@ -73,6 +73,68 @@
                             <!-- /.info-box -->
                         </div>
                         {{-- Widget - latest entries --}}
+                        <div class="col-md-12" style="overflow-x: auto;">
+                            <h3>Need Approval Users</h3>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            {{ trans('cruds.user.fields.name') }}
+                                        </th>
+                                        <th>
+                                            {{ trans('cruds.user.fields.email') }}
+                                        </th>
+                                        <th>
+                                            {{ trans('cruds.user.fields.level') }}
+                                        </th>
+                                        <th>
+                                            Identity Number
+                                        </th>
+                                        <th>
+                                            {{ trans('cruds.user.fields.approved') }}
+                                        </th>
+                                        <th>
+                                            &nbsp;
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($users as $key => $user)
+                                        <tr data-entry-id="{{ $user->id }}">
+                                            <td class="text-center">
+                                                {{ $user->name ?? '' }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $user->email ?? '' }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ App\Models\User::LEVEL_SELECT[$user->level] ?? '' }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $user->identity_number ?? '' }}
+                                            </td>
+                                            <td class="text-center">
+                                                <strong>{{ $user->approved ? 'Yes' : 'No' }}</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                @can('user_show')
+                                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.users.show', $user->id) }}">
+                                                        {{ trans('global.view') }}
+                                                    </a>
+                                                @endcan
+
+                                                @can('user_edit')
+                                                    <a class="btn btn-xs btn-info" href="{{ route('admin.users.edit', $user->id) }}">
+                                                        {{ trans('global.edit') }}
+                                                    </a>
+                                                @endcan
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        {{-- Widget - latest entries --}}
                         <div class="{{ $settings5['column_class'] }}" style="overflow-x: auto;">
                             <h3>{{ $settings5['chart_title'] }}</h3>
                             <table class="table table-bordered table-striped">
@@ -89,7 +151,7 @@
                                     @forelse($settings5['data'] as $entry)
                                         <tr>
                                             @foreach($settings5['fields'] as $key => $value)
-                                                <td>
+                                                <td class="text-center">
                                                     @if($value === '')
                                                         {{ $entry->{$key} }}
                                                     @elseif(is_iterable($entry->{$key}))
@@ -99,12 +161,12 @@
                                                     @else
                                                         {{ data_get($entry, $key . '.' . $value) }}
                                                     @endif
-                                                </td>
+                                                </td class="text-center">
                                             @endforeach
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="{{ count($settings5['fields']) }}">{{ __('No entries found') }}</td>
+                                            <td class="text-center" colspan="{{ count($settings5['fields']) }}">{{ __('No entries found') }}</td class="text-center">
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -128,7 +190,7 @@
                                     @forelse($settings6['data'] as $entry)
                                         <tr>
                                             @foreach($settings6['fields'] as $key => $value)
-                                                <td>
+                                                <td class="text-center">
                                                     @if($value === '')
                                                         {{ $entry->{$key} }}
                                                     @elseif(is_iterable($entry->{$key}))
@@ -138,12 +200,12 @@
                                                     @else
                                                         {{ data_get($entry, $key . '.' . $value) }}
                                                     @endif
-                                                </td>
+                                                </td class="text-center">
                                             @endforeach
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="{{ count($settings6['fields']) }}">{{ __('No entries found') }}</td>
+                                            <td class="text-center" colspan="{{ count($settings6['fields']) }}">{{ __('No entries found') }}</td class="text-center">
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -153,45 +215,6 @@
                         <div class="{{ $chart7->options['column_class'] }}">
                             <h3>{!! $chart7->options['chart_title'] !!}</h3>
                             {!! $chart7->renderHtml() !!}
-                        </div>
-
-                        {{-- Widget - latest entries --}}
-                        <div class="{{ $settings8['column_class'] }}" style="overflow-x: auto;">
-                            <h3>{{ $settings8['chart_title'] }}</h3>
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        @foreach($settings8['fields'] as $key => $value)
-                                            <th>
-                                                {{ trans(sprintf('cruds.%s.fields.%s', $settings8['translation_key'] ?? 'pleaseUpdateWidget', $key)) }}
-                                            </th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($settings8['data'] as $entry)
-                                        <tr>
-                                            @foreach($settings8['fields'] as $key => $value)
-                                                <td>
-                                                    @if($value === '')
-                                                        {{ $entry->{$key} }}
-                                                    @elseif(is_iterable($entry->{$key}))
-                                                        @foreach($entry->{$key} as $subEentry)
-                                                            <span class="label label-info">{{ $subEentry->{$value} }}</span>
-                                                        @endforeach
-                                                    @else
-                                                        {{ data_get($entry, $key . '.' . $value) }}
-                                                    @endif
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="{{ count($settings8['fields']) }}">{{ __('No entries found') }}</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>

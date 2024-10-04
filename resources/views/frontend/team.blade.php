@@ -42,10 +42,10 @@
     <!-- START ABOUT -->
     <section class="section">
         <div class="container">
-            <div class="row align-items-center g-0">
+            <div class="row align-items-center g-0 mb-2">
                 <div class="col-lg-6">
                     <div class="about-img mt-4 mt-lg-0">
-                        <img src="{{ asset('img/MeetTheTeam.png') }}" alt="" class="img-fluid rounded" style="width: 512px; height: auto; object-fit: cover;">
+                        <img src="{{ asset('img/MeetTheTeam.png') }}" alt="" class="img-fluid rounded animate-on-view" style="width: 512px; height: auto; object-fit: cover;">
                     </div>
                 </div><!--end col-->
                 <div class="col-lg-6">
@@ -64,7 +64,7 @@
                 <div class="col-lg-12 col-md-12">
                     <div class="team-box card border-0 mt-4">
                         <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('img/bu_kiki.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;"  >
+                            <img src="{{ asset('img/bu_kiki.png') }}" alt="" class="img-thumbnail animate-on-view" style="width: 240px; height: 312px; object-fit: cover; border-radius: 20%;"  >
                             <ul class="team-social list-unstyled">
                                 <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
                                 <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
@@ -82,7 +82,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="team-box card border-0 mt-4">
                         <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('img/flo.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;">
+                            <img src="{{ asset('img/flo.png') }}" alt="" class="img-thumbnail animate-on-view" style="width: 240px; height: 312px; object-fit: cover; border-radius: 20%;">
                             <ul class="team-social list-unstyled">
                                 <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
                                 <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
@@ -99,7 +99,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="team-box card border-0 mt-4">
                         <div class="team-img position-relative mx-auto">
-                            <img src="{{ asset('img/jo.png') }}" alt="" class="img-thumbnail" style="width: 216px; height: 280px; object-fit: cover;">
+                            <img src="{{ asset('img/jo.png') }}" alt="" class="img-thumbnail animate-on-view" style="width: 240px; height: 312px; object-fit: cover; border-radius: 20%;">
                             <ul class="team-social list-unstyled">
                                 <li><a href="javascript:void(0)"><i class="mdi mdi-facebook"></i></a></li>
                                 <li class="my-1"><a href="javascript:void(0)"><i class="mdi mdi-twitter"></i></a> </li>
