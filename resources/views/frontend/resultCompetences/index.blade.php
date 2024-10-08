@@ -55,7 +55,7 @@
                                 <div class="p-4">
                                     <div class="row align-items-center">
                                         <div class="col-md-2 text-center">
-                                            <a href="company-details.html">
+                                            <a href="{{route('frontend.competences.show', $competence->id) }}">
                                                 <img src="{{ $competence->image ? $competence->image->getUrl() : asset('jobcy/images/competence.jpg') }}" alt="Image" class="img-fluid rounded-3" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50px;">
                                             </a>
                                         </div>
