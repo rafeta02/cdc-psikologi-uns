@@ -55,7 +55,7 @@ class PrestasiMahasiswaController extends Controller
         }
 
         foreach ($request->input('surat_tugas', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('surat_tugas')));
+            $filePath = storage_path('tmp/uploads/' . basename($file));
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
             $newFileName = $prestasiMahasiswa->nama_kegiatan .'_surat_tugas_' . uniqid(). '.' . $extension;
@@ -71,7 +71,7 @@ class PrestasiMahasiswaController extends Controller
         }
 
         foreach ($request->input('sertifikat', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('sertifikat')));
+            $filePath = storage_path('tmp/uploads/' . basename($file));
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
             $newFileName = $prestasiMahasiswa->nama_kegiatan .'_sertifikat_' . uniqid(). '.' . $extension;
@@ -87,7 +87,7 @@ class PrestasiMahasiswaController extends Controller
         }
 
         foreach ($request->input('foto_dokumentasi', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('foto_dokumentasi')));
+            $filePath = storage_path('tmp/uploads/' . basename($file));
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
             $newFileName = $prestasiMahasiswa->nama_kegiatan .'_foto_dokumentasi_' . uniqid(). '.' . $extension;
@@ -119,7 +119,7 @@ class PrestasiMahasiswaController extends Controller
         }
 
         foreach ($request->input('bukti_sipsmart', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('bukti_sipsmart')));
+            $filePath = storage_path('tmp/uploads/' . basename($file));
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
             $newFileName = $prestasiMahasiswa->nama_kegiatan .'_bukti_sipsmart_' . uniqid(). '.' . $extension;

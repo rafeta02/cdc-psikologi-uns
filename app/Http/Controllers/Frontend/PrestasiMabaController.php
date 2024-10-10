@@ -45,7 +45,7 @@ class PrestasiMabaController extends Controller
         $prestasiMaba = PrestasiMaba::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         foreach ($request->input('bukti_kegiatan', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('bukti_kegiatan')));
+            $filePath = storage_path('tmp/uploads/' . basename($file));
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
             $imageNewName = $prestasiMaba->nama_kegiatan .'_' . uniqid(). '.' . $extension;
