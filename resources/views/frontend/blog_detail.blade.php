@@ -19,7 +19,7 @@
                                 <ol class="breadcrumb justify-content-center">
                                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                                     <li class="breadcrumb-item"><a href="javascript:void(0)">Article</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"> {{ $post->title }} </li>
+                                    <li class="breadcrumb-item active" aria-current="page"> Detail </li>
                                 </ol>
                             </nav>
                         </div>
