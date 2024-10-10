@@ -154,7 +154,20 @@ class PostController extends Controller
                 if ($post->image) {
                     $post->image->delete();
                 }
-                $post->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
+
+                $filePath = storage_path('tmp/uploads/' . basename($request->input('image')));
+                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+                $imageNewName = Str::slug($post->title). '_' . uniqid(). '.' . $extension;
+
+                $newFilePath = storage_path('tmp/uploads/' . $imageNewName);
+                rename($filePath, $newFilePath);
+
+                if (file_exists($newFilePath)) {
+                    $post->addMedia($newFilePath)->toMediaCollection('image');
+                } else {
+                    throw new \Exception('File does not exist at path: ' . $newFilePath);
+                }
             }
         } elseif ($post->image) {
             $post->image->delete();
