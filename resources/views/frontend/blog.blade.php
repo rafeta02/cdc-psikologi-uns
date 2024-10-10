@@ -50,50 +50,52 @@
                     </div>
                 </div><!--end col-->
 
-                <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
-                    <div class="carousel-inner">
+                @if ($featured->count() > 0)
+                    <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+                        <div class="carousel-inner">
 
-                        @foreach ($featured as $item)
-                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="post-preview overflow-hidden rounded-3 mb-3 mb-lg-0">
-                                        <a href="{{ route('blog-detail', $item->slug) }}"><img src="{{ $item->image ? $item->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="Blog" class="img-fluid blog-img" /></a>
-                                    </div>
-                                </div><!--end col-->
-                                <div class="col-lg-5">
-                                    <article class="post position-relative">
-                                        <div class="post ms-lg-4">
-                                            <p class="text-muted mb-3">
-                                                <i class="uil uil-user"></i> Posted By {{ $item->author->name }}
-                                                &#9;<i class="uil uil-browser"></i>
-                                                @foreach ($item->categories as $category)
-                                                    {{ $category->name }} {{ $loop->last ? '' : ', ' }}
-                                                @endforeach
-                                                &#9;<i class="uil uil-calendar-alt"></i> {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}
-                                            </p>
-                                            <h5 class="mb-4"><a href="{{ route('blog-detail', $item->slug) }}" class="primary-link">{{ $item->title }}</a></h5>
-                                            <p class="text-muted">
-                                                {!! $item->excerpt !!}
-                                            </p>
+                            @foreach ($featured as $item)
+                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="post-preview overflow-hidden rounded-3 mb-3 mb-lg-0">
+                                            <a href="{{ route('blog-detail', $item->slug) }}"><img src="{{ $item->image ? $item->image->getUrl() : asset('jobcy/images/blog/img-' . str_pad(rand(1, 10), 2, '0', STR_PAD_LEFT) . '.jpg') }}" alt="Blog" class="img-fluid blog-img" /></a>
                                         </div>
-                                    </article>
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end carousel-item-->
-                        @endforeach
-                    </div><!--end carousel-inner-->
+                                    </div><!--end col-->
+                                    <div class="col-lg-5">
+                                        <article class="post position-relative">
+                                            <div class="post ms-lg-4">
+                                                <p class="text-muted mb-3">
+                                                    <i class="uil uil-user"></i> Posted By {{ $item->author->name }}
+                                                    &#9;<i class="uil uil-browser"></i>
+                                                    @foreach ($item->categories as $category)
+                                                        {{ $category->name }} {{ $loop->last ? '' : ', ' }}
+                                                    @endforeach
+                                                    &#9;<i class="uil uil-calendar-alt"></i> {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}
+                                                </p>
+                                                <h5 class="mb-4"><a href="{{ route('blog-detail', $item->slug) }}" class="primary-link">{{ $item->title }}</a></h5>
+                                                <p class="text-muted">
+                                                    {!! $item->excerpt !!}
+                                                </p>
+                                            </div>
+                                        </article>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div><!--end carousel-item-->
+                            @endforeach
+                        </div><!--end carousel-inner-->
 
-                     <!-- Visible Controls -->
-                    <a class="carousel-control-prev" href="#blogCarousel" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%);"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#blogCarousel" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%);"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
-                </div><!--end carousel-->
+                        <!-- Visible Controls -->
+                        <a class="carousel-control-prev" href="#blogCarousel" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%);"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#blogCarousel" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%);"></span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
+                    </div><!--end carousel-->
+                @endif
 
             </div><!--end row-->
             <div class="row mt-5">

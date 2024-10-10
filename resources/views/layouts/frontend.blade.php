@@ -75,7 +75,7 @@
                                 aria-expanded="false" class="nav-link dropdown-toggle">Assessment</a>
                             <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
                                 <li><a href="{{ route('frontend.competences.index') }}" class="dropdown-item">Kompetensi Mahasiswa</a></li>
-                                <li><a href="{{ route('frontend.assessments.index') }}" class="dropdown-item">Karir dan Kepribadian</a></li>
+                                <li><a href="{{ route('frontend.assessments.index') }}" class="dropdown-item">Assessment Karir</a></li>
                             </ul>
                         </li>
                     </ul>

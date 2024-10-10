@@ -45,7 +45,19 @@ class PrestasiMabaController extends Controller
         $prestasiMaba = PrestasiMaba::create(array_merge($request->all(), ['user_id' => auth()->id()]));
 
         foreach ($request->input('bukti_kegiatan', []) as $file) {
-            $prestasiMaba->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('bukti_kegiatan');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('bukti_kegiatan')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $imageNewName = $prestasiMaba->nama_kegiatan .'_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $imageNewName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMaba->addMedia($newFilePath)->toMediaCollection('bukti_kegiatan');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         if ($media = $request->input('ck-media', false)) {

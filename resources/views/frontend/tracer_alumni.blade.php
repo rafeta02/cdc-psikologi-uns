@@ -106,7 +106,7 @@
                             Hormat Kami,
                             <br><br>
                             <cite title="Source Title" class="text-primary fw-semibold">
-                                Ketua Program Studi Psikologi<br>
+                                Career Development Center Fakultas Psikologi<br>
                                 Universitas Sebelas Maret
                             </cite>
                             </figcaption>

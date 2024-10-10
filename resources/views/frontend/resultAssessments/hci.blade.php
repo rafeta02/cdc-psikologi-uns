@@ -228,16 +228,9 @@
                         <input type="hidden" id="test_name" name="test_name" value="hci">
                         <div class="step active">
                             <div class="form-group">
+                                <h5>Selamat Datang di Asesmen Minat Pekerjaan dalam Karier</h5>
                                 <p>
-                                    Halo!👋🏼<br>
-                                    Perkenalkan, kami dari Career Development Center Fakultas Psikologi UNS. Di sini, kami ingin meminta bantuan Saudara/i untuk mengisi asesmen karier dalam rangka meningkatkan optimalisasi pengembangan karier di Fakultas Psikologi UNS.
-                                    <br>
-                                    Assessment ini digunakan untuk mengukur Minat Pekerjaan dalam Karier.<br>
-                                    Estimasi pengerjaan asesmen karier ini membutuhkan waktu sekitar 30 menit <br>
-                                    Kriteria responden yang kami butuhkan adalah mahasiswa/i aktif Universitas Sebelas Maret. Identitas dan hasil asesmen bersifat rahasia dan hanya akan digunakan untuk kepentingan penelitian. <br>
-                                    Terima kasih banyak atas kesediaan Saudara/i untuk mengisi asesmen karier kami☺️🙏🏼<br>
-                                    Apabila ada yang ingin ditanyakan, silakan menghubungi👇🏼<br>
-                                    📲: 085692156358 (Florine)
+                                    Asesmen ini dirancang untuk membantu Anda memahami minat dan preferensi pekerjaan yang dapat memandu Anda dalam memilih karier yang sesuai dengan kepribadian dan minat Anda. Dengan menjawab pertanyaan-pertanyaan dalam asesmen ini secara jujur dan lengkap, Anda akan mendapatkan gambaran yang lebih jelas mengenai bidang pekerjaan yang mungkin cocok untuk Anda. Proses ini hanya akan memakan waktu sekitar 10 menit. Pastikan Anda menjawab setiap pertanyaan dengan cermat agar hasil yang diperoleh dapat memberikan panduan karier yang akurat dan bermanfaat.
                                 </p>
                             </div>
                             <div class="form-group">

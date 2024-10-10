@@ -228,16 +228,9 @@
                         <input type="hidden" id="test_name" name="test_name" value="cci">
                         <div class="step active">
                             <div class="form-group">
+                                <h5>Selamat Datang di Asesmen Kesiapan Diri dalam Bekerja</h5>
                                 <p>
-                                    Halo!👋🏼<br>
-                                    Perkenalkan, kami dari Career Development Center Fakultas Psikologi UNS. Di sini, kami ingin meminta bantuan Saudara/i untuk mengisi assessment karier dalam rangka meningkatkan optimalisasi pengembangan karier di Fakultas Psikologi UNS.
-                                    <br>
-                                    Assessment ini digunakan untuk mengukur Kepercayaan Diri dalam Karier.<br>
-                                    Estimasi pengerjaan assessment karier ini membutuhkan waktu sekitar 30 menit <br>
-                                    Kriteria responden yang kami butuhkan adalah mahasiswa/i aktif Universitas Sebelas Maret. Identitas dan hasil assessment bersifat rahasia dan hanya akan digunakan untuk kepentingan penelitian. <br>
-                                    Terima kasih banyak atas kesediaan Saudara/i untuk mengisi assessment karier kami☺️🙏🏼<br>
-                                    Apabila ada yang ingin ditanyakan, silakan menghubungi👇🏼<br>
-                                    📲: 085692156358 (Florine)
+                                    Asesmen ini bertujuan untuk membantu Anda memahami kesiapan pribadi dalam menghadapi dunia kerja, termasuk aspek-aspek seperti keterampilan, motivasi, dan sikap profesional yang diperlukan. Dengan mengisi asesmen ini secara jujur dan menyeluruh, Anda akan memperoleh gambaran yang lebih jelas mengenai sejauh mana Anda siap untuk bekerja dan area mana yang mungkin perlu ditingkatkan. Proses pengerjaan asesmen ini hanya memakan waktu sekitar 10 menit. Luangkan waktu Anda untuk menjawab setiap pertanyaan dengan baik agar hasil yang diperoleh dapat memberikan panduan yang akurat bagi pengembangan karier Anda.
                                 </p>
                             </div>
                             <div class="form-group">

@@ -47,10 +47,10 @@
                 <div class="col-lg-6">
                     <div class="section-title me-lg-5">
                         <h6 class="sub-title">About Us</h6>
-                        <h2 class="title mb-4">Who <span class="text-warning fw-bold">(CDC FAPSI)</span> Are ?</h2>
+                        <h2 class="title mb-4">Who Are <span class="text-warning fw-bold">We</span> ?</h2>
 
                         <p class="text-muted">
-                            Career Development Center Fakultas Psikologi (CDC FAPSI) Universitas Sebelas Maret merupakan pusat pengembangan karier yang diperuntukkan bagi mahasiswa Fakultas Psikologi Universitas Sebelas Maret. Kami bertujuan untuk mencetak lulusan Fakultas Psikologi UNS yang berdaya saing kerja di tingkat nasional maupun internasional. CDC FAPSI dibentuk pada Tahun 2024 menyusul berubahnya Program Studi Psikologi menjadi Fakultas Psikologi pada tanggal 11 Maret 2022 sesuai SK Rektor Universitas Sebelas Maret Nomor 320/UN27/HK/2022.
+                            Career Development Center Fakultas Psikologi (CDC FPsi) Universitas Sebelas Maret merupakan pusat pengembangan karier yang diperuntukkan bagi mahasiswa Fakultas Psikologi Universitas Sebelas Maret. Kami bertujuan untuk mencetak lulusan Fakultas Psikologi UNS yang berdaya saing kerja di tingkat nasional maupun internasional. CDC FPsi dibentuk pada Tahun 2024 menyusul berubahnya Program Studi Psikologi menjadi Fakultas Psikologi pada tanggal 11 Maret 2022 sesuai SK Rektor Universitas Sebelas Maret Nomor 320/UN27/HK/2022.
                         </p>
 
                         <div class="row mt-4 pt-2">

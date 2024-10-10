@@ -28,7 +28,7 @@ class ResultAssessment extends Model
     public const TEST_NAME_SELECT = [
         'hci' => 'Minat Pekerjaan',
         'wr' => 'Kesiapan Kerja',
-        'cci' => 'Kepercayaan Diri dalam Karier',
+        'cci' => 'Kesiapan Diri dalam Bekerja',
     ];
 
     protected $fillable = [

@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use Alert;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -103,7 +104,19 @@ class PostController extends Controller
         $post->categories()->sync($request->input('categories', []));
         $post->tags()->sync($request->input('tags', []));
         if ($request->input('image', false)) {
-            $post->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('image')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $imageNewName = Str::slug($post->title). '_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $imageNewName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $post->addMedia($newFilePath)->toMediaCollection('image');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         if ($media = $request->input('ck-media', false)) {

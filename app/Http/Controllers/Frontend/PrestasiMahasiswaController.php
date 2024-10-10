@@ -55,23 +55,83 @@ class PrestasiMahasiswaController extends Controller
         }
 
         foreach ($request->input('surat_tugas', []) as $file) {
-            $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('surat_tugas');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('surat_tugas')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_surat_tugas_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('surat_tugas');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         foreach ($request->input('sertifikat', []) as $file) {
-            $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('sertifikat');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('sertifikat')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_sertifikat_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('sertifikat');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         foreach ($request->input('foto_dokumentasi', []) as $file) {
-            $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('foto_dokumentasi');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('foto_dokumentasi')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_foto_dokumentasi_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('foto_dokumentasi');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         if ($request->input('surat_tugas_pembimbing', false)) {
-            $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas_pembimbing'))))->toMediaCollection('surat_tugas_pembimbing');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('surat_tugas_pembimbing')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_surat_tugas_pembimbing_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('surat_tugas_pembimbing');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         foreach ($request->input('bukti_sipsmart', []) as $file) {
-            $prestasiMahasiswa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('bukti_sipsmart');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('bukti_sipsmart')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_bukti_sipsmart_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('bukti_sipsmart');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         if ($media = $request->input('ck-media', false)) {

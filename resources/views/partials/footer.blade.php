@@ -17,10 +17,10 @@
             </div><!--end col-->
             <div class="col-lg-2 col-6">
                 <div class="footer-item mt-4 mt-lg-0">
-                    <p class="fs-16 text-white mb-4">Company</p>
+                    <p class="fs-16 text-white mb-4">About Us</p>
                     <ul class="list-unstyled footer-list mb-0">
                         <li><a href="{{ route('about-us') }}"><i class="mdi mdi-chevron-right"></i> About Us</a></li>
-                        <li><a href="{{ route('team') }}"><i class="mdi mdi-chevron-right"></i> Team</a></li>
+                        <li><a href="{{ route('team') }}"><i class="mdi mdi-chevron-right"></i>Our Team</a></li>
                     </ul>
                 </div>
             </div><!--end col-->

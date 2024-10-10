@@ -57,7 +57,18 @@
                         <li><a class="dropdown-item" href="{{ route('tracer-study') }}">Untuk Stakeholder</a></li>
                         <li><a class="dropdown-item" target="_blank" href="https://tracer.uns.ac.id/">Tracer Study Universitas</a></li>
                     </ul>
-                </li><!--end dropdown-->
+                </li>
+                <li class="nav-item dropdown dropdown-hover">
+                    <a class="nav-link" href="javascript:void(0)" id="about-us" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        About Us
+                        <div class="arrow-down"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="about-us">
+                        <li><a class="dropdown-item" href="{{ route('about-us') }}">About Us</a></li>
+                        <li><a class="dropdown-item" href="{{ route('team') }}">Our Team</a></li>
+                    </ul>
+                </li>
+                <!--end dropdown-->
                 {{-- <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="productdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         About Us

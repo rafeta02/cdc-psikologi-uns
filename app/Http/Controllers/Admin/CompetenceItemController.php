@@ -74,7 +74,19 @@ class CompetenceItemController extends Controller
         $competenceItem = CompetenceItem::create($request->all());
 
         if ($request->input('image', false)) {
-            $competenceItem->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
+            $filePath = storage_path('tmp/uploads/' . basename($request->input('image')));
+            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+            $imageNewName = $competenceItem->name .'_' . uniqid(). '.' . $extension;
+
+            $newFilePath = storage_path('tmp/uploads/' . $imageNewName);
+            rename($filePath, $newFilePath);
+
+            if (file_exists($newFilePath)) {
+                $competenceItem->addMedia($newFilePath)->toMediaCollection('image');
+            } else {
+                throw new \Exception('File does not exist at path: ' . $newFilePath);
+            }
         }
 
         if ($media = $request->input('ck-media', false)) {

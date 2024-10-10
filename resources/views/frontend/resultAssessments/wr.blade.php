@@ -228,16 +228,9 @@
                         <input type="hidden" id="test_name" name="test_name" value="wr">
                         <div class="step active">
                             <div class="form-group">
+                                <h5>Selamat Datang di Asesmen Kesiapan Kerja</h5>
                                 <p>
-                                    Halo!👋🏼<br>
-                                    Perkenalkan, kami dari Career Development Center Fakultas Psikologi UNS. Di sini, kami ingin meminta bantuan Saudara/i untuk mengisi assessment karier dalam rangka meningkatkan optimalisasi pengembangan karier di Fakultas Psikologi UNS.
-                                    <br>
-                                    Assessment ini digunakan untuk mengukur Kesiapan Kerja dalam Karier.<br>
-                                    Estimasi pengerjaan assessment karier ini membutuhkan waktu sekitar 30 menit <br>
-                                    Kriteria responden yang kami butuhkan adalah mahasiswa/i aktif Universitas Sebelas Maret. Identitas dan hasil assessment bersifat rahasia dan hanya akan digunakan untuk kepentingan penelitian. <br>
-                                    Terima kasih banyak atas kesediaan Saudara/i untuk mengisi assessment karier kami☺️🙏🏼<br>
-                                    Apabila ada yang ingin ditanyakan, silakan menghubungi👇🏼<br>
-                                    📲: 085692156358 (Florine)
+                                    Asesmen ini dirancang untuk mengevaluasi sejauh mana Anda siap memasuki dunia kerja, baik dari segi keterampilan, sikap, maupun pengetahuan yang diperlukan di lingkungan profesional. Dengan menjawab setiap pertanyaan secara jujur dan lengkap, Anda akan mendapatkan wawasan mengenai aspek-aspek yang perlu Anda kembangkan agar lebih siap menghadapi tantangan karier di masa depan. Proses asesmen ini hanya membutuhkan waktu sekitar 10 menit. Pastikan Anda mengisi dengan cermat untuk mendapatkan hasil yang akurat dan dapat membantu dalam mempersiapkan langkah karier Anda.
                                 </p>
                             </div>
                             <div class="form-group">
