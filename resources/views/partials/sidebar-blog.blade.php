@@ -40,19 +40,16 @@
         </div>
         <ul class="widget-social-menu list-inline mb-0 mt-3">
             <li class="list-inline-item">
-                <a href="javascript:void(0)"><i class="uil uil-facebook-f"></i></a>
+                <a href="http://instagram.com/cdcpsikologiuns/"><i class="uil uil-instagram"></i></a>
             </li>
             <li class="list-inline-item">
-                <a href="javascript:void(0)"><i class="uil uil-whatsapp"></i></a>
+                <a href="http://tiktok.com/@cdcpsikologiuns"><i class="uil uil-tumblr"></i></a>
             </li>
             <li class="list-inline-item">
-                <a href="javascript:void(0)"><i class="uil uil-twitter-alt"></i></a>
+                <a href="https://www.linkedin.com/company/cdcpsikologiuns"><i class="uil uil-linkedin-alt"></i></a>
             </li>
             <li class="list-inline-item">
-                <a href="javascript:void(0)"><i class="uil uil-dribbble"></i></a>
-            </li>
-            <li class="list-inline-item">
-                <a href="javascript:void(0)"><i class="uil uil-envelope"></i></a>
+                <a href="mailto:cdcfakultaspsikologiuns@gmail.com"><i class="uil uil-google"></i></a>
             </li>
         </ul>
     </div>
