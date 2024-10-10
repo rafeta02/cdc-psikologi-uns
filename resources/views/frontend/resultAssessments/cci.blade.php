@@ -204,7 +204,7 @@
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('frontend.assessments.index') }}">Assessment</a></li>
-                <li class="breadcrumb-item active">Assesment Kepercayaan Diri dalam Karier</li>
+                <li class="breadcrumb-item active">Assesment Kesiapan Diri dalam Bekerja</li>
             </ol>
         </div><!-- /.col -->
     </div><!-- /.row -->
