@@ -100,6 +100,9 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        $request->request->add(['author_id' => auth()->user()->id]);
+        $request->request->add(['created_by_id' => auth()->user()->id]);
+
         $post = Post::create($request->all());
         $post->categories()->sync($request->input('categories', []));
         $post->tags()->sync($request->input('tags', []));
