@@ -427,7 +427,7 @@ class HomeController extends Controller
             $file = $request->file('tanda_tangan');
             $extension = $file->getClientOriginalExtension();
 
-            $fileName = $tracerStakeholder->nama_alumni . '_' . uniqid() . '.' . $extension;
+            $fileName = 'tracer_alumni_' . $tracerStakeholder->nama_alumni . '_' . uniqid() . '.' . $extension;
             $filePath = $file->move(storage_path('tmp/uploads'), $fileName);
 
             $newFilePath = storage_path('tmp/uploads/' . $fileName);
