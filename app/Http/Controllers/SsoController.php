@@ -51,6 +51,8 @@ class SsoController extends Controller
             ]
         );
 
+        $user->roles()->sync(2);
+
         if ($user->approved !== 1) {
             $user->update([
                 'approved' => $parsedAttributes['level'] == 'student' ? ($this->verifyFirstCharacter($parsedAttributes['identity_numbers']) ? 1 : 0 ) : 1,
