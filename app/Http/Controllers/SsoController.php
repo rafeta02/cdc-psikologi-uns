@@ -81,63 +81,6 @@ class SsoController extends Controller
         abort(401, 'User authentication failed.');
     }
 
-    public function getacs(Request $request)
-    {
-        // Overtrue\LaravelSaml\SamlUser
-        $samlUser = Saml::getAuthenticatedUser();
-
-        $parsedAttributes = $this->parseSamlAttributes($samlUser->getAttributes());
-
-        // Jika sudah ada user, maka data diupdate, jika belum ada, maka buat user
-        $user = User::updateOrCreate(
-            [
-                'email' => $parsedAttributes['email'],
-            ],
-            [
-                'name' => $parsedAttributes['nama'],
-                'no_hp' => $this->formatPhoneNumber($parsedAttributes['no_hp']),
-                'email_verified_at' => now()->format('d-m-Y H:i:s'),
-                'password' => bcrypt(random_int(1000000, 99999999)),
-                'verified' => 1,
-                'verified_at' => now()->format('d-m-Y H:i:s'),
-                'verification_token' => Str::random(64),
-                'username' => $parsedAttributes['username'],
-                'level' => $parsedAttributes['level'],
-                'identity_number' => $parsedAttributes['identity_numbers'],
-                'alamat' => $parsedAttributes['alamat'],
-            ]
-        );
-
-        if ($user->approved !== 1) {
-            $user->update([
-                'approved' => $parsedAttributes['level'] == 'student' ? ($this->verifyFirstCharacter($parsedAttributes['identity_numbers']) ? 1 : 0 ) : 1,
-            ]);
-        }
-
-        if($parsedAttributes['level'] == 'student') {
-            $mahasiswa = Mahasiswa::updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'nim' => $parsedAttributes['identity_numbers'],
-                ],
-                [
-                    'angkatan' => '20'. substr($parsedAttributes['identity_numbers'], 3, 2),
-                    'jurusan' => substr($parsedAttributes['identity_numbers'], 1, 2),
-                ]
-            );
-        }
-
-        // Jika user ditemukan, maka loginkan user
-        if ($user != null) {
-            Auth::login($user);
-
-            // Redirect ke halaman dashboard
-            return redirect()->route('frontend.home');
-        }
-
-        abort(401, 'User authentication failed.');
-    }
-
     public function logout(Request $request)
     {
         return Saml::redirectToLogout();

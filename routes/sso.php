@@ -10,5 +10,4 @@ Route::prefix('sso')
         Route::get('sls', [SsoController::class, 'sls'])->name('sls');
         Route::get('metadata', [SsoController::class, 'metadata'])->name('metadata');
         Route::post('acs', [SsoController::class, 'acs'])->name('acs');
-        Route::get('acs', [SsoController::class, 'getacs'])->name('getacs');
      });
