@@ -126,7 +126,13 @@
   for (var i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(
       allEditors[i], {
-        extraPlugins: [SimpleUploadAdapter]
+        extraPlugins: [SimpleUploadAdapter],
+        toolbar: [
+            'source', 'bold', 'italic', 'underline', 'link', 'imageUpload', 'blockQuote', 'insertTable', 'undo', 'redo'
+        ],
+        ckfinder: {
+            uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}'
+        }
       }
     );
   }
