@@ -128,11 +128,11 @@
       allEditors[i], {
         extraPlugins: [SimpleUploadAdapter],
         toolbar: [
-            'source', 'bold', 'italic', 'underline', 'link', 'imageUpload', 'blockQuote', 'insertTable', 'undo', 'redo'
+            'sourceEditing', 'bold', 'italic', 'underline', 'link', 'imageUpload', 'blockQuote', 'insertTable', 'undo', 'redo'
         ],
         ckfinder: {
             uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}'
-        }
+        } 
       }
     );
   }
