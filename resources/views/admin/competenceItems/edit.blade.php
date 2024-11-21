@@ -127,7 +127,7 @@
     ClassicEditor.create(allEditors[i], {
       extraPlugins: [SimpleUploadAdapter],
       toolbar: [
-        'sourceEditing', // Enable source editing
+        'htmlEmbed', // Add this to the toolbar
         'bold',
         'italic',
         'underline',
@@ -136,8 +136,11 @@
         'blockQuote',
         'insertTable',
         'undo',
-        'redo',
+        'redo'
       ],
+      htmlEmbed: {
+        showPreviews: true // Optional: shows a preview of the HTML
+      },
       ckfinder: {
         uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}',
       },
