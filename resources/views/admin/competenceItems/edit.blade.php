@@ -124,17 +124,27 @@
 
   var allEditors = document.querySelectorAll('.ckeditor');
   for (var i = 0; i < allEditors.length; ++i) {
-    ClassicEditor.create(
-      allEditors[i], {
-        extraPlugins: [SimpleUploadAdapter],
-        toolbar: [
-            'sourceEditing', 'bold', 'italic', 'underline', 'link', 'imageUpload', 'blockQuote', 'insertTable', 'undo', 'redo'
-        ],
-        ckfinder: {
-            uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}'
-        } 
-      }
-    );
+    ClassicEditor.create(allEditors[i], {
+      extraPlugins: [SimpleUploadAdapter],
+      toolbar: [
+        'sourceEditing', // Enable source editing
+        'bold',
+        'italic',
+        'underline',
+        'link',
+        'imageUpload',
+        'blockQuote',
+        'insertTable',
+        'undo',
+        'redo',
+      ],
+      ckfinder: {
+        uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}',
+      },
+      language: 'en', // Optional: Specify language settings
+    }).catch(error => {
+      console.error(error);
+    });
   }
 });
 </script>
