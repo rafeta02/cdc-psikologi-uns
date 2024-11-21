@@ -126,7 +126,39 @@
   for (var i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(
       allEditors[i], {
-        extraPlugins: [SimpleUploadAdapter]
+        extraPlugins: [SimpleUploadAdapter],
+        toolbar: [
+          'htmlEmbed',  // Allows raw HTML embedding
+          'mediaEmbed', // Allows media embedding
+          'bold', 
+          'italic', 
+          'underline', 
+          'link', 
+          'imageUpload', 
+          'blockQuote', 
+          'insertTable', 
+          'undo', 
+          'redo'
+        ],
+        htmlEmbed: {
+          showPreviews: true // Optional: shows previews of HTML
+        },
+        mediaEmbed: {
+          previewsInData: true // Show media previews (e.g., YouTube embeds)
+        },
+        htmlSupport: {
+          allow: [
+            {
+              name: 'iframe',
+              attributes: true,
+              classes: true,
+              styles: true
+            }
+          ]
+        },
+        ckfinder: {
+          uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}'
+        }
       }
     );
   }
