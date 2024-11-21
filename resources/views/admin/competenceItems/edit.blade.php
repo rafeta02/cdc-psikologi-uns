@@ -124,30 +124,11 @@
 
   var allEditors = document.querySelectorAll('.ckeditor');
   for (var i = 0; i < allEditors.length; ++i) {
-    ClassicEditor.create(allEditors[i], {
-      extraPlugins: [SimpleUploadAdapter],
-      toolbar: [
-        'htmlEmbed', // Add this to the toolbar
-        'bold',
-        'italic',
-        'underline',
-        'link',
-        'imageUpload',
-        'blockQuote',
-        'insertTable',
-        'undo',
-        'redo'
-      ],
-      htmlEmbed: {
-        showPreviews: true // Optional: shows a preview of the HTML
-      },
-      ckfinder: {
-        uploadUrl: '{{ route('admin.competence-items.storeCKEditorImages') }}',
-      },
-      language: 'en', // Optional: Specify language settings
-    }).catch(error => {
-      console.error(error);
-    });
+    ClassicEditor.create(
+      allEditors[i], {
+        extraPlugins: [SimpleUploadAdapter]
+      }
+    );
   }
 });
 </script>
