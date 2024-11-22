@@ -67,7 +67,7 @@
                                         <!--end col-->
                                         <div class="col-md-5">
                                             <div class="d-flex align-items-center">
-                                                <p class="text-muted mb-0">An important aspect of effective education is creating lesson plans for students. Establishing lesson plans allows teachers to prepare materials, create a timeline for their lessons and form an objective, or overall learning target, for their students.</p>
+                                                <p class="text-muted mb-0">{!! $competence->description !!}</p>
                                             </div>
                                         </div>
                                         <!--end col-->
