@@ -46,11 +46,10 @@
     @include('sweetalert::alert')
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand-md navbar-dark navbar-purple">
+        <nav class="main-header navbar navbar-expand-md navbar-dark" style="background-color: #22004C">
             <div class="container">
-                <a href="{{ route('home') }}" class="navbar-brand">
-                    <span class="brand-text font-weight-light">CDC Fakultas Psikologi UNS</span>
-                    <small class="text-light" style="font-size: 12px; display: block; line-height: 1;">Terbatas Untuk Civitas Fakultas Psikologi UNS</small> <!-- Jargon -->
+                <a href="{{ route('home') }}" class="navbar-brand mr-5">
+                    <img src="{{ asset('jobcy/images/logo-cdc-white.png') }}" alt="CDC Fakultas Psikologi UNS" style="height: 40px;">
                 </a>
 
                 <div class="collapse navbar-collapse order-3" id="navbarCollapse">
@@ -168,7 +167,7 @@
         <!-- /.content-wrapper -->
 
         <!-- Main Footer -->
-        <footer class="main-footer bg-purple">
+        <footer class="main-footer" style="background-color: #22004C">
             <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
                 Version  二千二十四

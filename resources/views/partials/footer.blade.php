@@ -4,8 +4,8 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="footer-item mt-4 mt-lg-0 me-lg-5">
-                    <h4 class="text-white mb-2">Career Development Center<br>Fakultas Psikologi<br>Universitas Sebelas Maret</h4>
-                    <p class="text-white-50">Sebuah pusat pengembangan karier yang diperuntukkan bagi mahasiswa Fakultas Psikologi Universitas Sebelas Maret..</p>
+                    <h4 class="text-white mb-2">Penjaminan Mutu<br>Fakultas Psikologi<br>Universitas Sebelas Maret</h4>
+                    <p class="text-white-50">Jalan Ir. Sutami No. 36A Kentingan, Jebres, Surakarta, Jawa Tengah 57126</p>
                     <p class="text-white mt-3">Follow Us on:</p>
                     <ul class="footer-social-menu list-inline mb-0">
                         <li class="list-inline-item"><a href="http://instagram.com/cdcpsikologiuns/"><i class="uil uil-instagram"></i></a></li>
@@ -17,21 +17,39 @@
             </div><!--end col-->
             <div class="col-lg-2 col-6">
                 <div class="footer-item mt-4 mt-lg-0">
-                    <p class="fs-16 text-white mb-4">For Job Seeker</p>
+                    <p class="fs-16 text-white mb-4">Find Job</p>
                     <ul class="list-unstyled footer-list mb-0">
-                        <li><a href="{{ route('jobs') }}"><i class="mdi mdi-chevron-right"></i> Browse by Position </a></li>
-                        <li><a href="{{ route('companies') }}"><i class="mdi mdi-chevron-right"></i> Browse by Company </a></li>
-                        <li><a href="#"><i class="mdi mdi-chevron-right"></i> Browse MBKM</a></li>
+                        <li><a href="{{ route('jobs') }}"><i class="mdi mdi-chevron-right"></i> By Position </a></li>
+                        <li><a href="{{ route('companies') }}"><i class="mdi mdi-chevron-right"></i> By Company </a></li>
+                        {{-- <li><a href="#"><i class="mdi mdi-chevron-right"></i> Browse MBKM</a></li> --}}
                     </ul>
                 </div>
             </div><!--end col-->
             <div class="col-lg-2 col-6">
                 <div class="footer-item mt-4 mt-lg-0">
-                    <p class="text-white fs-16 mb-4">For Alumni</p>
+                    <p class="fs-16 text-white mb-4">MKBKM Riset</p>
                     <ul class="list-unstyled footer-list mb-0">
-                        <li><a href="{{ route('news.acara-berita') }}"><i class="mdi mdi-chevron-right"></i> Browse News </a></li>
+                        <li><a href="#"><i class="mdi mdi-chevron-right"></i> Magang</a></li>
+                        <li><a href="#"><i class="mdi mdi-chevron-right"></i> Skripsi </a></li>
+                        <li><a href="#"><i class="mdi mdi-chevron-right"></i> KKN </a></li>
+                    </ul>
+                </div>
+            </div><!--end col-->
+            <div class="col-lg-2 col-6">
+                <div class="footer-item mt-4 mt-lg-0">
+                    <p class="fs-16 text-white mb-4">Achievement</p>
+                    <ul class="list-unstyled footer-list mb-0">
+                        <li><a href="{{ route('news.acara-berita') }}"><i class="mdi mdi-chevron-right"></i> News </a></li>
+                        <li><a href="{{ route('infografis')}}"><i class="mdi mdi-chevron-right"></i> Infografis </a></li>
+                    </ul>
+                </div>
+            </div><!--end col-->
+            <div class="col-lg-2 col-6">
+                <div class="footer-item mt-4 mt-lg-0">
+                    <p class="text-white fs-16 mb-4"> Alumni</p>
+                    <ul class="list-unstyled footer-list mb-0">
+                        <li><a href="{{ route('alumni-caring') }}"><i class="mdi mdi-chevron-right"></i> Profil Alumni </a></li>
                         <li><a href="{{ route('tracer-alumni') }}"><i class="mdi mdi-chevron-right"></i> Tracer Study </a></li>
-                        <li><a href="{{ route('frontend.home') }}"><i class="mdi mdi-chevron-right"></i> Dashboard </a></li>
                     </ul>
                 </div>
             </div><!--end col-->
