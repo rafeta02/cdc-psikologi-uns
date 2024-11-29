@@ -25,39 +25,43 @@
                         <li><a class="dropdown-item" href="{{ route('companies') }}">Find By Company</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">MBKM</a>
-                </li>
                 <li class="nav-item dropdown dropdown-hover">
-                    <a class="nav-link" href="javascript:void(0)" id="productdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        News
+                    <a class="nav-link" href="javascript:void(0)" id="newsdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Achievement
                         <div class="arrow-down"></div>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="productdropdown">
+                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="newsdropdown">
                         {{-- @foreach ($categoryMenus = categoryMenu() as $categoryMenu)
                             <li><a class="dropdown-item" href="{{ route('news', ['category' => $categoryMenu->slug]) }}">{{ $categoryMenu->name }}</a></li>
                         @endforeach --}}
-                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">Acara & Berita</a></li>
-                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li>
+                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">News</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis</a></li>
                     </ul>
                 </li><!--end dropdown-->
                 <li class="nav-item dropdown dropdown-hover">
-                    <a class="nav-link" href="javascript:void(0)" id="tracer-study" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link" href="javascript:void(0)" id="mbkmdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        MBKM Riset
+                        <div class="arrow-down"></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="mbkmdropdown">
+                        <li><a class="dropdown-item" href="#">Magang</a></li>
+                        <li><a class="dropdown-item" href="#">Skripsi</a></li>
+                        <li><a class="dropdown-item" href="#">KKN</a></li>
+                    </ul>
+                </li><!--end dropdown-->
+                <li class="nav-item dropdown dropdown-hover">
+                    <a class="nav-link" href="javascript:void(0)" id="alumnidropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Alumni
                         <div class="arrow-down"></div>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="tracer-study">
-                        <li><a class="dropdown-item" href="{{ route('tracer-alumni') }}">Untuk Alumni</a></li>
-                        <li><a class="dropdown-item" href="{{ route('tracer-study') }}">Untuk Stakeholder</a></li>
-                        <li><a class="dropdown-item" target="_blank" href="https://tracer.uns.ac.id/">Tracer Study Universitas</a></li>
+                    <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="alumnidropdown">
+                        <li><a class="dropdown-item" href="#">Profil Alumni</a></li>
+                        @auth
+                        <li><a class="dropdown-item" href="{{ route('alumni-caring') }}">Alumni Caring</a></li>
+                        @endauth
                     </ul>
                 </li>
-                @auth
-                <li class="nav-item">
-                    <a href="{{ route('alumni-caring') }}" class="nav-link">Alumni</a>
-                </li>
-                @endauth
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="tracer-study" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Tracer Study
@@ -71,12 +75,13 @@
                 </li>
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="about-us" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        About Us
+                        About
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="about-us">
-                        <li><a class="dropdown-item" href="{{ route('about-us') }}">About Us</a></li>
-                        <li><a class="dropdown-item" href="{{ route('team') }}">Our Team</a></li>
+                        <li><a class="dropdown-item" href="{{ route('about-us') }}">Profil Fakultas Psikologi UNS</a></li>
+                        <li><a class="dropdown-item" href="{{ route('team') }}">Profil CDC Fakultas Psikologi UNS</a></li>
+                        <li><a class="dropdown-item" href="{{ route('team') }}">Informasi Job Posting</a></li>
                     </ul>
                 </li>
                 <!--end dropdown-->

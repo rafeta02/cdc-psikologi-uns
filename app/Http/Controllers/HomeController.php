@@ -494,7 +494,7 @@ class HomeController extends Controller
 
     public function about()
     {
-        return view('frontend.about');
+        return view('frontend.psikologi-cdc');
     }
 
     public function team()
