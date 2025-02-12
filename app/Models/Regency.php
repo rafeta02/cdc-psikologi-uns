@@ -41,6 +41,17 @@ class Regency extends Model
 
     public function getRegencyWithProvinceNameAttribute()
     {
-        return $this->name . ' - ' . optional($this->province)->name;
+        $regencyName = $this->name ?? '';
+        $provinceName = $this->province?->name ?? '';
+        
+        if (empty($regencyName) && empty($provinceName)) {
+            return '';
+        }
+        
+        if (empty($provinceName)) {
+            return $regencyName;
+        }
+        
+        return $regencyName . ' - ' . $provinceName;
     }
 }

@@ -187,7 +187,7 @@ class VacancyController extends Controller
     {
         abort_if(Gate::denies('vacancy_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by');
+        $vacancy->load('company', 'experience', 'education', 'departments', 'position', 'industry', 'locations', 'created_by');
 
         return view('admin.vacancies.show', compact('vacancy'));
     }
