@@ -89,7 +89,7 @@
                                     <div class="col-lg-6">
                                         <div class="border rounded-start p-3">
                                             <p class="text-muted mb-0 fs-13">Position</p>
-                                            <p class="fw-medium fs-15 mb-0">{{ $job->position->name }}</p>
+                                            <p class="fw-medium fs-15 mb-0">{{ $job->position->name ?? ''}}</p>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -101,13 +101,13 @@
                                     <div class="col-lg-6">
                                         <div class="border p-3">
                                             <p class="text-muted fs-13 mb-0">Industry</p>
-                                            <p class="fw-medium mb-0">{{ $job->industry->name }}</p>
+                                            <p class="fw-medium mb-0">{{ $job->industry->name ?? ''}}</p>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="border p-3">
                                             <p class="text-muted fs-13 mb-0">Experience</p>
-                                            <p class="fw-medium mb-0">{{ $job->experience->name }}</p>
+                                            <p class="fw-medium mb-0">{{ $job->experience->name ?? ''}}</p>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -334,7 +334,7 @@
 
                                     <div class="mt-4">
                                         <h6 class="fs-19 mb-1">{{ $company->name }}</h6>
-                                        <p class="fs-14 text-muted">{{ $company->regency->name }} - {{ $company->regency->province->name }}</p>
+                                        <p class="fs-14 text-muted">{{ $company->regency_with_province_name ?? '' }}</p>
                                         <p class="fs-6 text-muted">{!! Str::words($company->description, 42, ' ...') !!}</p>
                                     </div>
                                 </div>
@@ -344,7 +344,7 @@
                                             <i class="uil uil-phone-volume text-primary fs-4"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Phone</h6>
-                                                <p class="text-muted fs-14 mb-0">{{ $company->telephone }}</p>
+                                                <p class="text-muted fs-14 mb-0">{{ $company->telephone ?? '' }}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -353,7 +353,7 @@
                                             <i class="uil uil-envelope text-primary fs-4"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Email</h6>
-                                                <p class="text-muted fs-14 mb-0">{{ $company->email }}</p>
+                                                <p class="text-muted fs-14 mb-0">{{ $company->email ?? '' }}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -362,7 +362,7 @@
                                             <i class="uil uil-globe text-primary fs-4"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Website</h6>
-                                                <p class="text-muted fs-14 text-break mb-0">{{ $company->website }}</p>
+                                                <p class="text-muted fs-14 text-break mb-0">{{ $company->website ?? '' }}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -371,7 +371,7 @@
                                             <i class="uil uil-map-marker text-primary fs-4"></i>
                                             <div class="ms-3">
                                                 <h6 class="fs-14 mb-2">Address</h6>
-                                                <p class="text-muted fs-14 mb-0">{{ $company->address }}</p>
+                                                <p class="text-muted fs-14 mb-0">{{ $company->address ?? '' }}</p>
                                             </div>
                                         </div>
                                     </li>

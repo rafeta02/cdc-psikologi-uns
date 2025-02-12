@@ -19,9 +19,9 @@
                             <a href="{{ route('company-detail', $company->slug) }}" class="primary-link">
                                 <h6 class="fs-18 mb-2">{{ $company->name }}</h6>
                             </a>
-                            <p class="fs-14 text-muted mb-2">{{ $company->regency->name }} - {{ $company->regency->province->name }}</p>
+                            <p class="fs-14 text-muted mb-2">{{ $company->regency->regency_with_province_name ?? '' }}</p>
                             <p class="fs-6 text-muted">{!! Str::words($company->description, 42, ' ...') !!}</p>
-                            <p class="mb-4"><small class="text-muted">Perusahaan</small> {{ ucfirst($company->ownership) }}; <br><small class="text-muted">Bidang industri</small> {{ ucwords($company->industry->name ?? '') }}</small></p>
+                            <p class="mb-4"><small class="text-muted">Perusahaan</small> {{ ucfirst($company->ownership ?? '') }}; <br><small class="text-muted">Bidang industri</small> {{ ucwords($company->industry->name ?? '') }}</small></p>
 
                             <a href="{{ route('company-detail', $company->slug) }}" class="btn btn-primary">
                                 {{ openingJobs($company->id) }} Opening Jobs
