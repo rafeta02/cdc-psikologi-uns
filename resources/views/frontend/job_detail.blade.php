@@ -114,7 +114,7 @@
                                         <div class="border p-3">
                                             <p class="text-muted fs-13 mb-0">Location</p>
                                             @forelse ($job->locations as $location)
-                                                <p class="fw-medium mb-0">{{ ucwords($location->name ?? '')}} - {{ ucwords($location->province->name ?? '')}}</p>
+                                                <p class="fw-medium mb-0">{{ ucwords($location->regency_with_province_name ?? '') }}</p>
                                             @empty
                                                 <p class="fw-medium mb-0">To be determined/ Flexible/ Remote options available.</p>
                                             @endforelse
