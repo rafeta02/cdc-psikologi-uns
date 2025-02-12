@@ -50,7 +50,7 @@
                             <div class="candidate-profile text-center">
                                 <img src="{{ $company->image ? $company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="avatar-lg rounded-circle">
                                 <h6 class="fs-18 mb-1 mt-4">{{ $company->name }} </h6>
-                                <p class="text-muted mb-3">{{ $company->regency->regency_with_province_name }}</p>
+                                <p class="text-muted mb-3">{{ $company->regency->name }} - {{ $company->regency->province->name }}</p>
                                 <ul class="candidate-detail-social-menu list-inline mb-0">
                                     <li class="list-inline-item">
                                         <a href="https://api.whatsapp.com/send?phone={{ $company->telephone }}" target="_blank" class="social-link"><i class="uil uil-whatsapp"></i></a>

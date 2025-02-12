@@ -300,7 +300,7 @@
                                                             @if ($job->locations->count() > 1)
                                                                 {{ $location->name ?? '' }}
                                                             @else
-                                                                {{ $location->regency_with_province_name ?? '' }}
+                                                                {{ $location->name ?? '' }} - {{ $location->province->name }}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -418,7 +418,7 @@
                                                         @if ($job->locations->count() > 1)
                                                             {{ $location->name ?? '' }}
                                                         @else
-                                                            {{ $location->regency_with_province_name ?? '' }}
+                                                            {{ $location->name ?? '' }} - {{ $location->province->name }}
                                                         @endif
                                                     </p>
                                                 </div>
@@ -536,7 +536,7 @@
                                                         @if ($job->locations->count() > 1)
                                                             {{ $location->name ?? '' }}
                                                         @else
-                                                            {{ $location->regency_with_province_name ?? '' }}
+                                                            {{ $location->name ?? '' }} - {{ $location->province->name }}
                                                         @endif
                                                     </p>
                                                 </div>
