@@ -50,7 +50,7 @@
                             <div class="candidate-profile text-center">
                                 <img src="{{ $company->image ? $company->image->getUrl() : asset('jobcy/images/default-company.png') }}" alt="" class="avatar-lg rounded-circle">
                                 <h6 class="fs-18 mb-1 mt-4">{{ $company->name }} </h6>
-                                <p class="text-muted mb-3">{{ $company->regency->name }} - {{ $company->regency->province->name }}</p>
+                                <p class="text-muted mb-3">{{ $company->regency->regency_with_province_name ?? '' }}</p>
                                 <ul class="candidate-detail-social-menu list-inline mb-0">
                                     <li class="list-inline-item">
                                         <a href="https://api.whatsapp.com/send?phone={{ $company->telephone }}" target="_blank" class="social-link"><i class="uil uil-whatsapp"></i></a>
@@ -109,7 +109,7 @@
                                     <div class="d-flex">
                                         <label class="text-dark">Phone</label>
                                         <div>
-                                            <p class="text-muted mb-0">{{ $company->telephone }}</p>
+                                            <p class="text-muted mb-0">{{ $company->telephone ?? '' }}</p>
                                         </div>
                                     </div>
                                 </li>
@@ -117,7 +117,7 @@
                                     <div class="d-flex">
                                         <label class="text-dark">Email</label>
                                         <div>
-                                            <p class="text-muted mb-0">{{ $company->email }}</p>
+                                            <p class="text-muted mb-0">{{ $company->email ?? '' }}</p>
                                         </div>
                                     </div>
                                 </li>
@@ -125,7 +125,7 @@
                                     <div class="d-flex">
                                         <label class="text-dark">Website</label>
                                         <div>
-                                            <p class="text-muted mb-0">{{ $company->website }}</p>
+                                            <p class="text-muted mb-0">{{ $company->website ?? '' }}</p>
                                         </div>
                                     </div>
                                 </li>
@@ -133,7 +133,7 @@
                                     <div class="d-flex">
                                         <label class="text-dark">Address</label>
                                         <div>
-                                            <p class="text-muted text-break mb-0">{{ $company->address }}</p>
+                                            <p class="text-muted text-break mb-0">{{ $company->address ?? '' }}</p>
                                         </div>
                                     </div>
                                 </li>
