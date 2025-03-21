@@ -17,6 +17,9 @@ use App\Models\ArticleCategory;
 use App\Models\ArticleTag;
 use App\Models\TracerStakeholder;
 use App\Models\TracerAlumnu;
+use App\Models\KategoriPrestasi;
+use App\Models\PrestasiMahasiswa;
+use App\Models\PrestasiMahasiswaDetail;
 use SEOMeta;
 use Alert;
 use App\Charts\MonthlyUsersChart;
@@ -515,6 +518,39 @@ class HomeController extends Controller
     public function privacy()
     {
         return view('frontend.privacy_policy');
+    }
+
+    public function prestasiMahasiswa(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = PrestasiMahasiswaDetail::with('prestasi_mahasiswa');
+
+            if (!empty($request->kategori)) {
+                $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
+                    $query->where('kategori_id', $request->kategori);
+                });
+            }
+            if (!empty($request->keikutsertaan)) {
+                $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
+                    $query->where('keikutsertaan', $request->keikutsertaan);
+                });
+            }
+            if (!empty($request->tingkat)) {
+                $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
+                    $query->where('tingkat', $request->tingkat);
+                });
+            }
+
+            // Paginate results
+            $prestasis = $query->latest()->paginate(7);
+            // Return partial view with filtered and paginated results
+            return view('partials.prestasi-list', compact('prestasis'))->render();
+        }
+
+        $prestasis = PrestasiMahasiswaDetail::with('prestasi_mahasiswa')->latest()->paginate(7);
+        $categories = KategoriPrestasi::pluck('name', 'id');
+
+        return view('frontend.prestasi_mahasiswa', compact('prestasis', 'categories'));
     }
 
 }

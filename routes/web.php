@@ -19,6 +19,7 @@ Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
 Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
 Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
 Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
+Route::get('prestasi', 'HomeController@prestasiMahasiswa')->name('prestasi');
 
 Route::get('infografis', 'HomeController@grafik')->name('infografis');
 

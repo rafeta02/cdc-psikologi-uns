@@ -36,6 +36,7 @@
                         @endforeach --}}
                         <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">News</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li> --}}
+                        <li><a class="dropdown-item" href="{{ route('prestasi') }}">Prestasi Mahasiswa</a></li>
                         <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis</a></li>
                     </ul>
                 </li><!--end dropdown-->
