@@ -32,4 +32,9 @@ class KategoriPrestasi extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function prestasi_mahasiswa()
+    {
+        return $this->HasMany(PrestasiMahasiswa::class, 'kategori_id');
+    }
 }

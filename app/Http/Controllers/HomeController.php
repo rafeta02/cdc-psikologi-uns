@@ -23,6 +23,9 @@ use App\Models\PrestasiMahasiswaDetail;
 use SEOMeta;
 use Alert;
 use App\Charts\MonthlyUsersChart;
+use App\Charts\PieChart;
+use App\Charts\BarChart;
+use DB;
 
 
 
@@ -489,10 +492,45 @@ class HomeController extends Controller
         return redirect()->route('tracer-alumni')->with('success', 'Data tersimpan, Terima kasih.');
     }
 
-    public function grafik(MonthlyUsersChart $chart)
+    public function grafik(PieChart $pie)
     {
+        //Grafik Pie Tingkat
+        $internasional = PrestasiMahasiswa::where('tingkat', 'internasional')->count();
+        $nasional = PrestasiMahasiswa::where('tingkat', 'nasional')->count();
+        $regional = PrestasiMahasiswa::where('tingkat', 'regional')->count();
+        $data = [$internasional, $nasional, $regional];
+        $label = ['Internasional', 'Nasional', 'Regional'];
+        $tingkat_chart = $pie->build(
+            'Capaian Prestasi Mahasiswa Fakultas Psikologi',
+            'Capaian Prestasi Mahasiswa Fakultas Psikologi Universitas Sebelas Maret Berdasarkan Tingkat Kegiatan',
+            $data, $label);
 
-        return view('frontend.grafik', ['chart' => $chart->build()]);
+        //Grafik Pie Kategori
+        $data = [];
+        $label = [];
+        $kategori = KategoriPrestasi::whereHas('prestasi_mahasiswa')->get();
+        foreach($kategori as $item) {
+            $data[] = PrestasiMahasiswa::where('kategori_id', $item->id)->count();
+            $label[] = $item->name;
+        };
+
+        $kategori_chart = $pie->build(
+            'Capaian Prestasi Mahasiswa Fakultas Psikologi',
+            'Capaian Prestasi Mahasiswa Fakultas Psikologi Universitas Sebelas Maret Berdasarkan Kategori Kegiatan',
+            $data, $label);
+
+        $achievementsByYear = DB::table('prestasi_mahasiswas')
+            ->selectRaw('YEAR(tanggal_akhir) as year, COUNT(*) as total')
+            ->whereNotNull('tanggal_akhir')
+            ->groupBy(DB::raw('YEAR(tanggal_akhir)'))
+            ->orderBy('year')
+            ->get();
+        
+        // Format data for the chart
+        $years = $achievementsByYear->pluck('year');
+        $counts = $achievementsByYear->pluck('total');
+
+        return view('frontend.grafik', compact('tingkat_chart', 'kategori_chart', 'years', 'counts'));
     }
 
     public function about()

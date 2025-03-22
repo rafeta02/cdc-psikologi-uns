@@ -49,11 +49,21 @@
                         <h6 class="sub-title">Infografis</h6>
                         <h2 class="title mb-4">Infografis Prestasi Mahasiswa</h2>
 
-                        <p class="text-muted">Start working with Jobcy that can provide everything you need to generate awareness, drive traffic, connect. Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
+                        <p class="text-muted">Infografis ini menampilkan berbagai pencapaian mahasiswa dalam berbagai bidang, termasuk akademik, olahraga, seni, dan kompetisi tingkat nasional maupun internasional. Dengan visualisasi data yang menarik, infografis ini memberikan gambaran mengenai jumlah penghargaan, kategori prestasi, serta kontribusi mahasiswa dalam meningkatkan reputasi institusi. Informasi ini juga bertujuan untuk menginspirasi mahasiswa lain agar terus berprestasi dan berkontribusi dalam bidang yang mereka tekuni.</p>
 
                         <div class="row mt-4 pt-2">
                             <div class="col-md-12">
-                                {!! $chart->container() !!}
+                                {!! $tingkat_chart->container() !!}
+                            </div>
+                        </div>
+                        <div class="row mt-2 pt-2">
+                            <div class="col-md-12">
+                                {!! $kategori_chart->container() !!}
+                            </div>
+                        </div>
+                        <div class="row mt-2 pt-2">
+                            <div class="col-md-12">
+                                <canvas id="achievementsChart" width="800" height="400"></canvas>
                             </div>
                         </div>
                     </div>
@@ -106,7 +116,49 @@
 @endsection
 
 @section('scripts')
-<script src="{{ $chart->cdn() }}"></script>
+<script src="{{ $tingkat_chart->cdn() }}"></script>
+<script src="{{ $kategori_chart->cdn() }}"></script>
 
-{{ $chart->script() }}
+{{ $tingkat_chart->script() }}
+{{ $kategori_chart->script() }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('achievementsChart').getContext('2d');
+        const achievementsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($years) !!},
+                datasets: [{
+                    label: 'Jumlah Prestasi Mahasiswa',
+                    data: {!! json_encode($counts) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Jumlah Prestasi Mahasiswa per Tahun'
+                    },
+                    legend: {
+                        position: 'top',
+                    },
+                }
+            }
+        });
+    });
+</script>
 @endsection
