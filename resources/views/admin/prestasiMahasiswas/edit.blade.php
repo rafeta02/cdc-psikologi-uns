@@ -129,15 +129,27 @@
             <div class="form-group">
                 <label>{{ trans('cruds.prestasiMahasiswa.fields.keikutsertaan') }}</label>
                 @foreach(App\Models\PrestasiMahasiswa::KEIKUTSERTAAN_RADIO as $key => $label)
-                    <div class="form-check {{ $errors->has('keikutsertaan') ? 'is-invalid' : '' }}">
-                        <input class="form-check-input" type="radio" id="keikutsertaan_{{ $key }}" name="keikutsertaan" value="{{ $key }}" {{ old('keikutsertaan', $prestasiMahasiswa->keikutsertaan) === (string) $key ? 'checked' : '' }}>
-                        <label class="form-check-label" for="keikutsertaan_{{ $key }}">{{ $label }}</label>
+                    <div>
+                        <input type="radio" id="keikutsertaan_{{ $key }}" name="keikutsertaan" value="{{ $key }}" {{ old('keikutsertaan', $prestasiMahasiswa->keikutsertaan) === (string) $key ? 'checked' : '' }}>
+                        <label for="keikutsertaan_{{ $key }}">{{ $label }}</label>
                     </div>
                 @endforeach
                 @if($errors->has('keikutsertaan'))
-                    <span class="text-danger">{{ $errors->first('keikutsertaan') }}</span>
+                    <div class="invalid-feedback">
+                        {{ $errors->first('keikutsertaan') }}
+                    </div>
                 @endif
                 <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.keikutsertaan_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="dosen_pembimbing">{{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing') ?? 'Dosen Pembimbing' }}</label>
+                <input class="form-control {{ $errors->has('dosen_pembimbing') ? 'is-invalid' : '' }}" type="text" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', $prestasiMahasiswa->dosen_pembimbing) }}">
+                @if($errors->has('dosen_pembimbing'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dosen_pembimbing') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing_helper') ?? 'Masukkan nama dosen pembimbing (jika ada)' }}</span>
             </div>
             <div class="form-group">
                 <label for="url_publikasi">{{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}</label>

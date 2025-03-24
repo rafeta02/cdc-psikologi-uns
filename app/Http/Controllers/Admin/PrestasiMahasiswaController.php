@@ -75,11 +75,24 @@ class PrestasiMahasiswaController extends Controller
             $table->editColumn('tempat_penyelenggara', function ($row) {
                 return $row->tempat_penyelenggara ? $row->tempat_penyelenggara : '';
             });
+            $table->editColumn('keikutsertaan', function ($row) {
+                return $row->keikutsertaan ? PrestasiMahasiswa::KEIKUTSERTAAN_RADIO[$row->keikutsertaan] : '';
+            });
+            $table->editColumn('dosen_pembimbing', function ($row) {
+                return $row->dosen_pembimbing ? $row->dosen_pembimbing : '';
+            });
+            $table->editColumn('url_publikasi', function ($row) {
+                return $row->url_publikasi ? $row->url_publikasi : '';
+            });
             $table->editColumn('no_wa', function ($row) {
                 return $row->no_wa ? $row->no_wa : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'kategori']);
+            $table->editColumn('validation_status', function ($row) {
+                return $row->validation_status ? PrestasiMahasiswa::STATUS_SELECT[$row->validation_status] : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'kategori', 'validation_status']);
 
             return $table->make(true);
         }
@@ -268,5 +281,44 @@ class PrestasiMahasiswaController extends Controller
         }
 
         return Excel::download(new PrestasiMahasiswaExport($start , $end), 'Prestasi Mahasiswa dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
+    }
+
+    public function validate(Request $request, PrestasiMahasiswa $prestasiMahasiswa)
+    {
+        abort_if(Gate::denies('prestasi_mahasiswa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        return view('admin.prestasiMahasiswas.validate', compact('prestasiMahasiswa'));
+    }
+
+    public function processValidation(Request $request, PrestasiMahasiswa $prestasiMahasiswa)
+    {
+        abort_if(Gate::denies('prestasi_mahasiswa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $request->validate([
+            'validation_status' => 'required|in:pending,validated,rejected',
+            'validation_notes' => 'nullable|string',
+        ]);
+
+        $prestasiMahasiswa->update([
+            'validation_status' => $request->validation_status,
+            'validation_notes' => $request->validation_notes,
+            'validated_at' => $request->validation_status != 'pending' ? now() : null,
+            'validated_by' => $request->validation_status != 'pending' ? auth()->id() : null,
+        ]);
+
+        return redirect()->route('admin.prestasi-mahasiswas.index')
+            ->with('message', 'Validasi prestasi mahasiswa berhasil!');
+    }
+
+    public function pendingValidations()
+    {
+        abort_if(Gate::denies('prestasi_mahasiswa_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $pendingSubmissions = PrestasiMahasiswa::where('validation_status', 'pending')
+            ->where('is_draft', 0)
+            ->with(['user', 'kategori'])
+            ->get();
+
+        return view('admin.prestasiMahasiswas.pending', compact('pendingSubmissions'));
     }
 }

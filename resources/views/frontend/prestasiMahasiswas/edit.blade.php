@@ -173,6 +173,16 @@
                             <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.keikutsertaan_helper') }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="dosen_pembimbing">{{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing') ?? 'Dosen Pembimbing' }}</label>
+                            <input class="form-control" type="text" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', $prestasiMahasiswa->dosen_pembimbing) }}">
+                            @if($errors->has('dosen_pembimbing'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('dosen_pembimbing') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing_helper') ?? 'Masukkan nama dosen pembimbing (jika ada)' }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="url_publikasi">{{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}</label>
                             <input class="form-control" type="text" name="url_publikasi" id="url_publikasi" value="{{ old('url_publikasi', $prestasiMahasiswa->url_publikasi) }}">
                             @if($errors->has('url_publikasi'))

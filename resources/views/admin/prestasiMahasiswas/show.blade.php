@@ -113,6 +113,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing') ?? 'Dosen Pembimbing' }}
+                        </th>
+                        <td>
+                            {{ $prestasiMahasiswa->dosen_pembimbing }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}
                         </th>
                         <td>

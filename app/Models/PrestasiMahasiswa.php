@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use App\Traits\SelfOwnTrait;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class PrestasiMahasiswa extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia, Auditable, HasFactory;
+    use SoftDeletes, InteractsWithMedia, Auditable, HasFactory, SelfOwnTrait;
 
     public $table = 'prestasi_mahasiswas';
 
@@ -28,20 +29,14 @@ class PrestasiMahasiswa extends Model implements HasMedia
         '<10' => '<10 Perguruan Tinggi',
     ];
 
-    protected $dates = [
-        'tanggal_awal',
-        'tanggal_akhir',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_VALIDATED = 'validated';
+    public const STATUS_REJECTED = 'rejected';
 
-    protected $appends = [
-        'surat_tugas',
-        'sertifikat',
-        'foto_dokumentasi',
-        'surat_tugas_pembimbing',
-        'bukti_sipsmart',
+    public const STATUS_SELECT = [
+        self::STATUS_PENDING => 'Pending',
+        self::STATUS_VALIDATED => 'Validated',
+        self::STATUS_REJECTED => 'Rejected',
     ];
 
     public const TINGKAT_RADIO = [
@@ -66,6 +61,22 @@ class PrestasiMahasiswa extends Model implements HasMedia
         'peserta'   => 'Peserta',
     ];
 
+    protected $dates = [
+        'tanggal_awal',
+        'tanggal_akhir',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    protected $appends = [
+        'surat_tugas',
+        'sertifikat',
+        'foto_dokumentasi',
+        'surat_tugas_pembimbing',
+        'bukti_sipsmart',
+    ];
+
     protected $fillable = [
         'user_id',
         'skim',
@@ -79,11 +90,18 @@ class PrestasiMahasiswa extends Model implements HasMedia
         'nama_penyelenggara',
         'tempat_penyelenggara',
         'keikutsertaan',
+        'dosen_pembimbing',
         'url_publikasi',
         'no_wa',
         'created_at',
         'updated_at',
         'deleted_at',
+        'current_step',
+        'is_draft',
+        'validation_status',
+        'validation_notes',
+        'validated_at',
+        'validated_by',
     ];
 
     protected function serializeDate(DateTimeInterface $date)

@@ -143,6 +143,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('prestasi-mahasiswas/media', 'PrestasiMahasiswaController@storeMedia')->name('prestasi-mahasiswas.storeMedia');
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
     Route::post('prestasi-mahasiswas/export', 'PrestasiMahasiswaController@export')->name('prestasi-mahasiswas.export');
+    Route::get('prestasi-mahasiswas/pending', 'PrestasiMahasiswaController@pendingValidations')->name('prestasi-mahasiswas.pending');
+    Route::get('prestasi-mahasiswas/{prestasi_mahasiswa}/validate', 'PrestasiMahasiswaController@validate')->name('prestasi-mahasiswas.validate');
+    Route::post('prestasi-mahasiswas/{prestasi_mahasiswa}/validate', 'PrestasiMahasiswaController@processValidation')->name('prestasi-mahasiswas.process-validation');
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
     // Prestasi Mahasiswa Detail
@@ -252,6 +255,8 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('prestasi-mahasiswas/media', 'PrestasiMahasiswaController@storeMedia')->name('prestasi-mahasiswas.storeMedia');
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
     Route::post('prestasi-mahasiswas/print-bukti', 'PrestasiMahasiswaController@printBukti')->name('prestasi-mahasiswas.printBukti');
+    Route::post('prestasi-mahasiswas/save-step', 'PrestasiMahasiswaController@saveStep')->name('prestasi-mahasiswas.save-step');
+    Route::get('prestasi-mahasiswas/get-draft', 'PrestasiMahasiswaController@getDraft')->name('prestasi-mahasiswas.get-draft');
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
      // Result Assessment

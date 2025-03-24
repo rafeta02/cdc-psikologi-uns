@@ -68,6 +68,15 @@
                         No WA
                     </th>
                     <th>
+                        {{ trans('cruds.prestasiMahasiswa.fields.keikutsertaan') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing') ?? 'Dosen Pembimbing' }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -101,6 +110,9 @@ $(function () {
         { data: 'nama_penyelenggara', name: 'nama_penyelenggara', class : 'text-center' },
         { data: 'tempat_penyelenggara', name: 'tempat_penyelenggara', class : 'text-center' },
         { data: 'no_wa', name: 'no_wa', class : 'text-center' },
+        { data: 'keikutsertaan', name: 'keikutsertaan', class : 'text-center' },
+        { data: 'dosen_pembimbing', name: 'dosen_pembimbing', class : 'text-center' },
+        { data: 'url_publikasi', name: 'url_publikasi', class : 'text-center' },
         { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,

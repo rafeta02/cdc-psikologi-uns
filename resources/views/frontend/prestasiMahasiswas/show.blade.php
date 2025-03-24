@@ -122,6 +122,14 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>
+                                        {{ trans('cruds.prestasiMahasiswa.fields.dosen_pembimbing') ?? 'Dosen Pembimbing' }}
+                                    </th>
+                                    <td>
+                                        {{ $prestasiMahasiswa->dosen_pembimbing }}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Peserta</th>
                                     <td>
                                         <table width="100%">
