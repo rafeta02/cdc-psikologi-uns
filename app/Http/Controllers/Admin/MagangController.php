@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
+use Carbon\Carbon;
 
 class MagangController extends Controller
 {
@@ -56,11 +58,18 @@ class MagangController extends Controller
                 return $row->type ? Magang::TYPE_SELECT[$row->type] : '';
             });
 
+            $table->editColumn('close_date', function ($row) {
+                if (!$row->close_date_exist){
+                    return $row->close_date ? '<span class="badge badge-warning">ASAP</span><br>'. Carbon::parse($row->close_date)->format('j F Y') : '';
+                }
+                return $row->close_date ? Carbon::parse($row->close_date)->format('j F Y') : '';
+            });
+
             $table->editColumn('needs', function ($row) {
-                return $row->needs ? $row->needs : '';
+                return $row->needs ? $row->needs.' Orang' : '';
             });
             $table->editColumn('filled', function ($row) {
-                return $row->filled ? $row->filled : '';
+                return $row->filled ? $row->filled.' Orang' : '-';
             });
 
             $table->rawColumns(['actions', 'placeholder', 'company']);

@@ -96,7 +96,7 @@ class MahasiswaMagang extends Model implements HasMedia
 
     public function mahasiswa()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
     public function magang()

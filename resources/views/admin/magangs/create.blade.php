@@ -18,26 +18,6 @@
                 <span class="help-block">{{ trans('cruds.magang.fields.name_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="company_id">{{ trans('cruds.magang.fields.company') }}</label>
-                <select class="form-control select2 {{ $errors->has('company') ? 'is-invalid' : '' }}" name="company_id" id="company_id">
-                    @foreach($companies as $id => $entry)
-                        <option value="{{ $id }}" {{ old('company_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('company'))
-                    <span class="text-danger">{{ $errors->first('company') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.magang.fields.company_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="description">{{ trans('cruds.magang.fields.description') }}</label>
-                <textarea class="form-control ckeditor {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description">{!! old('description') !!}</textarea>
-                @if($errors->has('description'))
-                    <span class="text-danger">{{ $errors->first('description') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.magang.fields.description_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label>{{ trans('cruds.magang.fields.type') }}</label>
                 <select class="form-control {{ $errors->has('type') ? 'is-invalid' : '' }}" name="type" id="type">
                     <option value disabled {{ old('type', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
@@ -49,7 +29,31 @@
                     <span class="text-danger">{{ $errors->first('type') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.magang.fields.type_helper') }}</span>
+            </div>  
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="required" for="company_id">{{ trans('cruds.vacancy.fields.company') }}</label>
+                    <select class="form-control select2 {{ $errors->has('company') ? 'is-invalid' : '' }}" name="company_id" id="company_id">
+                        @foreach($companies as $id => $entry)
+                            <option value="{{ $id }}" {{ old('company_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                        @endforeach
+                        <option>ADD NEW COMPANY</option>
+                    </select>
+                    @if($errors->has('company'))
+                        <span class="text-danger">{{ $errors->first('company') }}</span>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.vacancy.fields.company_helper') }}</span>
+                </div>
             </div>
+            <div class="form-group">
+                <label for="description">{{ trans('cruds.magang.fields.description') }}</label>
+                <textarea class="form-control ckeditor {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description" id="description">{!! old('description') !!}</textarea>
+                @if($errors->has('description'))
+                    <span class="text-danger">{{ $errors->first('description') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.magang.fields.description_helper') }}</span>
+            </div>
+            
             <div class="form-group">
                 <label for="open_date">{{ trans('cruds.magang.fields.open_date') }}</label>
                 <input class="form-control date {{ $errors->has('open_date') ? 'is-invalid' : '' }}" type="text" name="open_date" id="open_date" value="{{ old('open_date') }}">
@@ -94,20 +98,12 @@
                 <span class="help-block">{{ trans('cruds.magang.fields.registrasi_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="needs">{{ trans('cruds.magang.fields.needs') }}</label>
+                <label for="needs">{{ trans('cruds.magang.fields.needs') }} (Orang)</label>
                 <input class="form-control {{ $errors->has('needs') ? 'is-invalid' : '' }}" type="number" name="needs" id="needs" value="{{ old('needs', '') }}" step="1">
                 @if($errors->has('needs'))
                     <span class="text-danger">{{ $errors->first('needs') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.magang.fields.needs_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="filled">{{ trans('cruds.magang.fields.filled') }}</label>
-                <input class="form-control {{ $errors->has('filled') ? 'is-invalid' : '' }}" type="number" name="filled" id="filled" value="{{ old('filled', '') }}" step="1">
-                @if($errors->has('filled'))
-                    <span class="text-danger">{{ $errors->first('filled') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.magang.fields.filled_helper') }}</span>
             </div>
             <div class="form-group">
                 <div class="form-check {{ $errors->has('featured') ? 'is-invalid' : '' }}">
@@ -135,7 +131,7 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
   function SimpleUploadAdapter(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = function(loader) {
       return {
@@ -195,6 +191,33 @@
       }
     );
   }
+
+  $('#company_id').select2({
+        matcher: function(params, data) {
+            // Always return the pinned option
+            if (data.text === 'ADD NEW COMPANY') {
+                return data;
+            }
+            // If there is no search term, show all options
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+            // Check if the option or text matches the search term
+            if (data.text.toLowerCase().indexOf(params.term.toLowerCase()) > -1) {
+                return data;
+            }
+            // If it doesn't match, return `null`
+            return null;
+        }
+    });
+
+    $('#company_id').on('select2:select', function (e) {
+        var selectedValue = e.params.data.text;
+        if (selectedValue === 'ADD NEW COMPANY') {
+            window.open('{{ route("admin.companies.create") }}', '_blank');
+        }
+    });
+
 });
 </script>
 

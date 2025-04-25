@@ -54,37 +54,8 @@
 @section('scripts')
 @parent
 <script>
-    $(function () {
+$(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('magang_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.magangs.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-          return entry.id
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
 
   let dtOverrideGlobals = {
     buttons: dtButtons,
@@ -94,14 +65,14 @@
     aaSorting: [],
     ajax: "{{ route('admin.magangs.index') }}",
     columns: [
-      { data: 'placeholder', name: 'placeholder' },
-{ data: 'name', name: 'name' },
-{ data: 'company_name', name: 'company.name' },
-{ data: 'type', name: 'type' },
-{ data: 'close_date', name: 'close_date' },
-{ data: 'needs', name: 'needs' },
-{ data: 'filled', name: 'filled' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+        { data: 'placeholder', name: 'placeholder' },
+        { data: 'name', name: 'name', class: 'text-center' },
+        { data: 'company_name', name: 'company.name', class: 'text-center' },
+        { data: 'type', name: 'type', class: 'text-center' },
+        { data: 'close_date', name: 'close_date', class: 'text-center' },
+        { data: 'needs', name: 'needs', class: 'text-center' },
+        { data: 'filled', name: 'filled', class: 'text-center' },
+        { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
     ],
     orderCellsTop: true,
     order: [[ 2, 'desc' ]],
