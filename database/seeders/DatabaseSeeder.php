@@ -13,18 +13,64 @@ use App\Models\Company;
 use App\Models\Post;
 use App\Models\Vacancy;
 use App\Models\Regency;
+use App\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
         $this->call([
-            PermissionsTableSeeder::class,
-            RolesTableSeeder::class,
-            PermissionRoleTableSeeder::class,
-            UsersTableSeeder::class,
-            RoleUserTableSeeder::class,
+            // PermissionsTableSeeder::class,
+            // RolesTableSeeder::class,
+            // PermissionRoleTableSeeder::class,
+            // UsersTableSeeder::class,
+            // RoleUserTableSeeder::class,
         ]);
+
+        $permissions = [
+            [
+                'id'    => 230,
+                'title' => 'magang_create',
+            ],
+            [
+                'id'    => 231,
+                'title' => 'magang_edit',
+            ],
+            [
+                'id'    => 232,
+                'title' => 'magang_show',
+            ],
+            [
+                'id'    => 233,
+                'title' => 'magang_delete',
+            ],
+            [
+                'id'    => 234,
+                'title' => 'magang_access',
+            ],
+            [
+                'id'    => 235,
+                'title' => 'mahasiswa_magang_create',
+            ],
+            [
+                'id'    => 236,
+                'title' => 'mahasiswa_magang_edit',
+            ],
+            [
+                'id'    => 237,
+                'title' => 'mahasiswa_magang_show',
+            ],
+            [
+                'id'    => 238,
+                'title' => 'mahasiswa_magang_delete',
+            ],
+            [
+                'id'    => 239,
+                'title' => 'mahasiswa_magang_access',
+            ]
+        ];
+
+        Permission::insert($permissions);
 
         // ArticleCategory::factory()->count(10)->create();
         // ArticleTag::factory()->count(30)->create();

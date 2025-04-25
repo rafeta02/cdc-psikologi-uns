@@ -1,0 +1,166 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\Auditable;
+use DateTimeInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class MahasiswaMagang extends Model implements HasMedia
+{
+    use SoftDeletes, InteractsWithMedia, Auditable, HasFactory;
+
+    public $table = 'mahasiswa_magangs';
+
+    public const TYPE_SELECT = [
+        'KMM'  => 'KMM',
+        'MBKM' => 'MBKM',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    public const APPROVE_SELECT = [
+        'APPROVED' => 'APPROVED',
+        'REJECTED' => 'REJECTED',
+        'PENDING'  => 'PENDING',
+    ];
+
+    public const VERIFIED_SELECT = [
+        'APPROVED' => 'APPROVED',
+        'REJECTED' => 'REJECTED',
+        'PENDING'  => 'PENDING',
+    ];
+
+    public const BIDANG_SELECT = [
+        'klinis'     => 'Klinis',
+        'sosial'     => 'Sosial',
+        'industri'   => 'Industri',
+        'pendidikan' => 'Pendidikan',
+        'lainnya'    => 'Lainnya',
+    ];
+
+    protected $appends = [
+        'laporan_akhir',
+        'presensi',
+        'sertifikat',
+        'form_penilaian_pembimbing_lapangan',
+        'form_penilaian_dosen_pembimbing',
+        'berita_acara_seminar',
+        'presensi_kehadiran_seminar',
+        'notulen_pertanyaan',
+        'tanda_bukti_penyerahan_laporan',
+        'berkas_magang',
+    ];
+
+    protected $fillable = [
+        'mahasiswa_id',
+        'nim',
+        'nama',
+        'semester',
+        'type',
+        'bidang',
+        'magang_id',
+        'instansi',
+        'alamat_instansi',
+        'approve',
+        'approved_by_id',
+        'pretest',
+        'posttest',
+        'dosen_pembimbing',
+        'verified',
+        'verified_by_id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->fit('crop', 50, 50);
+        $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function magang()
+    {
+        return $this->belongsTo(Magang::class, 'magang_id');
+    }
+
+    public function approved_by()
+    {
+        return $this->belongsTo(User::class, 'approved_by_id');
+    }
+
+    public function getLaporanAkhirAttribute()
+    {
+        return $this->getMedia('laporan_akhir');
+    }
+
+    public function getPresensiAttribute()
+    {
+        return $this->getMedia('presensi');
+    }
+
+    public function getSertifikatAttribute()
+    {
+        return $this->getMedia('sertifikat');
+    }
+
+    public function getFormPenilaianPembimbingLapanganAttribute()
+    {
+        return $this->getMedia('form_penilaian_pembimbing_lapangan')->last();
+    }
+
+    public function getFormPenilaianDosenPembimbingAttribute()
+    {
+        return $this->getMedia('form_penilaian_dosen_pembimbing')->last();
+    }
+
+    public function getBeritaAcaraSeminarAttribute()
+    {
+        return $this->getMedia('berita_acara_seminar')->last();
+    }
+
+    public function getPresensiKehadiranSeminarAttribute()
+    {
+        return $this->getMedia('presensi_kehadiran_seminar');
+    }
+
+    public function getNotulenPertanyaanAttribute()
+    {
+        return $this->getMedia('notulen_pertanyaan')->last();
+    }
+
+    public function getTandaBuktiPenyerahanLaporanAttribute()
+    {
+        return $this->getMedia('tanda_bukti_penyerahan_laporan')->last();
+    }
+
+    public function getBerkasMagangAttribute()
+    {
+        return $this->getMedia('berkas_magang');
+    }
+
+    public function verified_by()
+    {
+        return $this->belongsTo(User::class, 'verified_by_id');
+    }
+}

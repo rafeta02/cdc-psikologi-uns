@@ -437,6 +437,54 @@
                         </ul>
                     </li>
                 @endcan
+                @can('magang_access')
+                <li class="nav-item">
+                    <a href="{{ route("admin.magangs.index") }}" class="nav-link {{ request()->is("admin/magangs") || request()->is("admin/magangs/*") ? "active" : "" }}">
+                        <i class="fa-fw nav-icon fas fa-user-md">
+
+                        </i>
+                        <p>
+                            {{ trans('cruds.magang.title') }}
+                        </p>
+                    </a>
+                </li>
+            @endcan
+            @can('mahasiswa_magang_access')
+                <li class="nav-item">
+                    <a href="{{ route("admin.mahasiswa-magangs.index") }}" class="nav-link {{ request()->is("admin/mahasiswa-magangs") || request()->is("admin/mahasiswa-magangs/*") ? "active" : "" }}">
+                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                        </i>
+                        <p>
+                            {{ trans('cruds.mahasiswaMagang.title') }}
+                        </p>
+                    </a>
+                </li>
+            @endcan
+            @can('test_magang_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.test-magangs.index") }}" class="nav-link {{ request()->is("admin/test-magangs") || request()->is("admin/test-magangs/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-question">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.testMagang.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
+                @can('monitoring_magang_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.monitoring-magangs.index") }}" class="nav-link {{ request()->is("admin/monitoring-magangs") || request()->is("admin/monitoring-magangs/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-desktop">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.monitoringMagang.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
                 @can('result_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/result-assessments*") ? "menu-open" : "" }} {{ request()->is("admin/holland-tests*") ? "menu-open" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "menu-open" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "menu-open" : "" }} {{ request()->is("admin/questions*") ? "menu-open" : "" }}">
                         <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/result-assessments*") ? "active" : "" }} {{ request()->is("admin/holland-tests*") ? "active" : "" }} {{ request()->is("admin/work-readiness-tests*") ? "active" : "" }} {{ request()->is("admin/career-confidence-tests*") ? "active" : "" }} {{ request()->is("admin/questions*") ? "active" : "" }}" href="#">

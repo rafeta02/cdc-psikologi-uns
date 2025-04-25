@@ -219,6 +219,28 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('vacancy-tags/parse-csv-import', 'VacancyTagController@parseCsvImport')->name('vacancy-tags.parseCsvImport');
     Route::post('vacancy-tags/process-csv-import', 'VacancyTagController@processCsvImport')->name('vacancy-tags.processCsvImport');
     Route::resource('vacancy-tags', 'VacancyTagController');
+
+    // Magang
+    Route::delete('magangs/destroy', 'MagangController@massDestroy')->name('magangs.massDestroy');
+    Route::post('magangs/media', 'MagangController@storeMedia')->name('magangs.storeMedia');
+    Route::post('magangs/ckmedia', 'MagangController@storeCKEditorImages')->name('magangs.storeCKEditorImages');
+    Route::resource('magangs', 'MagangController');
+
+    // Mahasiswa Magang
+    Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
+    Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
+    Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
+    Route::resource('mahasiswa-magangs', 'MahasiswaMagangController');
+
+    // Test Magang
+    Route::delete('test-magangs/destroy', 'TestMagangController@massDestroy')->name('test-magangs.massDestroy');
+    Route::resource('test-magangs', 'TestMagangController');
+
+    // Monitoring Magang
+    Route::delete('monitoring-magangs/destroy', 'MonitoringMagangController@massDestroy')->name('monitoring-magangs.massDestroy');
+    Route::post('monitoring-magangs/media', 'MonitoringMagangController@storeMedia')->name('monitoring-magangs.storeMedia');
+    Route::post('monitoring-magangs/ckmedia', 'MonitoringMagangController@storeCKEditorImages')->name('monitoring-magangs.storeCKEditorImages');
+    Route::resource('monitoring-magangs', 'MonitoringMagangController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -269,6 +291,22 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('competences/ckmedia', 'ResultCompetenceController@storeCKEditorImages')->name('competences.storeCKEditorImages');
     Route::get('competences/certificate/{competence}', 'ResultCompetenceController@certificate')->name('competences.certificate');
     Route::resource('competences', 'ResultCompetenceController')->names('competences');
+
+    // Mahasiswa Magang
+    Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
+    Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
+    Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
+    Route::resource('mahasiswa-magangs', 'MahasiswaMagangController');
+
+    // Test Magang
+    Route::delete('test-magangs/destroy', 'TestMagangController@massDestroy')->name('test-magangs.massDestroy');
+    Route::resource('test-magangs', 'TestMagangController');
+
+    // Monitoring Magang
+    Route::delete('monitoring-magangs/destroy', 'MonitoringMagangController@massDestroy')->name('monitoring-magangs.massDestroy');
+    Route::post('monitoring-magangs/media', 'MonitoringMagangController@storeMedia')->name('monitoring-magangs.storeMedia');
+    Route::post('monitoring-magangs/ckmedia', 'MonitoringMagangController@storeCKEditorImages')->name('monitoring-magangs.storeCKEditorImages');
+    Route::resource('monitoring-magangs', 'MonitoringMagangController');
 
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
     Route::post('frontend/profile', 'ProfileController@update')->name('profile.update');

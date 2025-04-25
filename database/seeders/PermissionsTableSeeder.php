@@ -615,6 +615,86 @@ class PermissionsTableSeeder extends Seeder
                 'title' => 'mahasiswa_access',
             ],
             [
+                'id'    => 230,
+                'title' => 'magang_create',
+            ],
+            [
+                'id'    => 231,
+                'title' => 'magang_edit',
+            ],
+            [
+                'id'    => 232,
+                'title' => 'magang_show',
+            ],
+            [
+                'id'    => 233,
+                'title' => 'magang_delete',
+            ],
+            [
+                'id'    => 234,
+                'title' => 'magang_access',
+            ],
+            [
+                'id'    => 235,
+                'title' => 'mahasiswa_magang_create',
+            ],
+            [
+                'id'    => 236,
+                'title' => 'mahasiswa_magang_edit',
+            ],
+            [
+                'id'    => 237,
+                'title' => 'mahasiswa_magang_show',
+            ],
+            [
+                'id'    => 238,
+                'title' => 'mahasiswa_magang_delete',
+            ],
+            [
+                'id'    => 239,
+                'title' => 'mahasiswa_magang_access',
+            ],
+            [
+                'id'    => 240,
+                'title' => 'test_magang_create',
+            ],
+            [
+                'id'    => 241,
+                'title' => 'test_magang_edit',
+            ],
+            [
+                'id'    => 242,
+                'title' => 'test_magang_show',
+            ],
+            [
+                'id'    => 243,
+                'title' => 'test_magang_delete',
+            ],
+            [
+                'id'    => 244,
+                'title' => 'test_magang_access',
+            ],
+            [
+                'id'    => 245,
+                'title' => 'monitoring_magang_create',
+            ],
+            [
+                'id'    => 246,
+                'title' => 'monitoring_magang_edit',
+            ],
+            [
+                'id'    => 247,
+                'title' => 'monitoring_magang_show',
+            ],
+            [
+                'id'    => 248,
+                'title' => 'monitoring_magang_delete',
+            ],
+            [
+                'id'    => 249,
+                'title' => 'monitoring_magang_access',
+            ],
+            [
                 'id'    => 152,
                 'title' => 'profile_password_edit',
             ],
