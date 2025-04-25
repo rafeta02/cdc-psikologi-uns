@@ -256,7 +256,6 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
     Route::post('prestasi-mahasiswas/print-bukti', 'PrestasiMahasiswaController@printBukti')->name('prestasi-mahasiswas.printBukti');
     Route::post('prestasi-mahasiswas/save-step', 'PrestasiMahasiswaController@saveStep')->name('prestasi-mahasiswas.save-step');
-    Route::get('prestasi-mahasiswas/get-draft', 'PrestasiMahasiswaController@getDraft')->name('prestasi-mahasiswas.get-draft');
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
      // Result Assessment

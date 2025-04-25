@@ -126,11 +126,33 @@
                                             @if($prestasiMahasiswa->is_draft ?? false)
                                                 <span class="badge badge-warning">Draft</span>
                                                 <br>
-                                                <a href="{{ route('frontend.prestasi-mahasiswas.create', ['draft_id' => $prestasiMahasiswa->id]) }}" class="btn btn-sm btn-info mt-1">
+                                                @php
+                                                    $steps = [
+                                                        1 => 'Informasi Umum',
+                                                        2 => 'Informasi Peserta',
+                                                        3 => 'Dokumen Pendukung',
+                                                        4 => 'Survey'
+                                                    ];
+                                                    $currentStep = $prestasiMahasiswa->current_step ?? 1;
+                                                    $progress = (($currentStep - 1) / 3) * 100;
+                                                @endphp
+                                                <div class="progress mt-2" style="height: 20px;">
+                                                    <div class="progress-bar" role="progressbar" 
+                                                         style="width: {{ $progress }}%;" 
+                                                         aria-valuenow="{{ $progress }}" 
+                                                         aria-valuemin="0" 
+                                                         aria-valuemax="100">
+                                                        {{ round($progress) }}%
+                                                    </div>
+                                                </div>
+                                                <small class="d-block mt-2">
+                                                    <strong>Langkah {{ $currentStep }} dari 4:</strong><br>
+                                                    {{ $steps[$currentStep] }}
+                                                </small>
+                                                <a href="{{ route('frontend.prestasi-mahasiswas.create', ['draft_id' => $prestasiMahasiswa->id]) }}" 
+                                                   class="btn btn-sm btn-info mt-2">
                                                     <i class="fas fa-edit"></i> Lanjutkan Pengisian
                                                 </a>
-                                                <br>
-                                                <small class="text-muted">Dokumen belum lengkap</small>
                                             @else
                                                 <span class="badge badge-success">Selesai</span>
                                             @endif

@@ -41,10 +41,19 @@ class PrestasiMahasiswaController extends Controller
         abort_if(Gate::denies('prestasi_mahasiswa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('frontend.prestasiMahasiswas.create', compact('kategoris', 'users'));
+        // Get draft if draft_id is provided
+        $draft = null;
+        if (request('draft_id')) {
+            $draft = PrestasiMahasiswa::where('id', request('draft_id'))
+                ->where('user_id', auth()->id())
+                ->where('is_draft', true)
+                ->with(['pesertas'])
+                ->first();
+        }
+
+        return view('frontend.prestasiMahasiswas.create', compact('kategoris', 'users', 'draft'));
     }
 
     public function store(StorePrestasiMahasiswaRequest $request)
@@ -133,65 +142,66 @@ class PrestasiMahasiswaController extends Controller
             }
         }
 
-        // Handle file uploads using the existing media handling logic
-        foreach ($request->input('surat_tugas', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($file));
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_surat_tugas_' . uniqid(). '.' . $extension;
-            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
-            rename($filePath, $newFilePath);
+        // Handle file uploads
+        $fileCollections = [
+            'surat_tugas' => 'surat_tugas',
+            'sertifikat' => 'sertifikat',
+            'foto_dokumentasi' => 'foto_dokumentasi',
+            'bukti_sipsmart' => 'bukti_sipsmart'
+        ];
 
-            if (file_exists($newFilePath)) {
-                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('surat_tugas');
+        foreach ($fileCollections as $inputName => $collectionName) {
+            // Remove files that are no longer in the request
+            if (count($prestasiMahasiswa->$collectionName) > 0) {
+                foreach ($prestasiMahasiswa->$collectionName as $media) {
+                    if (!in_array($media->file_name, $request->input($inputName, []))) {
+                        $media->delete();
+                    }
+                }
+            }
+
+            // Get existing media files
+            $media = $prestasiMahasiswa->$collectionName->pluck('file_name')->toArray();
+
+            // Add new files
+            foreach ($request->input($inputName, []) as $file) {
+                if (count($media) === 0 || !in_array($file, $media)) {
+                    $filePath = storage_path('tmp/uploads/' . basename($file));
+                    if (file_exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $newFileName = $prestasiMahasiswa->nama_kegiatan . '_' . $inputName . '_' . uniqid() . '.' . $extension;
+                        $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+                        
+                        if (copy($filePath, $newFilePath)) {
+                            $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection($collectionName);
+                        }
+                    }
+                }
             }
         }
 
-        foreach ($request->input('sertifikat', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($file));
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_sertifikat_' . uniqid(). '.' . $extension;
-            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
-            rename($filePath, $newFilePath);
-
-            if (file_exists($newFilePath)) {
-                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('sertifikat');
-            }
-        }
-
-        foreach ($request->input('foto_dokumentasi', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($file));
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_foto_dokumentasi_' . uniqid(). '.' . $extension;
-            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
-            rename($filePath, $newFilePath);
-
-            if (file_exists($newFilePath)) {
-                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('foto_dokumentasi');
-            }
-        }
-
+        // Handle single file upload (surat_tugas_pembimbing)
         if ($request->input('surat_tugas_pembimbing', false)) {
-            $filePath = storage_path('tmp/uploads/' . basename($request->input('surat_tugas_pembimbing')));
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_surat_tugas_pembimbing_' . uniqid(). '.' . $extension;
-            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
-            rename($filePath, $newFilePath);
+            if (!$prestasiMahasiswa->surat_tugas_pembimbing || 
+                $request->input('surat_tugas_pembimbing') !== $prestasiMahasiswa->surat_tugas_pembimbing->file_name) {
+                
+                if ($prestasiMahasiswa->surat_tugas_pembimbing) {
+                    $prestasiMahasiswa->surat_tugas_pembimbing->delete();
+                }
 
-            if (file_exists($newFilePath)) {
-                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('surat_tugas_pembimbing');
+                $filePath = storage_path('tmp/uploads/' . basename($request->input('surat_tugas_pembimbing')));
+                if (file_exists($filePath)) {
+                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                    $newFileName = $prestasiMahasiswa->nama_kegiatan . '_surat_tugas_pembimbing_' . uniqid() . '.' . $extension;
+                    $newFilePath = storage_path('tmp/uploads/' . $newFileName);
+                    
+                    if (copy($filePath, $newFilePath)) {
+                        $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('surat_tugas_pembimbing');
+                    }
+                }
             }
-        }
-
-        foreach ($request->input('bukti_sipsmart', []) as $file) {
-            $filePath = storage_path('tmp/uploads/' . basename($file));
-            $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            $newFileName = $prestasiMahasiswa->nama_kegiatan .'_bukti_sipsmart_' . uniqid(). '.' . $extension;
-            $newFilePath = storage_path('tmp/uploads/' . $newFileName);
-            rename($filePath, $newFilePath);
-
-            if (file_exists($newFilePath)) {
-                $prestasiMahasiswa->addMedia($newFilePath)->toMediaCollection('bukti_sipsmart');
-            }
+        } elseif ($prestasiMahasiswa->surat_tugas_pembimbing) {
+            $prestasiMahasiswa->surat_tugas_pembimbing->delete();
         }
 
         // Get student name for congratulations message
@@ -204,7 +214,7 @@ class PrestasiMahasiswaController extends Controller
 
         // Get achievement type
         $achievement = PrestasiMahasiswaModel::PEROLEHAN_JUARA_SELECT[$prestasiMahasiswa->perolehan_juara] ?? 'achievement';
-
+        
         // Create congratulations message
         $congratsMessage = "Congratulations! Thank you {$studentName} for the outstanding {$achievement} on {$prestasiMahasiswa->nama_kegiatan} by {$prestasiMahasiswa->nama_penyelenggara}. Your name has been listed on the Faculty of Psychology web of achievers.";
 
@@ -351,141 +361,124 @@ class PrestasiMahasiswaController extends Controller
     {
         abort_if(Gate::denies('prestasi_mahasiswa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $step = $request->input('save_step');
         $draftId = $request->input('draft_id');
-        $is_draft = true; // Always save as draft when using this method
-        $is_explicit_draft = $request->has('save_as_draft'); // Flag to indicate user clicked "Save as Draft" button
+        $currentStep = $request->input('current_step');
+        $saveAsDraft = $request->input('save_as_draft', false);
 
         try {
-            // If we already have a draft, update it
+            // Prepare data with default values for required fields
+            $data = array_merge(
+                // Convert null values to empty strings for string fields
+                collect($request->except(['_token', '_method', 'draft_id', 'current_step', 'save_as_draft']))
+                    ->map(function ($value, $key) {
+                        // If the value is null and the field is a string field, return empty string
+                        if (is_null($value) && in_array($key, [
+                            'nama_penyelenggara',
+                            'tempat_penyelenggara',
+                            'dosen_pembimbing',
+                            'url_publikasi',
+                            'no_wa',
+                            'informasi_lomba',
+                            'tips_trik'
+                        ])) {
+                            return '';
+                        }
+                        return $value;
+                    })
+                    ->toArray(),
+                [
+                    'current_step' => $currentStep,
+                    'is_draft' => true,
+                    // Set default values for required fields if they're not provided
+                    'jumlah_peserta' => $request->input('jumlah_peserta', 'individu'),
+                    'perolehan_juara' => $request->input('perolehan_juara', 'juara_1'),
+                    'keikutsertaan' => $request->input('keikutsertaan', 'offline'),
+                    'bersedia_mentoring' => $request->input('bersedia_mentoring', '0'),
+                    // Set empty string defaults for required string fields
+                    'nama_penyelenggara' => $request->input('nama_penyelenggara', ''),
+                    'tempat_penyelenggara' => $request->input('tempat_penyelenggara', ''),
+                    'dosen_pembimbing' => $request->input('dosen_pembimbing', ''),
+                    'url_publikasi' => $request->input('url_publikasi', ''),
+                    'no_wa' => $request->input('no_wa', ''),
+                    'informasi_lomba' => $request->input('informasi_lomba', ''),
+                    'tips_trik' => $request->input('tips_trik', '')
+                ]
+            );
+
             if ($draftId) {
-                $prestasiMahasiswa = PrestasiMahasiswa::find($draftId);
+                // Update existing draft
+                $prestasi = PrestasiMahasiswa::where('id', $draftId)
+                    ->where('user_id', auth()->id())
+                    ->first();
 
-                // Make sure the user owns this draft
-                if (!$prestasiMahasiswa || $prestasiMahasiswa->user_id != auth()->id()) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => ['draft_id' => 'Invalid draft ID']
-                    ], 400);
+                if (!$prestasi) {
+                    throw new \Exception('Draft not found');
                 }
 
-                // Update the record based on the step
-                switch ($step) {
-                    case 1:
-                        $prestasiMahasiswa->update([
-                            'skim' => $request->input('skim'),
-                            'tingkat' => $request->input('tingkat'),
-                            'nama_kegiatan' => $request->input('nama_kegiatan'),
-                            'kategori_id' => $request->input('kategori_id'),
-                            'tanggal_awal' => $request->input('tanggal_awal'),
-                            'tanggal_akhir' => $request->input('tanggal_akhir'),
-                            'current_step' => $step,
-                            'is_draft' => $is_draft,
-                        ]);
-                        break;
-                    case 2:
-                        $prestasiMahasiswa->update([
-                            'jumlah_peserta' => $request->input('jumlah_peserta'),
-                            'perolehan_juara' => $request->input('perolehan_juara'),
-                            'nama_penyelenggara' => $request->input('nama_penyelenggara'),
-                            'tempat_penyelenggara' => $request->input('tempat_penyelenggara'),
-                            'keikutsertaan' => $request->input('keikutsertaan'),
-                            'url_publikasi' => $request->input('url_publikasi'),
-                            'dosen_pembimbing' => $request->input('dosen_pembimbing'),
-                            'current_step' => $step,
-                            'is_draft' => $is_draft,
-                        ]);
+                // Update the draft with new data
+                $prestasi->update($data);
 
-                        // Update peserta details
-                        if ($request->has('nama_peserta') && is_array($request->input('nama_peserta'))) {
-                            // Delete existing peserta records
-                            PrestasiMahasiswaDetail::where('prestasi_mahasiswa_id', $prestasiMahasiswa->id)->delete();
-                            
-                            // Create new peserta records
-                            foreach ($request->input('nama_peserta') as $key => $nama) {
-                                if (!empty($nama)) {
-                                    PrestasiMahasiswaDetail::create([
-                                        'nim' => $request->nim_peserta[$key] ?? '',
-                                        'nama' => $nama,
-                                        'prestasi_mahasiswa_id' => $prestasiMahasiswa->id,
-                                    ]);
-                                }
-                            }
-                        }
-                        break;
-                    case 3:
-                        $prestasiMahasiswa->update([
-                            'no_wa' => $request->input('no_wa'),
-                            'current_step' => $step,
-                            'is_draft' => $is_draft,
-                        ]);
-
-                        // Only validate files if this isn't explicitly saving as a draft
-                        // and we're trying to advance to the next step
-                        if (!$is_explicit_draft) {
-                            // Check if all required files are present
-                            $suratTugas = $prestasiMahasiswa->getMedia('surat_tugas')->count() > 0;
-                            $sertifikat = $prestasiMahasiswa->getMedia('sertifikat')->count() > 0;
-                            $fotoDokumentasi = $prestasiMahasiswa->getMedia('foto_dokumentasi')->count() > 0;
-                            $suratTugasPembimbing = $prestasiMahasiswa->getMedia('surat_tugas_pembimbing')->count() > 0;
-                            $buktiSipsmart = $prestasiMahasiswa->getMedia('bukti_sipsmart')->count() > 0;
-                            
-                            $hasAllFiles = $suratTugas && $sertifikat && $fotoDokumentasi && 
-                                          $suratTugasPembimbing && $buktiSipsmart;
-                            
-                            if (!$hasAllFiles) {
-                                $missingFiles = [];
-                                if (!$suratTugas) $missingFiles[] = 'Surat Tugas';
-                                if (!$sertifikat) $missingFiles[] = 'Sertifikat';
-                                if (!$fotoDokumentasi) $missingFiles[] = 'Foto Dokumentasi';
-                                if (!$suratTugasPembimbing) $missingFiles[] = 'Surat Tugas Pembimbing';
-                                if (!$buktiSipsmart) $missingFiles[] = 'Bukti SIPSMART';
-                                
-                                return response()->json([
-                                    'success' => false,
-                                    'message' => 'Document uploads are incomplete',
-                                    'missing_files' => $missingFiles,
-                                    'errors' => [
-                                        'files' => 'Please upload all required documents before proceeding.'
-                                    ]
-                                ], 422);
-                            }
-                        }
-                        
-                        // File uploads are handled separately through the storeMedia route
-                        break;
-                }
-            } else {
-                // Create a new draft
-                $prestasiMahasiswa = PrestasiMahasiswa::create([
-                    'user_id' => auth()->id(),
-                    'skim' => $request->input('skim'),
-                    'tingkat' => $request->input('tingkat'),
-                    'nama_kegiatan' => $request->input('nama_kegiatan') ?? 'Draft',
-                    'kategori_id' => $request->input('kategori_id'),
-                    'tanggal_awal' => $request->input('tanggal_awal'),
-                    'tanggal_akhir' => $request->input('tanggal_akhir'),
-                    'jumlah_peserta' => $request->input('jumlah_peserta') ?? '>10',
-                    'perolehan_juara' => $request->input('perolehan_juara') ?? 'peserta',
-                    'nama_penyelenggara' => $request->input('nama_penyelenggara') ?? 'Draft',
-                    'tempat_penyelenggara' => $request->input('tempat_penyelenggara') ?? 'Draft',
-                    'keikutsertaan' => $request->input('keikutsertaan'),
-                    'url_publikasi' => $request->input('url_publikasi'),
-                    'dosen_pembimbing' => $request->input('dosen_pembimbing'),
-                    'no_wa' => $request->input('no_wa') ?? '0',
-                    'current_step' => $step,
-                    'is_draft' => $is_draft,
-                ]);
-
-                // Create peserta records if step 2 is being saved immediately
-                if ($step == 2 && $request->has('nama_peserta') && is_array($request->input('nama_peserta'))) {
+                // Handle peserta if in step 2
+                if ($currentStep == 2 && $request->has('nama_peserta')) {
+                    // Delete existing peserta
+                    PrestasiMahasiswaDetail::where('prestasi_mahasiswa_id', $prestasi->id)->delete();
+                    
+                    // Add new peserta
                     foreach ($request->input('nama_peserta') as $key => $nama) {
                         if (!empty($nama)) {
                             PrestasiMahasiswaDetail::create([
-                                'nim' => $request->nim_peserta[$key] ?? '',
+                                'prestasi_mahasiswa_id' => $prestasi->id,
                                 'nama' => $nama,
-                                'prestasi_mahasiswa_id' => $prestasiMahasiswa->id,
+                                'nim' => $request->input('nim_peserta')[$key] ?? ''
                             ]);
+                        }
+                    }
+                }
+
+            } else {
+                // Add user_id to data array for new drafts
+                $data['user_id'] = auth()->id();
+
+                // Create new draft
+                $prestasi = PrestasiMahasiswa::create($data);
+
+                // Handle peserta if in step 2
+                if ($currentStep == 2 && $request->has('nama_peserta')) {
+                    foreach ($request->input('nama_peserta') as $key => $nama) {
+                        if (!empty($nama)) {
+                            PrestasiMahasiswaDetail::create([
+                                'prestasi_mahasiswa_id' => $prestasi->id,
+                                'nama' => $nama,
+                                'nim' => $request->input('nim_peserta')[$key] ?? ''
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            // Handle file uploads if in step 3
+            if ($currentStep == 3) {
+                $fileCollections = [
+                    'surat_tugas' => 'surat_tugas',
+                    'sertifikat' => 'sertifikat',
+                    'foto_dokumentasi' => 'foto_dokumentasi',
+                    'surat_tugas_pembimbing' => 'surat_tugas_pembimbing',
+                    'bukti_sipsmart' => 'bukti_sipsmart'
+                ];
+
+                foreach ($fileCollections as $inputName => $collectionName) {
+                    if ($request->has($inputName)) {
+                        $files = is_array($request->input($inputName)) ? 
+                            $request->input($inputName) : 
+                            [$request->input($inputName)];
+
+                        foreach ($files as $file) {
+                            if ($file) {
+                                $filePath = storage_path('tmp/uploads/' . basename($file));
+                                if (file_exists($filePath)) {
+                                    $prestasi->addMedia($filePath)->toMediaCollection($collectionName);
+                                }
+                            }
                         }
                     }
                 }
@@ -493,102 +486,72 @@ class PrestasiMahasiswaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Step ' . $step . ' saved successfully',
-                'draft_id' => $prestasiMahasiswa->id
+                'draft_id' => $prestasi->id,
+                'message' => $saveAsDraft ? 'Draft saved successfully' : 'Step saved successfully'
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error saving step data',
-                'error' => $e->getMessage()
+                'message' => 'Error saving data: ' . $e->getMessage()
             ], 500);
         }
     }
 
     public function getDraft(Request $request)
     {
-        abort_if(Gate::denies('prestasi_mahasiswa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $draftId = $request->input('draft_id');
-
-        if (!$draftId) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No draft ID provided'
-            ], 400);
-        }
-
         try {
-            $draft = PrestasiMahasiswa::find($draftId);
+            $draft = PrestasiMahasiswa::where('id', $request->draft_id)
+                ->where('user_id', auth()->id())
+                ->where('is_draft', true)
+                ->with(['pesertas'])
+                ->first();
 
-            if (!$draft || $draft->user_id != auth()->id()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Draft not found or you do not have permission to access it'
-                ], 404);
+            if (!$draft) {
+                throw new \Exception('Draft not found');
             }
 
-            // Load the peserta (participant) details
-            $pesertaDetails = PrestasiMahasiswaDetail::where('prestasi_mahasiswa_id', $draft->id)->get();
-            
-            // Format data for the frontend
-            $draftData = $draft->toArray();
-            $draftData['nama_peserta'] = $pesertaDetails->pluck('nama')->toArray();
-            $draftData['nim_peserta'] = $pesertaDetails->pluck('nim')->toArray();
+            // Get file information
+            $fileCollections = [
+                'surat_tugas_files' => $draft->getMedia('surat_tugas'),
+                'sertifikat_files' => $draft->getMedia('sertifikat'),
+                'foto_dokumentasi_files' => $draft->getMedia('foto_dokumentasi'),
+                'surat_tugas_pembimbing_file' => $draft->getMedia('surat_tugas_pembimbing')->first(),
+                'bukti_sipsmart_files' => $draft->getMedia('bukti_sipsmart')
+            ];
 
-            // Add media URLs
-            if ($draft->getMedia('surat_tugas')->count() > 0) {
-                $draftData['surat_tugas_files'] = $draft->getMedia('surat_tugas')->map(function ($media) {
-                    return [
-                        'name' => $media->file_name,
-                        'url' => $media->getUrl(),
+            // Format file information
+            $formattedFiles = [];
+            foreach ($fileCollections as $key => $collection) {
+                if ($key === 'surat_tugas_pembimbing_file' && $collection) {
+                    $formattedFiles[$key] = [
+                        'name' => $collection->file_name,
+                        'size' => $collection->size,
+                        'url' => $collection->getUrl()
                     ];
-                })->toArray();
+                } elseif (is_array($collection) || is_object($collection)) {
+                    $formattedFiles[$key] = $collection->map(function($file) {
+                        return [
+                            'name' => $file->file_name,
+                            'size' => $file->size,
+                            'url' => $file->getUrl()
+                        ];
+                    })->toArray();
+                }
             }
 
-            if ($draft->getMedia('sertifikat')->count() > 0) {
-                $draftData['sertifikat_files'] = $draft->getMedia('sertifikat')->map(function ($media) {
-                    return [
-                        'name' => $media->file_name,
-                        'url' => $media->getUrl(),
-                    ];
-                })->toArray();
-            }
-
-            if ($draft->getMedia('foto_dokumentasi')->count() > 0) {
-                $draftData['foto_dokumentasi_files'] = $draft->getMedia('foto_dokumentasi')->map(function ($media) {
-                    return [
-                        'name' => $media->file_name,
-                        'url' => $media->getUrl(),
-                    ];
-                })->toArray();
-            }
-
-            if ($draft->getMedia('surat_tugas_pembimbing')->count() > 0) {
-                $draftData['surat_tugas_pembimbing_file'] = [
-                    'name' => $draft->getMedia('surat_tugas_pembimbing')->first()->file_name,
-                    'url' => $draft->getMedia('surat_tugas_pembimbing')->first()->getUrl(),
-                ];
-            }
-
-            if ($draft->getMedia('bukti_sipsmart')->count() > 0) {
-                $draftData['bukti_sipsmart_files'] = $draft->getMedia('bukti_sipsmart')->map(function ($media) {
-                    return [
-                        'name' => $media->file_name,
-                        'url' => $media->getUrl(),
-                    ];
-                })->toArray();
-            }
+            // Prepare response data
+            $responseData = array_merge($draft->toArray(), $formattedFiles);
 
             return response()->json([
                 'success' => true,
-                'draft' => $draftData
+                'draft' => $responseData
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error retrieving draft data',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }
