@@ -268,10 +268,81 @@
                                 </tr>
                             </tbody>
                         </table>
+                        
+                        <!-- Monitoring Magang Section -->
+                        @if($mahasiswaMagang->mahasiswa_id == auth()->id() && $mahasiswaMagang->approve == 'APPROVED')
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                Monitoring Magang
+                                <a href="{{ route('frontend.monitoring-magangs.create', ['magang_id' => $mahasiswaMagang->id]) }}" class="btn btn-sm btn-success float-right">
+                                    <i class="fa fa-plus"></i> Add Monitoring
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Place</th>
+                                                <th>Supervisor</th>
+                                                <th>Evidence</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($mahasiswaMagang->monitorings as $monitoring)
+                                            <tr>
+                                                <td>{{ $monitoring->tanggal }}</td>
+                                                <td>{{ $monitoring->tempat }}</td>
+                                                <td>{{ $monitoring->pembimbing }}</td>
+                                                <td>
+                                                    @foreach($monitoring->bukti as $media)
+                                                    <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-xs btn-info">
+                                                        <i class="fa fa-file"></i>
+                                                    </a>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('frontend.monitoring-magangs.show', $monitoring->id) }}" class="btn btn-xs btn-primary">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ route('frontend.monitoring-magangs.edit', $monitoring->id) }}" class="btn btn-xs btn-info">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center">No monitoring records found</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        <!-- End Monitoring Magang Section -->
+                        
                         <div class="form-group">
                             <a class="btn btn-default" href="{{ route('frontend.mahasiswa-magangs.index') }}">
                                 {{ trans('global.back_to_list') }}
                             </a>
+                            
+                            @if($mahasiswaMagang->mahasiswa_id == auth()->id() && $mahasiswaMagang->approve == 'APPROVED')
+                                @if(!$mahasiswaMagang->pretest)
+                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}" class="btn btn-primary">
+                                        Take Pretest
+                                    </a>
+                                @endif
+                                
+                                @if(!$mahasiswaMagang->posttest)
+                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}" class="btn btn-success">
+                                        Take Posttest
+                                    </a>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>

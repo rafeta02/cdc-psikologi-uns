@@ -36,7 +36,23 @@ class MonitoringMagangController extends Controller
 
         $magangs = MahasiswaMagang::pluck('instansi', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas'));
+        // Get magang_id from request if available
+        $selectedMagang = request('magang_id');
+        $mahasiswaMagang = null;
+        
+        // If magang_id is provided, set the current user as mahasiswa
+        if ($selectedMagang) {
+            $mahasiswaMagang = MahasiswaMagang::find($selectedMagang);
+            
+            // Ensure the user owns this magang record
+            if ($mahasiswaMagang && $mahasiswaMagang->mahasiswa_id == auth()->id()) {
+                $selectedMahasiswa = auth()->id();
+            } else {
+                abort(403, 'You are not authorized to add monitoring for this internship');
+            }
+        }
+
+        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'selectedMagang', 'selectedMahasiswa'));
     }
 
     public function store(StoreMonitoringMagangRequest $request)
@@ -49,6 +65,11 @@ class MonitoringMagangController extends Controller
 
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $monitoringMagang->id]);
+        }
+
+        // Redirect back to the mahasiswa magang details
+        if ($monitoringMagang->magang_id) {
+            return redirect()->route('frontend.mahasiswa-magangs.show', $monitoringMagang->magang_id);
         }
 
         return redirect()->route('frontend.monitoring-magangs.index');

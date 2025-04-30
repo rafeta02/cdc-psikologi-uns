@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class MahasiswaMagangController extends Controller
 {
@@ -37,13 +38,26 @@ class MahasiswaMagangController extends Controller
                 $deleteGate    = 'mahasiswa_magang_delete';
                 $crudRoutePart = 'mahasiswa-magangs';
 
-                return view('partials.datatablesActions', compact(
+                $actions = view('partials.datatablesActions', compact(
                     'viewGate',
                     'editGate',
                     'deleteGate',
                     'crudRoutePart',
                     'row'
-                ));
+                ))->render();
+
+                // Add approve/reject buttons for pending applications
+                if ($row->approve === 'PENDING') {
+                    $actions .= '<button class="btn btn-xs btn-success approve-btn ml-1" data-id="' . $row->id . '">Approve</button>';
+                    $actions .= '<button class="btn btn-xs btn-danger reject-btn ml-1" data-id="' . $row->id . '">Reject</button>';
+                }
+                
+                // Add verify button for completed applications that need verification
+                if ($row->approve === 'APPROVED' && $row->verified === 'PENDING') {
+                    $actions .= '<button class="btn btn-xs btn-primary verify-btn ml-1" data-id="' . $row->id . '">Verify</button>';
+                }
+                
+                return $actions;
             });
 
             $table->addColumn('mahasiswa_name', function ($row) {
@@ -349,5 +363,69 @@ class MahasiswaMagangController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Approve a magang application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\MahasiswaMagang  $mahasiswaMagang
+     * @return \Illuminate\Http\Response
+     */
+    public function approve(Request $request, $id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
+        
+        $mahasiswaMagang->update([
+            'approve' => 'APPROVED',
+            'approved_by_id' => auth()->id(),
+            'dosen_pembimbing' => $request->input('dosen_pembimbing')
+        ]);
+
+        Alert::success('Success', 'Kegiatan Magang Mahasiswa berhasil di approved');
+
+        return redirect()->route('admin.mahasiswa-magangs.index');
+    }
+
+    /**
+     * Reject a magang application.
+     *
+     * @param  \App\Models\MahasiswaMagang  $mahasiswaMagang
+     * @return \Illuminate\Http\Response
+     */
+    public function reject($id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
+        
+        $mahasiswaMagang->update([
+            'approve' => 'REJECTED',
+            'approved_by_id' => auth()->id()
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Verify a magang application.
+     *
+     * @param  \App\Models\MahasiswaMagang  $mahasiswaMagang
+     * @return \Illuminate\Http\Response
+     */
+    public function verify($id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
+        
+        $mahasiswaMagang->update([
+            'verified' => 'APPROVED',
+            'verified_by_id' => auth()->id()
+        ]);
+
+        return redirect()->route('admin.mahasiswa-magangs.index')->with('message', 'Application verified successfully');
     }
 }

@@ -115,6 +115,12 @@
                                                 </form>
                                             @endcan
 
+                                            @if($mahasiswaMagang->approve === 'REJECTED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                <a class="btn btn-xs btn-warning" href="{{ route('frontend.mahasiswa-magangs.resubmit', $mahasiswaMagang->id) }}">
+                                                    Resubmit Files
+                                                </a>
+                                            @endif
+
                                         </td>
 
                                     </tr>

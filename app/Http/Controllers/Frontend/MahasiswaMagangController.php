@@ -283,4 +283,114 @@ class MahasiswaMagangController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
+
+    public function apply($slug)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('message', 'You must be logged in to apply for internships');
+        }
+
+        $magang = Magang::where('slug', $slug)->firstOrFail();
+        
+        return view('frontend.mahasiswaMagangs.apply', compact('magang'));
+    }
+
+    public function storeApplication(Request $request)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('message', 'You must be logged in to apply for internships');
+        }
+        
+        $validatedData = $request->validate([
+            'nim' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'semester' => 'required|integer|min:1|max:12',
+            'type' => 'required|string|in:' . implode(',', array_keys(MahasiswaMagang::TYPE_SELECT)),
+            'bidang' => 'required|string|in:' . implode(',', array_keys(MahasiswaMagang::BIDANG_SELECT)),
+            'magang_id' => 'required|exists:magangs,id',
+            'instansi' => 'required|string|max:255',
+            'alamat_instansi' => 'required|string|max:1000',
+        ]);
+        
+        $mahasiswaMagang = new MahasiswaMagang();
+        $mahasiswaMagang->mahasiswa_id = auth()->id();
+        $mahasiswaMagang->nim = $validatedData['nim'];
+        $mahasiswaMagang->nama = $validatedData['nama'];
+        $mahasiswaMagang->semester = $validatedData['semester'];
+        $mahasiswaMagang->type = $validatedData['type'];
+        $mahasiswaMagang->bidang = $validatedData['bidang'];
+        $mahasiswaMagang->magang_id = $validatedData['magang_id'];
+        $mahasiswaMagang->instansi = $validatedData['instansi'];
+        $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+        $mahasiswaMagang->approve = 'PENDING';
+        $mahasiswaMagang->verified = 'PENDING';
+        $mahasiswaMagang->save();
+
+        // Update the filled count for the magang
+        $magang = Magang::find($validatedData['magang_id']);
+        if ($magang) {
+            $magang->filled = ($magang->filled ?? 0) + 1;
+            $magang->save();
+        }
+        
+        return redirect()->route('magang-detail', ['slug' => $magang->slug])->with('success', 'Your application has been submitted successfully.');
+    }
+
+    /**
+     * Show file resubmission form for rejected applications
+     */
+    public function resubmitFiles(MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Check if the application is rejected
+        if ($mahasiswaMagang->approve !== 'REJECTED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Only rejected applications can be resubmitted.');
+        }
+
+        return view('frontend.mahasiswaMagangs.resubmit_files', compact('mahasiswaMagang'));
+    }
+
+    /**
+     * Update files for a rejected application
+     */
+    public function updateFiles(Request $request, MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Check if the application is rejected
+        if ($mahasiswaMagang->approve !== 'REJECTED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Only rejected applications can be resubmitted.');
+        }
+
+        // Handle berkas_magang files
+        if (count($mahasiswaMagang->berkas_magang) > 0) {
+            foreach ($mahasiswaMagang->berkas_magang as $media) {
+                if (!in_array($media->file_name, $request->input('berkas_magang', []))) {
+                    $media->delete();
+                }
+            }
+        }
+        $media = $mahasiswaMagang->berkas_magang->pluck('file_name')->toArray();
+        foreach ($request->input('berkas_magang', []) as $file) {
+            if (count($media) === 0 || !in_array($file, $media)) {
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
+            }
+        }
+
+        // Reset approval status to pending
+        $mahasiswaMagang->approve = 'PENDING';
+        $mahasiswaMagang->save();
+
+        return redirect()->route('frontend.mahasiswa-magangs.index')
+            ->with('success', 'Your internship application files have been updated and resubmitted.');
+    }
 }

@@ -26,6 +26,7 @@ use App\Charts\MonthlyUsersChart;
 use App\Charts\PieChart;
 use App\Charts\BarChart;
 use DB;
+use App\Models\Magang;
 
 
 
@@ -247,6 +248,97 @@ class HomeController extends Controller
         $jobs = Vacancy::where('company_id', $company->id)->where('close_date', '>=', now())->orderBy('open_date', 'desc')->paginate(5);;
         $closedjobs = Vacancy::where('company_id', $company->id)->where('close_date', '<', now())->orderBy('open_date', 'desc')->paginate(5);;
         return view('frontend.company_detail', compact('company', 'jobs', 'closedjobs'));
+    }
+
+    public function magang(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Magang::query();
+
+            if (!empty($request->name)) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            if (!empty($request->type)) {
+                $query->where('type', $request->type);
+            }
+
+            if (!empty($request->company)) {
+                $query->where('company_id', $request->company);
+            }
+
+            if (!empty($request->onlyopen)) {
+                $query->where(function($q) {
+                    $q->where('close_date', '>=', now())->orWhere('close_date_exist', 0);
+                });
+            }
+
+            // Paginate results
+            $magangs = $query->latest()->paginate(7);
+            // Return partial view with filtered and paginated results
+            return view('partials.magang-list', compact('magangs'))->render();
+        }
+
+        $magangs = Magang::latest()->paginate(7);
+        $companies = Company::pluck('name', 'id');
+        return view('frontend.magang', compact('magangs', 'companies'));
+    }
+
+    public function magangDetail($slug)
+    {
+        $magang = Magang::where('slug', $slug)->first();
+        
+        if (!$magang) {
+            return redirect()->route('magang')->with('error', 'Magang not found');
+        }
+        
+        $company = Company::find($magang->company_id);
+        $relatedMagangs = Magang::whereNot('slug', $slug)
+            ->where('company_id', $magang->company_id)
+            ->where(function($q) {
+                $q->where('close_date', '>=', now())->orWhere('close_date_exist', 0);
+            })
+            ->latest()
+            ->take(3)
+            ->get();
+        return view('frontend.magang_detail', compact('magang', 'company', 'relatedMagangs'));
+    }
+
+    public function magangAjax(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Magang::query();
+
+            if (!empty($request->name)) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            if (!empty($request->type)) {
+                $query->where('type', $request->type);
+            }
+
+            if (!empty($request->company)) {
+                $query->where('company_id', $request->company);
+            }
+
+            if (!empty($request->opening)) {
+                if ($request->opening == 1) {
+                    $query->where(function($q) {
+                        $q->where('close_date', '>=', now())
+                          ->orWhere('close_date_exist', 0);
+                    });
+                } else {
+                    $query->where('close_date', '<', now());
+                }
+            }
+
+            // Paginate results
+            $magangs = $query->orderBy('open_date', 'desc')->paginate(5);
+            // Return partial view with filtered and paginated results
+            return view('partials.magang-list', compact('magangs'))->render();
+        }
+
+        return redirect()->back();
     }
 
     public function news(Request $request, $category = null)

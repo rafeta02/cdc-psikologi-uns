@@ -23,6 +23,7 @@
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="jobsdropdown">
                         <li><a class="dropdown-item" href="{{ route('jobs') }}">Find By Position</a></li>
                         <li><a class="dropdown-item" href="{{ route('companies') }}">Find By Company</a></li>
+                        <li><a class="dropdown-item" href="{{ route('magang') }}">Internship/Magang</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown dropdown-hover">
@@ -46,7 +47,7 @@
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="mbkmdropdown">
-                        <li><a class="dropdown-item" href="#">Magang</a></li>
+                        <li><a class="dropdown-item" href="{{ route('magang') }}">Magang</a></li>
                         <li><a class="dropdown-item" href="#">Skripsi</a></li>
                         <li><a class="dropdown-item" href="#">KKN</a></li>
                     </ul>

@@ -117,7 +117,13 @@
 { data: 'dosen_pembimbing', name: 'dosen_pembimbing' },
 { data: 'berkas_magang', name: 'berkas_magang', sortable: false, searchable: false },
 { data: 'verified', name: 'verified' },
-{ data: 'actions', name: '{{ trans('global.actions') }}' }
+{ 
+    data: 'actions', 
+    name: '{{ trans('global.actions') }}',
+    render: function (data, type, row) {
+        return data;
+    }
+}
     ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
@@ -129,7 +135,61 @@
           .columns.adjust();
   });
   
+  // Action buttons for approve/reject
+  $(document).on('click', '.approve-btn', function() {
+    let id = $(this).data('id');
+    $('#approve-modal').modal('show');
+    $('#approve-form').attr('action', '/admin/mahasiswa-magangs/' + id + '/approve');
+  });
+  
+  $(document).on('click', '.reject-btn', function() {
+    let id = $(this).data('id');
+    if(confirm('Are you sure you want to reject this application?')) {
+      $.ajax({
+        url: '/admin/mahasiswa-magangs/' + id + '/reject',
+        type: 'POST',
+        headers: {'x-csrf-token': _token},
+        success: function() {
+          location.reload();
+        }
+      });
+    }
+  });
+  
+  $(document).on('click', '.verify-btn', function() {
+    let id = $(this).data('id');
+    if(confirm('Are you sure you want to verify this application?')) {
+      window.location.href = '/admin/mahasiswa-magangs/' + id + '/verify';
+    }
+  });
 });
 
 </script>
+
+<!-- Approve Modal -->
+<div class="modal fade" id="approve-modal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="approveModalLabel">Approve Magang Application</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="approve-form" method="POST">
+        @csrf
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="dosen_pembimbing">Dosen Pembimbing</label>
+            <input type="text" name="dosen_pembimbing" id="dosen_pembimbing" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">Approve</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 @endsection

@@ -17,7 +17,7 @@
                             <label for="mahasiswa_id">{{ trans('cruds.monitoringMagang.fields.mahasiswa') }}</label>
                             <select class="form-control select2" name="mahasiswa_id" id="mahasiswa_id">
                                 @foreach($mahasiswas as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('mahasiswa_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                    <option value="{{ $id }}" {{ old('mahasiswa_id', $selectedMahasiswa ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('mahasiswa'))
@@ -31,7 +31,7 @@
                             <label for="magang_id">{{ trans('cruds.monitoringMagang.fields.magang') }}</label>
                             <select class="form-control select2" name="magang_id" id="magang_id">
                                 @foreach($magangs as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('magang_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                    <option value="{{ $id }}" {{ old('magang_id', $selectedMagang ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                                 @endforeach
                             </select>
                             @if($errors->has('magang'))

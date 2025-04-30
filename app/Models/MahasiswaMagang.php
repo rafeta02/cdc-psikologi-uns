@@ -163,4 +163,9 @@ class MahasiswaMagang extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'verified_by_id');
     }
+
+    public function monitorings()
+    {
+        return $this->hasMany(MonitoringMagang::class, 'magang_id');
+    }
 }

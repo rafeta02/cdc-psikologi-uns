@@ -90,4 +90,87 @@ class TestMagangController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function takeTest($magang_id, $type)
+    {
+        // Verify the user is authorized to take this test
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($magang_id);
+        
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'You are not authorized to take this test');
+        }
+        
+        // Check if test has already been taken
+        $existingTest = TestMagang::where('magang_id', $magang_id)
+            ->where('mahasiswa_id', auth()->id())
+            ->where('type', $type)
+            ->first();
+            
+        if ($existingTest) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You have already completed this ' . strtolower($type));
+        }
+        
+        return view('frontend.testMagangs.test_form', compact('magang_id', 'type'));
+    }
+    
+    public function storeTest(Request $request)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'magang_id' => 'required|exists:mahasiswa_magangs,id',
+            'type' => 'required|in:PRETEST,POSTTEST',
+            'q_1' => 'required|integer|between:1,5',
+            'q_2' => 'required|integer|between:1,5',
+            'q_3' => 'required|integer|between:1,5',
+            'q_4' => 'required|integer|between:1,5',
+            'q_5' => 'required|integer|between:1,5',
+            'q_6' => 'required|integer|between:1,5',
+            'q_7' => 'required|integer|between:1,5',
+            'q_8' => 'required|integer|between:1,5',
+            'q_9' => 'required|integer|between:1,5',
+            'q_10' => 'required|integer|between:1,5',
+            'q_11' => 'required|integer|between:1,5',
+            'q_12' => 'required|integer|between:1,5',
+            'q_13' => 'required|integer|between:1,5',
+            'q_14' => 'required|integer|between:1,5',
+            'q_15' => 'required|integer|between:1,5',
+            'q_16' => 'required|integer|between:1,5',
+            'q_17' => 'required|integer|between:1,5',
+            'q_18' => 'required|integer|between:1,5',
+        ]);
+        
+        // Calculate result (sum of all answers)
+        $result = 0;
+        for ($i = 1; $i <= 18; $i++) {
+            $result += $request->input('q_' . $i);
+        }
+        
+        // Create the test record
+        $testMagang = new TestMagang();
+        $testMagang->mahasiswa_id = auth()->id();
+        $testMagang->magang_id = $request->magang_id;
+        $testMagang->type = $request->type;
+        $testMagang->result = $result;
+        
+        // Store all question answers
+        for ($i = 1; $i <= 18; $i++) {
+            $fieldName = 'q_' . $i;
+            $testMagang->$fieldName = $request->$fieldName;
+        }
+        
+        $testMagang->save();
+        
+        // Update the pretest/posttest flag on the MahasiswaMagang record
+        $mahasiswaMagang = MahasiswaMagang::find($request->magang_id);
+        if ($request->type == 'PRETEST') {
+            $mahasiswaMagang->pretest = true;
+        } else {
+            $mahasiswaMagang->posttest = true;
+        }
+        $mahasiswaMagang->save();
+        
+        return redirect()->route('frontend.mahasiswa-magangs.index')
+            ->with('success', 'Your ' . strtolower($request->type) . ' has been submitted successfully');
+    }
 }

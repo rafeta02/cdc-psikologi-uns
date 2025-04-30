@@ -62,6 +62,14 @@
                             <a href="{{ route('alumni-caring') }}" class="nav-link">Alumni Caring</a>
                         </li>
                         <li class="nav-item dropdown">
+                            <a id="dropdownSubMenuInternships" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" class="nav-link dropdown-toggle">Internships</a>
+                            <ul aria-labelledby="dropdownSubMenuInternships" class="dropdown-menu border-0 shadow">
+                                <li><a href="{{ route('magang') }}" class="dropdown-item">Browse Internships</a></li>
+                                <li><a href="{{ route('frontend.mahasiswa-magangs.index') }}" class="dropdown-item">My Applications</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false" class="nav-link dropdown-toggle">Prestasi</a>
                             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">

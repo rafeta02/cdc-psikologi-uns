@@ -6,6 +6,16 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('jobs', 'HomeController@job')->name('jobs');
 Route::get('jobs/{slug}', 'HomeController@jobDetail')->name('job-detail');
 Route::get('job-ajax', 'HomeController@jobAjax')->name('job-ajax');
+
+// Magang/Internships Routes
+Route::get('magang', 'HomeController@magang')->name('magang');
+Route::get('magang/{slug}', 'HomeController@magangDetail')->name('magang-detail');
+Route::get('magang-ajax', 'HomeController@magangAjax')->name('magang-ajax');
+
+// Magang Application Routes
+Route::get('magang/{slug}/apply', 'Frontend\MahasiswaMagangController@apply')->name('magang.apply')->middleware(['auth']);
+Route::post('magang/store-application', 'Frontend\MahasiswaMagangController@storeApplication')->name('magang.store-application')->middleware(['auth']);
+
 Route::get('companies', 'HomeController@company')->name('companies');
 Route::get('companies/{slug}', 'HomeController@companyDetail')->name('company-detail');
 Route::get('news/acara-berita', 'HomeController@acara')->name('news.acara-berita');
@@ -230,10 +240,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
     Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
     Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
+    Route::post('mahasiswa-magangs/{id}/approve', 'MahasiswaMagangController@approve')->name('mahasiswa-magangs.approve');
+    Route::post('mahasiswa-magangs/{id}/reject', 'MahasiswaMagangController@reject')->name('mahasiswa-magangs.reject');
+    Route::get('mahasiswa-magangs/{id}/verify', 'MahasiswaMagangController@verify')->name('mahasiswa-magangs.verify');
     Route::resource('mahasiswa-magangs', 'MahasiswaMagangController');
 
     // Test Magang
     Route::delete('test-magangs/destroy', 'TestMagangController@massDestroy')->name('test-magangs.massDestroy');
+    Route::get('test-magangs/take/{magang_id}/{type}', 'TestMagangController@takeTest')->name('test-magangs.take');
+    Route::post('test-magangs/store-test', 'TestMagangController@storeTest')->name('test-magangs.storeTest');
     Route::resource('test-magangs', 'TestMagangController');
 
     // Monitoring Magang
@@ -293,10 +308,12 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::resource('competences', 'ResultCompetenceController')->names('competences');
 
     // Mahasiswa Magang
-    Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
-    Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
-    Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
-    Route::resource('mahasiswa-magangs', 'MahasiswaMagangController');
+    Route::delete('internship-applications/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
+    Route::post('internship-applications/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
+    Route::post('internship-applications/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
+    Route::get('internship-applications/{mahasiswaMagang}/resubmit', 'MahasiswaMagangController@resubmitFiles')->name('mahasiswa-magangs.resubmit');
+    Route::put('internship-applications/{mahasiswaMagang}/update-files', 'MahasiswaMagangController@updateFiles')->name('mahasiswa-magangs.update-files');
+    Route::resource('internship-applications', 'MahasiswaMagangController', ['names' => 'mahasiswa-magangs']);
 
     // Test Magang
     Route::delete('test-magangs/destroy', 'TestMagangController@massDestroy')->name('test-magangs.massDestroy');
