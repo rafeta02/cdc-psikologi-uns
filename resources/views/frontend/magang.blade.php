@@ -1,6 +1,6 @@
 @extends('layouts.jobcy')
 
-@section('title', "Internship/Magang - Career Development Center Fakultas Psikologi UNS")
+@section('title', "Magang - Career Development Center Fakultas Psikologi UNS")
 
 @section('content')
     <!-- Start home -->
@@ -9,12 +9,12 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="text-center text-white">
-                        <h3 class="mb-4">Internship / Magang</h3>
+                        <h3 class="mb-4">Magang</h3>
                         <div class="page-next">
                             <nav class="d-inline-block" aria-label="breadcrumb text-center">
                                 <ol class="breadcrumb justify-content-center">
                                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Internship/Magang</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Magang</li>
                                 </ol>
                             </nav>
                         </div>
@@ -50,7 +50,7 @@
             @endif
             
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <div class="me-lg-5">
                         <div class="job-list-header">
                             <form id="filter-form">
@@ -72,7 +72,7 @@
                                             <select class="form-select" name="company" id="company">
                                                 <option value="" selected>All Companies</option>
                                                 @foreach($companies as $id => $entry)
-                                                    <option value="{{ $id }}" {{ old('company') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                                    <option value="{{ $id }}">{{ $entry }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -80,7 +80,7 @@
                                     <div class="col-lg-5 col-md-6">
                                         <div class="filler-job-form">
                                             <i class="uil uil-clipboard-notes"></i>
-                                            <select class="form-select" data-trigger name="type" id="type">
+                                            <select class="form-select" name="type" id="type">
                                                 <option value="" selected>All Programs</option>
                                                 <option value="MBKM">MBKM</option>
                                                 <option value="REGULER">Regular</option>
@@ -88,7 +88,7 @@
                                         </div>
                                     </div><!--end col-->
                                     <div class="col-lg-2 col-md-6">
-                                        <button type="button" class="btn btn-danger w-100" onclick="location.reload();"><i class="uil uil-history-alt"></i> Reset</button>
+                                        <button type="button" class="btn btn-danger w-100" id="reset-btn"><i class="uil uil-history-alt"></i> Reset</button>
                                     </div><!--end col-->
                                 </div><!--end row-->
                             </form>
@@ -100,64 +100,6 @@
                     </div>
 
                 </div>
-                <!-- START SIDE-BAR -->
-                <div class="col-lg-3">
-                    <div class="side-bar mt-5 mt-lg-0">
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item mt-3">
-                                <h2 class="accordion-header" id="datePosted">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#dateposted" aria-expanded="false" aria-controls="dateposted">
-                                        Only Open Internships
-                                    </button>
-                                </h2>
-                                <div id="dateposted" class="accordion-collapse collapse show" aria-labelledby="datePosted">
-                                    <div class="accordion-body">
-                                        <div class="side-title form-check-all">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="onlyopen" value="open" />
-                                                <label class="form-check-label ms-2 text-muted" for="onlyopen">
-                                                    Only Open Internships
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- end accordion-item -->
-
-                            <div class="accordion-item mt-4">
-                                <h2 class="accordion-header" id="internshipType">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#internshiptype" aria-expanded="false" aria-controls="internshiptype">
-                                        Type of Program
-                                    </button>
-                                </h2>
-                                <div id="internshiptype" class="accordion-collapse collapse show" aria-labelledby="internshipType">
-                                    <div class="accordion-body">
-                                        <div class="side-title">
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input" value="" type="radio" name="magang_type" id="magang_type0" checked>
-                                                <label class="form-check-label ms-2 text-muted" for="magang_type0">
-                                                    All
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input" value="MBKM" type="radio" name="magang_type" id="magang_type1">
-                                                <label class="form-check-label ms-2 text-muted" for="magang_type1">
-                                                    MBKM
-                                                </label>
-                                            </div>
-                                            <div class="form-check mt-2">
-                                                <input class="form-check-input" value="REGULER" type="radio" name="magang_type" id="magang_type2">
-                                                <label class="form-check-label ms-2 text-muted" for="magang_type2">
-                                                    Regular
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!-- end accordion-item -->
-                        </div><!--end accordion-->
-                    </div><!--end side-bar-->
-                </div><!--end col-->
                 <!-- END SIDE-BAR -->
             </div><!--end row-->
         </div><!--end container-->
@@ -165,15 +107,60 @@
     <!-- END MAGANG/INTERNSHIP-LIST -->
 @endsection
 
-@section('script')
+@section('scripts')
 <script>
-    function filterMagang() {
-        var form = $('#filter-form');
-        var name = $('#name').val();
-        var company = $('#company').val();
-        var type = $('#type').val();
-        var onlyopen = $('#onlyopen').is(':checked') ? 1 : 0;
-        var magang_type = $('input[name="magang_type"]:checked').val();
+    // Initialize Choices.js for company dropdown
+    const companyChoices = new Choices('#company', {
+        placeholder: true,
+        placeholderValue: 'Search for a Company',
+        searchEnabled: true,
+        searchResultLimit: 10,
+        shouldSort: false,
+        removeItemButton: true
+    });
+
+    // Function to load companies via AJAX
+    function loadCompanies(query) {
+        return fetch('{{ route("select.getCompanies") }}?q=' + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                return data;  // The endpoint already returns the correct format
+            });
+    }
+
+    // Handle the search event for company dropdown
+    document.querySelector('#company').addEventListener('search', function(event) {
+        const searchTerm = event.detail.value;
+
+        if (searchTerm && searchTerm.length >= 2) {
+            loadCompanies(searchTerm).then(options => {
+                // Clear previous choices and set new options
+                companyChoices.clearChoices();
+                companyChoices.setChoices(options, 'id', 'text', true);
+            });
+        }
+    });
+
+    // Initialize Choices.js for type dropdown
+    const typeChoices = new Choices('#type', {
+        placeholder: true,
+        placeholderValue: 'Select Program Type',
+        searchEnabled: false,
+        removeItemButton: true
+    });
+
+    // AJAX Filtering Function
+    function filterMagang(page = 1) {
+        let name = document.getElementById('name').value;
+        let company = companyChoices.getValue(true);  // Get the raw value
+        let type = typeChoices.getValue(true);        // Get the raw value
+
+        console.log("Filtering with:", {
+            name: name,
+            company: company,
+            type: type,
+            page: page
+        });
 
         $.ajax({
             url: '{{ route('magang') }}',
@@ -181,30 +168,123 @@
             data: {
                 name: name,
                 company: company,
-                type: magang_type || type,
-                onlyopen: onlyopen
+                type: type,
+                page: page
             },
             beforeSend: function() {
-                $('#magang-list').html('<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                $('#magang-list').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Loading internships...</p></div>');
             },
             success: function(data) {
                 $('#magang-list').html(data);
+                
+                // Update URL for sharing/bookmarking
+                updateURL(name, company, type, page);
             },
-            error: function() {
-                $('#magang-list').html('<div class="alert alert-danger">An error occurred while fetching data.</div>');
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+                $('#magang-list').html('<div class="alert alert-danger">An error occurred while fetching data. Please try again.</div>');
             }
         });
     }
+    
+    function updateURL(name, company, type, page) {
+        // Create URL parameters object
+        const params = new URLSearchParams();
+        
+        // Add parameters that have values
+        if (name) params.set('name', name);
+        if (company) params.set('company', company);
+        if (type) params.set('type', type);
+        if (page && page > 1) params.set('page', page);
+        
+        // Update URL without reloading page
+        const newURL = window.location.protocol + "//" + window.location.host + 
+                      window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.history.pushState({path: newURL}, '', newURL);
+    }
 
-    $(document).ready(function() {
-        // Bind events to sidebar filters
-        $('#onlyopen').change(function() {
-            filterMagang();
-        });
+    // Reset filters
+    document.getElementById('reset-btn').addEventListener('click', function() {
+        // Reset input field
+        document.getElementById('name').value = '';
+        
+        // Reset select dropdowns
+        companyChoices.setChoiceByValue('');
+        typeChoices.setChoiceByValue('');
+        
+        // Apply filters
+        filterMagang();
+        
+        // Reset URL
+        const newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.pushState({path: newURL}, '', newURL);
+    });
 
-        $('input[name="magang_type"]').change(function() {
+    // Handle pagination link clicks
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let page = $(this).attr('href').split('page=')[1];
+        filterMagang(page);
+    });
+    
+    // Apply URL parameters if present
+    (function applyUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Apply parameters to form elements
+        if (urlParams.has('name')) document.getElementById('name').value = urlParams.get('name');
+        
+        if (urlParams.has('company')) {
+            try {
+                companyChoices.setChoiceByValue(urlParams.get('company'));
+                
+                // If we have a company ID but no preloaded choices, load it
+                if (companyChoices.getValue(true) === undefined) {
+                    fetch('{{ route("select.getCompanies") }}?id=' + urlParams.get('company'))
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                companyChoices.setChoices(data, 'id', 'text', false);
+                                companyChoices.setChoiceByValue(urlParams.get('company'));
+                            }
+                        });
+                }
+            } catch (e) {
+                console.warn("Could not set company value:", e);
+            }
+        }
+        
+        if (urlParams.has('type')) {
+            try {
+                typeChoices.setChoiceByValue(urlParams.get('type'));
+            } catch (e) {
+                console.warn("Could not set type value:", e);
+            }
+        }
+        
+        // If any filter is present in URL, apply filters automatically
+        if (urlParams.toString()) {
+            const page = urlParams.has('page') ? urlParams.get('page') : 1;
+            // Short delay to ensure selects are fully initialized
+            setTimeout(() => filterMagang(page), 100);
+        }
+    })();
+    
+    // Trigger filters when dropdowns change
+    document.getElementById('company').addEventListener('change', function() {
+        filterMagang();
+    });
+    
+    document.getElementById('type').addEventListener('change', function() {
+        filterMagang();
+    });
+    
+    // Enable pressing Enter to filter
+    document.getElementById('name').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
             filterMagang();
-        });
+        }
     });
 </script>
 @endsection 

@@ -185,4 +185,44 @@ class CompanyController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
+    
+    /**
+     * Get companies for select2 ajax
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCompanies(Request $request)
+    {
+        // If ID is provided, return specific company
+        if ($request->has('id')) {
+            $company = Company::find($request->id);
+            if ($company) {
+                return response()->json([
+                    [
+                        'id' => $company->id,
+                        'text' => $company->name
+                    ]
+                ]);
+            }
+            return response()->json([]);
+        }
+        
+        // Otherwise search by query
+        $search = $request->q;
+        $query = Company::select('id', 'name');
+        
+        if ($search) {
+            $query->where('name', 'LIKE', "%$search%");
+        }
+        
+        $companies = $query->limit(10)->get();
+        
+        return response()->json($companies->map(function($company) {
+            return [
+                'id' => $company->id,
+                'text' => $company->name
+            ];
+        }));
+    }
 }

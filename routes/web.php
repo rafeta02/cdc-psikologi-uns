@@ -43,6 +43,7 @@ Route::get('userVerification/{token}', 'UserVerificationController@approve')->na
 
 //ajax for select
 Route::get('select/regencies', 'Admin\ProvinceController@getRegencies')->name('select.getRegencies');
+Route::get('select/companies', 'Admin\CompanyController@getCompanies')->name('select.getCompanies');
 
 Auth::routes(['register' => false]);
 
