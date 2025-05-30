@@ -78,7 +78,7 @@
             </div>
             <div class="p-3 bg-white text-end">
                 @auth
-                    <a href="{{ route('magang.apply', ['slug' => $magang->slug]) }}" class="btn btn-primary">Apply Now</a>
+                    <a href="{{ route('frontend.magang.apply', ['slug' => $magang->slug]) }}" class="btn btn-primary">Apply Now</a>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-primary">Login to Apply</a>
                 @endauth

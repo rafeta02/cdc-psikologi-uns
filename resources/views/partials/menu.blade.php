@@ -386,6 +386,18 @@
                         </ul>
                     </li>
                 @endcan
+                @can('contest_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.contests.index") }}" class="nav-link {{ request()->is("admin/contests") || request()->is("admin/contests/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-child">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.contest.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
                 @can('kompetensi_access')
                     <li class="nav-item has-treeview {{ request()->is("admin/result-competences*") ? "menu-open" : "" }} {{ request()->is("admin/competences*") ? "menu-open" : "" }} {{ request()->is("admin/competence-items*") ? "menu-open" : "" }}">
                         <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/result-competences*") ? "active" : "" }} {{ request()->is("admin/competences*") ? "active" : "" }} {{ request()->is("admin/competence-items*") ? "active" : "" }}" href="#">

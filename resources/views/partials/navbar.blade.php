@@ -38,12 +38,16 @@
                         <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">News</a></li>
                         {{-- <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('prestasi') }}">Prestasi Mahasiswa</a></li>
-                        <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis</a></li>
+                        <li><a class="dropdown-item" href="{{ route('jadwal-lomba') }}">Jadwal Lomba</a></li>
+                        <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis Prestasi</a></li>
                     </ul>
                 </li><!--end dropdown-->
-                <li class="nav-item dropdown dropdown-hover">
+                <li class="nav-item">
+                    <a href="{{ route('magang') }}" class="nav-link">Magang</a>
+                </li>
+                {{-- <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="mbkmdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        MBKM Riset
+                        Magang Mahasiswa
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="mbkmdropdown">
@@ -51,7 +55,7 @@
                         <li><a class="dropdown-item" href="#">Skripsi</a></li>
                         <li><a class="dropdown-item" href="#">KKN</a></li>
                     </ul>
-                </li><!--end dropdown-->
+                </li><!--end dropdown--> --}}
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="alumnidropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Alumni

@@ -9,6 +9,26 @@
         </div>
     </div>
 @endcan
+
+<!-- Success/Error Messages -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.prestasiMahasiswa.title_singular') }} {{ trans('global.list') }}
@@ -51,7 +71,6 @@
                     <th>
                         {{ trans('cruds.prestasiMahasiswa.fields.tingkat') }}
                     </th>
-
                     <th>
                         {{ trans('cruds.prestasiMahasiswa.fields.kategori') }}
                     </th>
@@ -77,6 +96,9 @@
                         {{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}
                     </th>
                     <th>
+                        Status Approval
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -85,7 +107,85 @@
     </div>
 </div>
 
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">
+                    <i class="fas fa-times-circle text-danger"></i> Tolak Prestasi Mahasiswa
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="rejectForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="validation_notes">
+                            <i class="fas fa-comment"></i> Alasan Penolakan <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="validation_notes" name="validation_notes" rows="4" 
+                                  placeholder="Berikan alasan mengapa prestasi ini ditolak..." required></textarea>
+                        <small class="form-text text-muted">
+                            Catatan ini akan dikirim ke mahasiswa sehingga mereka dapat memperbaiki submission mereka.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times-circle"></i> Tolak Prestasi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<!-- Validation Confirmation Modal -->
+<div class="modal fade" id="validateModal" tabindex="-1" role="dialog" aria-labelledby="validateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validateModalLabel">
+                    <i class="fas fa-check text-success"></i> Validasi Prestasi Mahasiswa
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="validateForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <i class="fas fa-info-circle"></i> 
+                        Apakah Anda yakin ingin memvalidasi prestasi mahasiswa ini? 
+                        Status akan berubah menjadi "Tervalidasi".
+                    </div>
+                    <div class="form-group">
+                        <label for="validation_notes_approve">
+                            <i class="fas fa-comment"></i> Catatan Validasi (Opsional)
+                        </label>
+                        <textarea class="form-control" id="validation_notes_approve" name="validation_notes" rows="3" 
+                                  placeholder="Berikan catatan validasi (opsional)..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Validasi Prestasi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('scripts')
@@ -113,6 +213,7 @@ $(function () {
         { data: 'keikutsertaan', name: 'keikutsertaan', class : 'text-center' },
         { data: 'dosen_pembimbing', name: 'dosen_pembimbing', class : 'text-center' },
         { data: 'url_publikasi', name: 'url_publikasi', class : 'text-center' },
+        { data: 'approval_status', name: 'approval_status', class : 'text-center' },
         { data: 'actions', name: '{{ trans('global.actions') }}', class : 'text-center' }
     ],
     orderCellsTop: true,
@@ -131,7 +232,125 @@ $(function () {
     },
   });
 
-});
+  // Handle validation
+  $(document).on('click', '.btn-validate', function() {
+    const prestasiId = $(this).data('id');
+    const prestasiName = $(this).data('name');
+    
+    $('#validateForm').attr('action', '/admin/prestasi-mahasiswas/' + prestasiId + '/approved');
+    $('#validateModalLabel').html('<i class="fas fa-check text-success"></i> Validasi Prestasi: ' + prestasiName);
+    $('#validation_notes_approve').val(''); // Clear previous notes
+    $('#validateModal').modal('show');
+  });
 
+  // Handle rejection
+  $(document).on('click', '.btn-reject-validation', function() {
+    const prestasiId = $(this).data('id');
+    const prestasiName = $(this).data('name');
+    
+    $('#rejectForm').attr('action', '/admin/prestasi-mahasiswas/' + prestasiId + '/reject');
+    $('#rejectModalLabel').html('<i class="fas fa-times-circle text-danger"></i> Tolak Prestasi: ' + prestasiName);
+    $('#validation_notes').val(''); // Clear previous notes
+    $('#rejectModal').modal('show');
+  });
+
+  // Handle form submissions
+  $('#validateForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+      url: $(this).attr('action'),
+      method: 'POST',
+      data: $(this).serialize() + '&_method=PATCH',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+        $('#validateModal').modal('hide');
+        if (response.success) {
+          // Show success message
+          $('body').prepend(`
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <i class="fas fa-check-circle"></i> ${response.message}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          `);
+          
+          // Refresh table
+          table.ajax.reload();
+          
+          // Auto-hide alert after 5 seconds
+          setTimeout(function() {
+            $('.alert-success').fadeOut();
+          }, 5000);
+        }
+      },
+      error: function(xhr) {
+        $('#validateModal').modal('hide');
+        $('body').prepend(`
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> Gagal memvalidasi prestasi. Silakan coba lagi.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        `);
+      }
+    });
+  });
+
+  $('#rejectForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    if (!$('#validation_notes').val().trim()) {
+      alert('Alasan penolakan harus diisi!');
+      return;
+    }
+    
+    $.ajax({
+      url: $(this).attr('action'),
+      method: 'POST',
+      data: $(this).serialize() + '&_method=PATCH',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+        $('#rejectModal').modal('hide');
+        if (response.success) {
+          // Show success message
+          $('body').prepend(`
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <i class="fas fa-check-circle"></i> ${response.message}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          `);
+          
+          // Refresh table
+          table.ajax.reload();
+          
+          // Auto-hide alert after 5 seconds
+          setTimeout(function() {
+            $('.alert-success').fadeOut();
+          }, 5000);
+        }
+      },
+      error: function(xhr) {
+        $('#rejectModal').modal('hide');
+        $('body').prepend(`
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> Gagal menolak prestasi. Silakan coba lagi.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        `);
+      }
+    });
+  });
+});
 </script>
 @endsection

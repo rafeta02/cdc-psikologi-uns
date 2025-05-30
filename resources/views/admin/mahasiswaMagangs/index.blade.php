@@ -1,5 +1,20 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .datatable-MahasiswaMagang tbody tr td {
+        vertical-align: middle !important;
+    }
+    .datatable-MahasiswaMagang .dropdown-item {
+        white-space: normal;
+        padding: 0.5rem 1rem;
+    }
+    .datatable-MahasiswaMagang .dropdown-menu {
+        max-width: 250px;
+    }
+    .datatable-MahasiswaMagang tbody tr:hover {
+        background-color: rgba(0,0,0,0.02);
+    }
+</style>
 @can('mahasiswa_magang_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
@@ -158,9 +173,7 @@
   
   $(document).on('click', '.verify-btn', function() {
     let id = $(this).data('id');
-    if(confirm('Are you sure you want to verify this application?')) {
-      window.location.href = '/admin/mahasiswa-magangs/' + id + '/verify';
-    }
+    window.location.href = '/admin/mahasiswa-magangs/' + id + '/verify-documents';
   });
 });
 

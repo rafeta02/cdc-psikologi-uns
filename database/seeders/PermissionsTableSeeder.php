@@ -695,6 +695,26 @@ class PermissionsTableSeeder extends Seeder
                 'title' => 'monitoring_magang_access',
             ],
             [
+                'id'    => 250,
+                'title' => 'contest_create',
+            ],
+            [
+                'id'    => 251,
+                'title' => 'contest_edit',
+            ],
+            [
+                'id'    => 252,
+                'title' => 'contest_show',
+            ],
+            [
+                'id'    => 253,
+                'title' => 'contest_delete',
+            ],
+            [
+                'id'    => 254,
+                'title' => 'contest_access',
+            ],
+            [
                 'id'    => 152,
                 'title' => 'profile_password_edit',
             ],

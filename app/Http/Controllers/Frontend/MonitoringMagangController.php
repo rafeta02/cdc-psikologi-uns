@@ -23,9 +23,29 @@ class MonitoringMagangController extends Controller
     {
         abort_if(Gate::denies('monitoring_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $monitoringMagangs = MonitoringMagang::with(['mahasiswa', 'magang', 'media'])->get();
+        $query = MonitoringMagang::with(['mahasiswa', 'magang', 'media']);
+        
+        // Filter by magang_id if provided in the request
+        if (request('magang_id')) {
+            $magangId = request('magang_id');
+            $query->where('magang_id', $magangId);
+            
+            // Check if this magang belongs to the current user
+            $mahasiswaMagang = MahasiswaMagang::find($magangId);
+            if (!$mahasiswaMagang || $mahasiswaMagang->mahasiswa_id != auth()->id()) {
+                abort(403, 'You are not authorized to view this internship monitoring data');
+            }
+        } else {
+            // If no specific magang_id, only show the user's own monitoring records
+            $query->whereHas('magang', function($q) {
+                $q->where('mahasiswa_id', auth()->id());
+            });
+        }
+        
+        $monitoringMagangs = $query->get();
+        $selectedMagang = request('magang_id') ? MahasiswaMagang::find(request('magang_id')) : null;
 
-        return view('frontend.monitoringMagangs.index', compact('monitoringMagangs'));
+        return view('frontend.monitoringMagangs.index', compact('monitoringMagangs', 'selectedMagang'));
     }
 
     public function create()

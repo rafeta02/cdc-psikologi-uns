@@ -20,6 +20,7 @@ use App\Models\TracerAlumnu;
 use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMahasiswa;
 use App\Models\PrestasiMahasiswaDetail;
+use App\Models\Contest;
 use SEOMeta;
 use Alert;
 use App\Charts\MonthlyUsersChart;
@@ -681,6 +682,143 @@ class HomeController extends Controller
         $categories = KategoriPrestasi::pluck('name', 'id');
 
         return view('frontend.prestasi_mahasiswa', compact('prestasis', 'categories'));
+    }
+
+    public function jadwalLomba(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Contest::query();
+
+            // Filter by type if provided
+            if (!empty($request->type)) {
+                $query->where('type', $request->type);
+            }
+
+            // Get contests with their dates
+            $contests = $query->whereNotNull('tanggal')->get();
+
+            // Format data for calendar
+            $events = [];
+            foreach ($contests as $contest) {
+                // Get original date values from database before accessor modification
+                $startDate = null;
+                $endDate = null;
+                
+                // Try to get original values first, then fallback to accessors
+                $originalTanggal = $contest->getOriginal('tanggal') ?? $contest->getRawOriginal('tanggal');
+                $originalDeadline = $contest->getOriginal('deadline') ?? $contest->getRawOriginal('deadline');
+                
+                if ($originalTanggal) {
+                    try {
+                        $startDate = \Carbon\Carbon::parse($originalTanggal)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // If parsing fails, try with the accessor
+                        $startDate = $contest->tanggal ? \Carbon\Carbon::createFromFormat('d/m/Y', $contest->tanggal)->format('Y-m-d') : null;
+                    }
+                }
+                
+                if ($originalDeadline) {
+                    try {
+                        $endDate = \Carbon\Carbon::parse($originalDeadline)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // If parsing fails, try with the accessor
+                        $endDate = $contest->deadline ? \Carbon\Carbon::createFromFormat('d/m/Y', $contest->deadline)->format('Y-m-d') : null;
+                    }
+                }
+
+                $events[] = [
+                    'id' => $contest->id,
+                    'title' => $contest->judul,
+                    'start' => $startDate,
+                    'end' => $endDate,
+                    'description' => $contest->deskripsi,
+                    'penyelenggara' => $contest->penyelenggara,
+                    'link' => $contest->link,
+                    'type' => $contest->type,
+                    'className' => 'event-' . $contest->type,
+                    'backgroundColor' => $this->getEventColor($contest->type),
+                    'borderColor' => $this->getEventColor($contest->type)
+                ];
+            }
+
+            return response()->json($events);
+        }
+
+        // Get contest types for filter
+        $contestTypes = Contest::TYPE_SELECT;
+        
+        return view('frontend.jadwal_lomba', compact('contestTypes'));
+    }
+
+    public function jadwalLombaEvents(Request $request)
+    {
+        $query = Contest::query();
+
+        // Filter by type if provided
+        if (!empty($request->type)) {
+            $query->where('type', $request->type);
+        }
+
+        // Get contests with their dates
+        $contests = $query->whereNotNull('tanggal')->get();
+
+        // Format data for calendar
+        $events = [];
+        foreach ($contests as $contest) {
+            // Get original date values from database before accessor modification
+            $startDate = null;
+            $endDate = null;
+            
+            // Try to get original values first, then fallback to accessors
+            $originalTanggal = $contest->getOriginal('tanggal') ?? $contest->getRawOriginal('tanggal');
+            $originalDeadline = $contest->getOriginal('deadline') ?? $contest->getRawOriginal('deadline');
+            
+            if ($originalTanggal) {
+                try {
+                    $startDate = \Carbon\Carbon::parse($originalTanggal)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    // If parsing fails, try with the accessor
+                    $startDate = $contest->tanggal ? \Carbon\Carbon::createFromFormat('d/m/Y', $contest->tanggal)->format('Y-m-d') : null;
+                }
+            }
+            
+            if ($originalDeadline) {
+                try {
+                    $endDate = \Carbon\Carbon::parse($originalDeadline)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    // If parsing fails, try with the accessor
+                    $endDate = $contest->deadline ? \Carbon\Carbon::createFromFormat('d/m/Y', $contest->deadline)->format('Y-m-d') : null;
+                }
+            }
+
+            $events[] = [
+                'id' => $contest->id,
+                'title' => $contest->judul,
+                'start' => $startDate,
+                'end' => $endDate,
+                'description' => $contest->deskripsi,
+                'penyelenggara' => $contest->penyelenggara,
+                'link' => $contest->link,
+                'type' => $contest->type,
+                'className' => 'event-' . $contest->type,
+                'backgroundColor' => $this->getEventColor($contest->type),
+                'borderColor' => $this->getEventColor($contest->type)
+            ];
+        }
+
+        return response()->json($events);
+    }
+
+    private function getEventColor($type)
+    {
+        $colors = [
+            'lokal' => '#28a745',        // Green
+            'wilayah' => '#17a2b8',      // Cyan
+            'nasional' => '#ffc107',     // Yellow
+            'internasional' => '#dc3545' // Red
+        ];
+
+        return $colors[$type] ?? '#6c757d'; // Default gray
     }
 
 }

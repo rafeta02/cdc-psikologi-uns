@@ -36,18 +36,54 @@ class PrestasiMahasiswaController extends Controller
             $table->addColumn('actions', '&nbsp;');
 
             $table->editColumn('actions', function ($row) {
-                $viewGate      = 'prestasi_mahasiswa_show';
-                $editGate      = 'prestasi_mahasiswa_edit';
-                $deleteGate    = 'prestasi_mahasiswa_delete';
+                $viewGate = 'prestasi_mahasiswa_show';
+                $editGate = 'prestasi_mahasiswa_edit';
+                $deleteGate = 'prestasi_mahasiswa_delete';
                 $crudRoutePart = 'prestasi-mahasiswas';
 
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
-                    'crudRoutePart',
-                    'row'
-                ));
+                $actions = '';
+                
+                if(auth()->user()->can($viewGate)) {
+                    $actions .= '<a class="btn btn-xs btn-primary" href="' . route("admin.{$crudRoutePart}.show", $row->id) . '">
+                                    ' . trans('global.view') . '
+                                </a> ';
+                }
+                
+                if(auth()->user()->can($editGate)) {
+                    $actions .= '<a class="btn btn-xs btn-info" href="' . route("admin.{$crudRoutePart}.edit", $row->id) . '">
+                                    ' . trans('global.edit') . '
+                                </a> ';
+                }
+
+                // Don't show validation actions for drafts
+                if (!($row->is_draft ?? false)) {
+                    $validationStatus = $row->validation_status ?? 'pending';
+                    
+                    // Validation Actions
+                    if ($validationStatus === 'pending') {
+                        $actions .= '<button type="button" class="btn btn-xs btn-success btn-validate" 
+                                        data-id="' . $row->id . '" 
+                                        data-name="' . htmlspecialchars($row->nama_kegiatan ?? 'Draft') . '">
+                                        <i class="fas fa-check"></i> Validate
+                                    </button> ';
+                        
+                        $actions .= '<button type="button" class="btn btn-xs btn-danger btn-reject-validation" 
+                                        data-id="' . $row->id . '" 
+                                        data-name="' . htmlspecialchars($row->nama_kegiatan ?? 'Draft') . '">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button> ';
+                    }
+                }
+
+                if(auth()->user()->can($deleteGate)) {
+                    $actions .= '<form action="' . route("admin.{$crudRoutePart}.destroy", $row->id) . '" method="POST" onsubmit="return confirm(\'' . trans('global.areYouSure') . '\');" style="display: inline-block;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="' . csrf_token() . '">
+                                    <input type="submit" class="btn btn-xs btn-danger" value="' . trans('global.delete') . '">
+                                </form>';
+                }
+
+                return $actions;
             });
 
             $table->editColumn('skim', function ($row) {
@@ -88,11 +124,44 @@ class PrestasiMahasiswaController extends Controller
                 return $row->no_wa ? $row->no_wa : '';
             });
 
+            // Add validation status column
+            $table->addColumn('approval_status', function ($row) {
+                if ($row->is_draft ?? false) {
+                    return '<span class="badge badge-warning"><i class="fas fa-edit"></i> Draft</span>';
+                }
+                
+                $validationStatus = $row->validation_status ?? 'pending';
+                
+                // Validation Status
+                switch ($validationStatus) {
+                    case 'validated':
+                        $statusDisplay = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> Validated</span>';
+                        if ($row->validation_notes) {
+                            $statusDisplay .= '<br><small class="text-muted" title="' . htmlspecialchars($row->validation_notes) . '">
+                                        <i class="fas fa-comment"></i> Has notes
+                                      </small>';
+                        }
+                        break;
+                    case 'rejected':
+                        $statusDisplay = '<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Rejected</span>';
+                        if ($row->validation_notes) {
+                            $statusDisplay .= '<br><small class="text-muted" title="' . htmlspecialchars($row->validation_notes) . '">
+                                        <i class="fas fa-comment"></i> Has notes
+                                      </small>';
+                        }
+                        break;
+                    default:
+                        $statusDisplay = '<span class="badge badge-warning"><i class="fas fa-clock"></i> Pending Validation</span>';
+                }
+                
+                return $statusDisplay;
+            });
+
             $table->editColumn('validation_status', function ($row) {
                 return $row->validation_status ? PrestasiMahasiswa::STATUS_SELECT[$row->validation_status] : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'kategori', 'validation_status']);
+            $table->rawColumns(['actions', 'placeholder', 'kategori', 'validation_status', 'approval_status']);
 
             return $table->make(true);
         }
@@ -283,13 +352,6 @@ class PrestasiMahasiswaController extends Controller
         return Excel::download(new PrestasiMahasiswaExport($start , $end), 'Prestasi Mahasiswa dari ' . $start->format('d-F-Y') .' sd '. $end->format('d-F-Y') . '.xlsx');
     }
 
-    public function validate(Request $request, PrestasiMahasiswa $prestasiMahasiswa)
-    {
-        abort_if(Gate::denies('prestasi_mahasiswa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        return view('admin.prestasiMahasiswas.validate', compact('prestasiMahasiswa'));
-    }
-
     public function processValidation(Request $request, PrestasiMahasiswa $prestasiMahasiswa)
     {
         abort_if(Gate::denies('prestasi_mahasiswa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -320,5 +382,57 @@ class PrestasiMahasiswaController extends Controller
             ->get();
 
         return view('admin.prestasiMahasiswas.pending', compact('pendingSubmissions'));
+    }
+
+    public function reject(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'validation_notes' => 'required|string|min:10'
+            ]);
+
+            $prestasiMahasiswa = PrestasiMahasiswa::findOrFail($id);
+            
+            $prestasiMahasiswa->update([
+                'validation_status' => 'rejected',
+                'validation_notes' => $request->validation_notes,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Prestasi mahasiswa berhasil ditolak.'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function approved(Request $request, $id)
+    {
+        try {
+            $prestasiMahasiswa = PrestasiMahasiswa::findOrFail($id);
+            
+            $prestasiMahasiswa->update([
+                'validation_status' => 'validated',
+                'validation_notes' => $request->validation_notes,
+                'validated_at' => now(),
+                'validated_by' => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Prestasi mahasiswa berhasil divalidasi.'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

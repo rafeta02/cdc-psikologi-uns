@@ -7,40 +7,59 @@
             <div class="card">
                 <div class="card-header">
                     {{ trans('global.create') }} {{ trans('cruds.monitoringMagang.title_singular') }}
+                    
+                    @if(isset($selectedMagang) && $selectedMagang)
+                    for Internship: <strong>{{ $magangs[$selectedMagang] ?? 'Selected Internship' }}</strong>
+                    @endif
                 </div>
+
+                @if(isset($selectedMagang) && $selectedMagang)
+                <div class="card-header bg-light border-bottom">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="mb-0"><strong>Institution:</strong> {{ $magangs[$selectedMagang] ?? '' }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <div class="card-body">
                     <form method="POST" action="{{ route("frontend.monitoring-magangs.store") }}" enctype="multipart/form-data">
                         @method('POST')
                         @csrf
-                        <div class="form-group">
-                            <label for="mahasiswa_id">{{ trans('cruds.monitoringMagang.fields.mahasiswa') }}</label>
-                            <select class="form-control select2" name="mahasiswa_id" id="mahasiswa_id">
-                                @foreach($mahasiswas as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('mahasiswa_id', $selectedMahasiswa ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('mahasiswa'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('mahasiswa') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.monitoringMagang.fields.mahasiswa_helper') }}</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="magang_id">{{ trans('cruds.monitoringMagang.fields.magang') }}</label>
-                            <select class="form-control select2" name="magang_id" id="magang_id">
-                                @foreach($magangs as $id => $entry)
-                                    <option value="{{ $id }}" {{ old('magang_id', $selectedMagang ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('magang'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('magang') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.monitoringMagang.fields.magang_helper') }}</span>
-                        </div>
+                        @if(isset($selectedMahasiswa) && isset($selectedMagang))
+                            <input type="hidden" name="mahasiswa_id" value="{{ $selectedMahasiswa }}">
+                            <input type="hidden" name="magang_id" value="{{ $selectedMagang }}">
+                        @else
+                            <div class="form-group">
+                                <label for="mahasiswa_id">{{ trans('cruds.monitoringMagang.fields.mahasiswa') }}</label>
+                                <select class="form-control select2" name="mahasiswa_id" id="mahasiswa_id">
+                                    @foreach($mahasiswas as $id => $entry)
+                                        <option value="{{ $id }}" {{ old('mahasiswa_id', $selectedMahasiswa ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('mahasiswa'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('mahasiswa') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.monitoringMagang.fields.mahasiswa_helper') }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="magang_id">{{ trans('cruds.monitoringMagang.fields.magang') }}</label>
+                                <select class="form-control select2" name="magang_id" id="magang_id">
+                                    @foreach($magangs as $id => $entry)
+                                        <option value="{{ $id }}" {{ old('magang_id', $selectedMagang ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('magang'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('magang') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.monitoringMagang.fields.magang_helper') }}</span>
+                            </div>
+                        @endif
                         <div class="form-group">
                             <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
                             <input class="form-control" type="text" name="pembimbing" id="pembimbing" value="{{ old('pembimbing', '') }}">

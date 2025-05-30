@@ -47,6 +47,19 @@ class MahasiswaMagangController extends Controller
     {
         $mahasiswaMagang = MahasiswaMagang::create($request->all());
 
+        // New document uploads
+        if ($request->input('proposal_magang', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))->toMediaCollection('proposal_magang');
+        }
+
+        if ($request->input('surat_tugas', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))->toMediaCollection('surat_tugas');
+        }
+
+        if ($request->input('berkas_instansi', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))->toMediaCollection('berkas_instansi');
+        }
+
         foreach ($request->input('laporan_akhir', []) as $file) {
             $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('laporan_akhir');
         }
@@ -114,6 +127,42 @@ class MahasiswaMagangController extends Controller
     public function update(UpdateMahasiswaMagangRequest $request, MahasiswaMagang $mahasiswaMagang)
     {
         $mahasiswaMagang->update($request->all());
+
+        // Handle proposal_magang file
+        if ($request->input('proposal_magang', false)) {
+            if (! $mahasiswaMagang->proposal_magang || $request->input('proposal_magang') !== $mahasiswaMagang->proposal_magang->file_name) {
+                if ($mahasiswaMagang->proposal_magang) {
+                    $mahasiswaMagang->proposal_magang->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))->toMediaCollection('proposal_magang');
+            }
+        } elseif ($mahasiswaMagang->proposal_magang) {
+            $mahasiswaMagang->proposal_magang->delete();
+        }
+
+        // Handle surat_tugas file
+        if ($request->input('surat_tugas', false)) {
+            if (! $mahasiswaMagang->surat_tugas || $request->input('surat_tugas') !== $mahasiswaMagang->surat_tugas->file_name) {
+                if ($mahasiswaMagang->surat_tugas) {
+                    $mahasiswaMagang->surat_tugas->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))->toMediaCollection('surat_tugas');
+            }
+        } elseif ($mahasiswaMagang->surat_tugas) {
+            $mahasiswaMagang->surat_tugas->delete();
+        }
+
+        // Handle berkas_instansi file
+        if ($request->input('berkas_instansi', false)) {
+            if (! $mahasiswaMagang->berkas_instansi || $request->input('berkas_instansi') !== $mahasiswaMagang->berkas_instansi->file_name) {
+                if ($mahasiswaMagang->berkas_instansi) {
+                    $mahasiswaMagang->berkas_instansi->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))->toMediaCollection('berkas_instansi');
+            }
+        } elseif ($mahasiswaMagang->berkas_instansi) {
+            $mahasiswaMagang->berkas_instansi->delete();
+        }
 
         if (count($mahasiswaMagang->laporan_akhir) > 0) {
             foreach ($mahasiswaMagang->laporan_akhir as $media) {
@@ -307,10 +356,21 @@ class MahasiswaMagangController extends Controller
             'semester' => 'required|integer|min:1|max:12',
             'type' => 'required|string|in:' . implode(',', array_keys(MahasiswaMagang::TYPE_SELECT)),
             'bidang' => 'required|string|in:' . implode(',', array_keys(MahasiswaMagang::BIDANG_SELECT)),
-            'magang_id' => 'required|exists:magangs,id',
+            'magang_id' => 'nullable|exists:magangs,id',
+            'company_id' => 'nullable|exists:companies,id',
             'instansi' => 'required|string|max:255',
             'alamat_instansi' => 'required|string|max:1000',
         ]);
+        
+        // Check if user already has an application for this magang
+        $existingApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->where('magang_id', $validatedData['magang_id'])
+            ->first();
+            
+        if ($existingApplication) {
+            return redirect()->route('magang-detail', ['slug' => Magang::find($validatedData['magang_id'])->slug])
+                ->with('error', 'You have already applied for this internship opportunity.');
+        }
         
         $mahasiswaMagang = new MahasiswaMagang();
         $mahasiswaMagang->mahasiswa_id = auth()->id();
@@ -320,8 +380,43 @@ class MahasiswaMagangController extends Controller
         $mahasiswaMagang->type = $validatedData['type'];
         $mahasiswaMagang->bidang = $validatedData['bidang'];
         $mahasiswaMagang->magang_id = $validatedData['magang_id'];
-        $mahasiswaMagang->instansi = $validatedData['instansi'];
-        $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+        
+        // Handle company relationship
+        if ($request->filled('company_id')) {
+            $mahasiswaMagang->company_id = $request->input('company_id');
+            
+            // If the user hasn't modified the instansi and alamat_instansi fields from their default values,
+            // ensure we're using the company data from the database
+            $magang = Magang::with('company')->find($validatedData['magang_id']);
+            if ($magang && $magang->company) {
+                // Check if instansi wasn't modified from default
+                if ($validatedData['instansi'] == $magang->company->name) {
+                    // Use the company name from database to ensure consistency
+                    $mahasiswaMagang->instansi = $magang->company->name;
+                } else {
+                    // User modified the instansi field
+                    $mahasiswaMagang->instansi = $validatedData['instansi'];
+                }
+                
+                // Check if alamat_instansi wasn't modified from default
+                if ($validatedData['alamat_instansi'] == $magang->company->location) {
+                    // Use the company location from database to ensure consistency
+                    $mahasiswaMagang->alamat_instansi = $magang->company->location;
+                } else {
+                    // User modified the alamat_instansi field
+                    $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+                }
+            } else {
+                // Fallback if company data not found
+                $mahasiswaMagang->instansi = $validatedData['instansi'];
+                $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+            }
+        } else {
+            // No company_id, just use the user-provided values
+            $mahasiswaMagang->instansi = $validatedData['instansi'];
+            $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+        }
+        
         $mahasiswaMagang->approve = 'PENDING';
         $mahasiswaMagang->verified = 'PENDING';
         $mahasiswaMagang->save();
@@ -333,7 +428,8 @@ class MahasiswaMagangController extends Controller
             $magang->save();
         }
         
-        return redirect()->route('magang-detail', ['slug' => $magang->slug])->with('success', 'Your application has been submitted successfully.');
+        return redirect()->route('magang-detail', ['slug' => $magang->slug])
+            ->with('success', 'Your application has been submitted successfully. You can check the status in your dashboard.');
     }
 
     /**
@@ -392,5 +488,146 @@ class MahasiswaMagangController extends Controller
 
         return redirect()->route('frontend.mahasiswa-magangs.index')
             ->with('success', 'Your internship application files have been updated and resubmitted.');
+    }
+
+    /**
+     * Show document upload form
+     */
+    public function uploadDocuments(MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('frontend.mahasiswaMagangs.upload_documents', compact('mahasiswaMagang'));
+    }
+
+    /**
+     * Store uploaded documents
+     */
+    public function storeDocuments(Request $request, MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        // Validate the request
+        $request->validate([
+            'proposal_magang' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'surat_tugas' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'berkas_instansi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+        ]);
+
+        // Handle proposal_magang upload
+        if ($request->hasFile('proposal_magang')) {
+            if ($mahasiswaMagang->proposal_magang) {
+                $mahasiswaMagang->proposal_magang->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('proposal_magang'))
+                ->toMediaCollection('proposal_magang');
+        }
+
+        // Handle surat_tugas upload
+        if ($request->hasFile('surat_tugas')) {
+            if ($mahasiswaMagang->surat_tugas) {
+                $mahasiswaMagang->surat_tugas->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('surat_tugas'))
+                ->toMediaCollection('surat_tugas');
+        }
+
+        // Handle berkas_instansi upload
+        if ($request->hasFile('berkas_instansi')) {
+            if ($mahasiswaMagang->berkas_instansi) {
+                $mahasiswaMagang->berkas_instansi->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('berkas_instansi'))
+                ->toMediaCollection('berkas_instansi');
+        }
+
+        return redirect()->route('frontend.mahasiswa-magangs.upload-documents', $mahasiswaMagang->id)
+            ->with('success', 'Documents uploaded successfully');
+    }
+    
+    /**
+     * Show final documents upload form
+     */
+    public function uploadFinalDocuments(MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Check if the application is approved
+        if ($mahasiswaMagang->approve !== 'APPROVED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Only approved internships can upload final documents.');
+        }
+
+        return view('frontend.mahasiswaMagangs.upload_final_documents', compact('mahasiswaMagang'));
+    }
+
+    /**
+     * Store final documents
+     */
+    public function storeFinalDocuments(Request $request, MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        // Check if the application is approved
+        if ($mahasiswaMagang->approve !== 'APPROVED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Only approved internships can upload final documents.');
+        }
+
+        // Handle multiple file uploads
+        $multipleFileFields = ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang'];
+        foreach ($multipleFileFields as $field) {
+            if (count($mahasiswaMagang->$field) > 0) {
+                foreach ($mahasiswaMagang->$field as $media) {
+                    if (!in_array($media->file_name, $request->input($field, []))) {
+                        $media->delete();
+                    }
+                }
+            }
+            $media = $mahasiswaMagang->$field->pluck('file_name')->toArray();
+            foreach ($request->input($field, []) as $file) {
+                if (count($media) === 0 || !in_array($file, $media)) {
+                    $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                        ->toMediaCollection($field);
+                }
+            }
+        }
+
+        // Handle single file uploads
+        $singleFileFields = [
+            'form_penilaian_pembimbing_lapangan',
+            'form_penilaian_dosen_pembimbing',
+            'berita_acara_seminar',
+            'notulen_pertanyaan',
+            'tanda_bukti_penyerahan_laporan'
+        ];
+        foreach ($singleFileFields as $field) {
+            if ($request->input($field, false)) {
+                if (!$mahasiswaMagang->$field || $request->input($field) !== $mahasiswaMagang->$field->file_name) {
+                    if ($mahasiswaMagang->$field) {
+                        $mahasiswaMagang->$field->delete();
+                    }
+                    $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input($field))))
+                        ->toMediaCollection($field);
+                }
+            } elseif ($mahasiswaMagang->$field) {
+                $mahasiswaMagang->$field->delete();
+            }
+        }
+
+        return redirect()->route('frontend.mahasiswa-magangs.upload-final-documents', $mahasiswaMagang->id)
+            ->with('success', 'Final documents uploaded successfully');
     }
 }

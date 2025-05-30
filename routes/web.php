@@ -12,10 +12,6 @@ Route::get('magang', 'HomeController@magang')->name('magang');
 Route::get('magang/{slug}', 'HomeController@magangDetail')->name('magang-detail');
 Route::get('magang-ajax', 'HomeController@magangAjax')->name('magang-ajax');
 
-// Magang Application Routes
-Route::get('magang/{slug}/apply', 'Frontend\MahasiswaMagangController@apply')->name('magang.apply')->middleware(['auth']);
-Route::post('magang/store-application', 'Frontend\MahasiswaMagangController@storeApplication')->name('magang.store-application')->middleware(['auth']);
-
 Route::get('companies', 'HomeController@company')->name('companies');
 Route::get('companies/{slug}', 'HomeController@companyDetail')->name('company-detail');
 Route::get('news/acara-berita', 'HomeController@acara')->name('news.acara-berita');
@@ -30,6 +26,8 @@ Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-stu
 Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
 Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
 Route::get('prestasi', 'HomeController@prestasiMahasiswa')->name('prestasi');
+Route::get('jadwal-lomba', 'HomeController@jadwalLomba')->name('jadwal-lomba');
+Route::get('jadwal-lomba-events', 'HomeController@jadwalLombaEvents')->name('jadwal-lomba-events');
 
 Route::get('infografis', 'HomeController@grafik')->name('infografis');
 
@@ -154,9 +152,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('prestasi-mahasiswas/media', 'PrestasiMahasiswaController@storeMedia')->name('prestasi-mahasiswas.storeMedia');
     Route::post('prestasi-mahasiswas/ckmedia', 'PrestasiMahasiswaController@storeCKEditorImages')->name('prestasi-mahasiswas.storeCKEditorImages');
     Route::post('prestasi-mahasiswas/export', 'PrestasiMahasiswaController@export')->name('prestasi-mahasiswas.export');
-    Route::get('prestasi-mahasiswas/pending', 'PrestasiMahasiswaController@pendingValidations')->name('prestasi-mahasiswas.pending');
-    Route::get('prestasi-mahasiswas/{prestasi_mahasiswa}/validate', 'PrestasiMahasiswaController@validate')->name('prestasi-mahasiswas.validate');
-    Route::post('prestasi-mahasiswas/{prestasi_mahasiswa}/validate', 'PrestasiMahasiswaController@processValidation')->name('prestasi-mahasiswas.process-validation');
+    
+    // Validation routes for Prestasi Mahasiswa
+    Route::patch('prestasi-mahasiswas/{id}/approved', 'PrestasiMahasiswaController@approved')->name('prestasi-mahasiswas.approved');
+    Route::patch('prestasi-mahasiswas/{id}/reject', 'PrestasiMahasiswaController@reject')->name('prestasi-mahasiswas.reject');
+    
     Route::resource('prestasi-mahasiswas', 'PrestasiMahasiswaController');
 
     // Prestasi Mahasiswa Detail
@@ -244,7 +244,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('mahasiswa-magangs/{id}/approve', 'MahasiswaMagangController@approve')->name('mahasiswa-magangs.approve');
     Route::post('mahasiswa-magangs/{id}/reject', 'MahasiswaMagangController@reject')->name('mahasiswa-magangs.reject');
     Route::get('mahasiswa-magangs/{id}/verify', 'MahasiswaMagangController@verify')->name('mahasiswa-magangs.verify');
-    Route::resource('mahasiswa-magangs', 'MahasiswaMagangController');
+    Route::get('mahasiswa-magangs/{id}/verify-documents', 'MahasiswaMagangController@verifyDocuments')->name('mahasiswa-magangs.verify-documents');
+    Route::post('mahasiswa-magangs/{id}/process-verification', 'MahasiswaMagangController@processVerification')->name('mahasiswa-magangs.process-verification');
+    Route::get('mahasiswa-magangs/{id}/generate-certificate', 'MahasiswaMagangController@generateCertificate')->name('mahasiswa-magangs.generate-certificate');
+    Route::get('internship-applications/{mahasiswaMagang}/upload-documents', 'MahasiswaMagangController@uploadDocuments')->name('mahasiswa-magangs.upload-documents');
+    Route::post('internship-applications/{mahasiswaMagang}/store-documents', 'MahasiswaMagangController@storeDocuments')->name('mahasiswa-magangs.store-documents');
+    Route::get('internship-applications/{mahasiswaMagang}/upload-final-documents', 'MahasiswaMagangController@uploadFinalDocuments')->name('mahasiswa-magangs.upload-final-documents');
+    Route::post('internship-applications/{mahasiswaMagang}/store-final-documents', 'MahasiswaMagangController@storeFinalDocuments')->name('mahasiswa-magangs.store-final-documents');
+    Route::resource('internship-applications', 'MahasiswaMagangController', ['names' => 'mahasiswa-magangs']);
 
     // Test Magang
     Route::delete('test-magangs/destroy', 'TestMagangController@massDestroy')->name('test-magangs.massDestroy');
@@ -257,6 +264,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('monitoring-magangs/media', 'MonitoringMagangController@storeMedia')->name('monitoring-magangs.storeMedia');
     Route::post('monitoring-magangs/ckmedia', 'MonitoringMagangController@storeCKEditorImages')->name('monitoring-magangs.storeCKEditorImages');
     Route::resource('monitoring-magangs', 'MonitoringMagangController');
+
+    // Contest
+    Route::delete('contests/destroy', 'ContestController@massDestroy')->name('contests.massDestroy');
+    Route::post('contests/parse-csv-import', 'ContestController@parseCsvImport')->name('contests.parseCsvImport');
+    Route::post('contests/process-csv-import', 'ContestController@processCsvImport')->name('contests.processCsvImport');
+    Route::resource('contests', 'ContestController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -269,6 +282,14 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
 });
 Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['auth']], function () {
     Route::get('/dashboard', 'HomeController@index')->name('home');
+
+    // Magang Application Routes (moved here from outside)
+    Route::get('magang/{slug}/apply', 'MahasiswaMagangController@apply')->name('magang.apply');
+    Route::post('magang/store-application', 'MahasiswaMagangController@storeApplication')->name('magang.store-application');
+    
+    // Test Magang Frontend Routes (moved here from outside)
+    Route::get('mahasiswa-magang/{magang_id}/test/{type}', 'TestMagangController@takeTest')->name('test-magangs.take');
+    Route::post('mahasiswa-magang/store-test', 'TestMagangController@storeTest')->name('test-magangs.storeTest');
 
     // Tracer Alumni
     Route::delete('tracer-alumnus/destroy', 'TracerAlumniController@massDestroy')->name('tracer-alumnus.massDestroy');
@@ -314,6 +335,10 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('internship-applications/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
     Route::get('internship-applications/{mahasiswaMagang}/resubmit', 'MahasiswaMagangController@resubmitFiles')->name('mahasiswa-magangs.resubmit');
     Route::put('internship-applications/{mahasiswaMagang}/update-files', 'MahasiswaMagangController@updateFiles')->name('mahasiswa-magangs.update-files');
+    Route::get('internship-applications/{mahasiswaMagang}/upload-documents', 'MahasiswaMagangController@uploadDocuments')->name('mahasiswa-magangs.upload-documents');
+    Route::post('internship-applications/{mahasiswaMagang}/store-documents', 'MahasiswaMagangController@storeDocuments')->name('mahasiswa-magangs.store-documents');
+    Route::get('internship-applications/{mahasiswaMagang}/upload-final-documents', 'MahasiswaMagangController@uploadFinalDocuments')->name('mahasiswa-magangs.upload-final-documents');
+    Route::post('internship-applications/{mahasiswaMagang}/store-final-documents', 'MahasiswaMagangController@storeFinalDocuments')->name('mahasiswa-magangs.store-final-documents');
     Route::resource('internship-applications', 'MahasiswaMagangController', ['names' => 'mahasiswa-magangs']);
 
     // Test Magang

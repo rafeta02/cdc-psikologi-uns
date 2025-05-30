@@ -49,6 +49,9 @@ class MahasiswaMagang extends Model implements HasMedia
     ];
 
     protected $appends = [
+        'proposal_magang',
+        'surat_tugas',
+        'berkas_instansi',
         'laporan_akhir',
         'presensi',
         'sertifikat',
@@ -69,14 +72,17 @@ class MahasiswaMagang extends Model implements HasMedia
         'type',
         'bidang',
         'magang_id',
+        'company_id',
         'instansi',
         'alamat_instansi',
         'approve',
+        'approval_notes',
         'approved_by_id',
         'pretest',
         'posttest',
         'dosen_pembimbing',
         'verified',
+        'verification_notes',
         'verified_by_id',
         'created_at',
         'updated_at',
@@ -104,9 +110,29 @@ class MahasiswaMagang extends Model implements HasMedia
         return $this->belongsTo(Magang::class, 'magang_id');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
+
     public function approved_by()
     {
         return $this->belongsTo(User::class, 'approved_by_id');
+    }
+
+    public function getProposalMagangAttribute()
+    {
+        return $this->getMedia('proposal_magang')->last();
+    }
+
+    public function getSuratTugasAttribute()
+    {
+        return $this->getMedia('surat_tugas')->last();
+    }
+
+    public function getBerkasInstansiAttribute()
+    {
+        return $this->getMedia('berkas_instansi')->last();
     }
 
     public function getLaporanAkhirAttribute()

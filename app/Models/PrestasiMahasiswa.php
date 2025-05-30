@@ -67,6 +67,16 @@ class PrestasiMahasiswa extends Model implements HasMedia
         'created_at',
         'updated_at',
         'deleted_at',
+        'validated_at',
+    ];
+
+    protected $casts = [
+        'validated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'is_draft' => 'boolean',
+        'bersedia_mentoring' => 'boolean',
     ];
 
     protected $appends = [
@@ -155,12 +165,24 @@ class PrestasiMahasiswa extends Model implements HasMedia
 
     public function getSuratTugasAttribute()
     {
-        return $this->getMedia('surat_tugas');
+        $files = $this->getMedia('surat_tugas');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+            $item->file_name = $item->file_name;
+            $item->name = $item->name ?? $item->file_name;
+        });
+        return $files;
     }
 
     public function getSertifikatAttribute()
     {
-        return $this->getMedia('sertifikat');
+        $files = $this->getMedia('sertifikat');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+            $item->file_name = $item->file_name;
+            $item->name = $item->name ?? $item->file_name;
+        });
+        return $files;
     }
 
     public function getFotoDokumentasiAttribute()
@@ -170,6 +192,8 @@ class PrestasiMahasiswa extends Model implements HasMedia
             $item->url       = $item->getUrl();
             $item->thumbnail = $item->getUrl('thumb');
             $item->preview   = $item->getUrl('preview');
+            $item->file_name = $item->file_name;
+            $item->name = $item->name ?? $item->file_name;
         });
 
         return $files;
@@ -177,7 +201,13 @@ class PrestasiMahasiswa extends Model implements HasMedia
 
     public function getSuratTugasPembimbingAttribute()
     {
-        return $this->getMedia('surat_tugas_pembimbing')->last();
+        $file = $this->getMedia('surat_tugas_pembimbing')->last();
+        if ($file) {
+            $file->url = $file->getUrl();
+            $file->file_name = $file->file_name;
+            $file->name = $file->name ?? $file->file_name;
+        }
+        return $file;
     }
 
     public function getBuktiSipsmartAttribute()
@@ -187,6 +217,8 @@ class PrestasiMahasiswa extends Model implements HasMedia
             $item->url       = $item->getUrl();
             $item->thumbnail = $item->getUrl('thumb');
             $item->preview   = $item->getUrl('preview');
+            $item->file_name = $item->file_name;
+            $item->name = $item->name ?? $item->file_name;
         });
 
         return $files;

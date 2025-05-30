@@ -271,7 +271,7 @@
                                     <a href="{{ route('company-detail', $magang->company->slug ?? '') }}" class="btn btn-primary btn-hover w-100 mt-2">Visit Company <i class="uil uil-arrow-right"></i></a>
                                     
                                     @auth
-                                        <a href="{{ route('magang.apply', ['slug' => $magang->slug]) }}" class="btn btn-success btn-hover w-100 mt-2">Apply Now <i class="uil uil-check"></i></a>
+                                        <a href="{{ route('frontend.magang.apply', ['slug' => $magang->slug]) }}" class="btn btn-success btn-hover w-100 mt-2">Apply Now <i class="uil uil-check"></i></a>
                                     @else
                                         <a href="{{ route('login') }}" class="btn btn-outline-success btn-hover w-100 mt-2">Login to Apply <i class="uil uil-signin"></i></a>
                                     @endauth

@@ -15,6 +15,47 @@
                             <a class="btn btn-default" href="{{ route('frontend.mahasiswa-magangs.index') }}">
                                 {{ trans('global.back_to_list') }}
                             </a>
+                            
+                            @if(auth()->user()->id == $mahasiswaMagang->mahasiswa_id)
+                                <div class="mt-3 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5>Tes Magang</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="mb-3">Silahkan lengkapi tes berikut untuk proses magang Anda:</p>
+                                            
+                                            <div class="d-flex gap-2">
+                                                @if(!$mahasiswaMagang->pretest)
+                                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}" 
+                                                       class="btn btn-primary">
+                                                        <i class="fas fa-clipboard-list mr-1"></i> Ambil Pre-Test
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-success" disabled>
+                                                        <i class="fas fa-check-circle mr-1"></i> Pre-Test Selesai
+                                                    </button>
+                                                @endif
+                                                
+                                                @if($mahasiswaMagang->approve == 'APPROVED' && !$mahasiswaMagang->posttest)
+                                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}" 
+                                                       class="btn btn-primary">
+                                                        <i class="fas fa-clipboard-check mr-1"></i> Ambil Post-Test
+                                                    </a>
+                                                @elseif($mahasiswaMagang->posttest)
+                                                    <button class="btn btn-success" disabled>
+                                                        <i class="fas fa-check-circle mr-1"></i> Post-Test Selesai
+                                                    </button>
+                                                @elseif($mahasiswaMagang->approve != 'APPROVED')
+                                                    <button class="btn btn-secondary" disabled title="Aplikasi magang harus disetujui terlebih dahulu">
+                                                        <i class="fas fa-lock mr-1"></i> Post-Test (Terkunci)
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <table class="table table-bordered table-striped">
                             <tbody>
@@ -266,6 +307,20 @@
                                         {{ $mahasiswaMagang->verified_by->name ?? '' }}
                                     </td>
                                 </tr>
+                                <!-- Add verification notes row -->
+                                @if($mahasiswaMagang->verification_notes)
+                                <tr>
+                                    <th>
+                                        Verification Notes
+                                    </th>
+                                    <td>
+                                        <div class="verification-notes p-2 bg-light border rounded">
+                                            {{ $mahasiswaMagang->verification_notes }}
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endif
+                                <!-- End verification notes row -->
                             </tbody>
                         </table>
                         
@@ -329,24 +384,66 @@
                             <a class="btn btn-default" href="{{ route('frontend.mahasiswa-magangs.index') }}">
                                 {{ trans('global.back_to_list') }}
                             </a>
-                            
-                            @if($mahasiswaMagang->mahasiswa_id == auth()->id() && $mahasiswaMagang->approve == 'APPROVED')
-                                @if(!$mahasiswaMagang->pretest)
-                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}" class="btn btn-primary">
-                                        Take Pretest
-                                    </a>
-                                @endif
-                                
-                                @if(!$mahasiswaMagang->posttest)
-                                    <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}" class="btn btn-success">
-                                        Take Posttest
-                                    </a>
-                                @endif
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Add pretest/posttest buttons section -->
+            <div class="card">
+                <div class="card-header">
+                    Assessment Tests
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    Pre-Test
+                                </div>
+                                <div class="card-body">
+                                    <p>Ujian sebelum memulai program magang untuk mengukur kesiapan adaptasi Anda.</p>
+                                    @if($mahasiswaMagang->pretest)
+                                        <button class="btn btn-success btn-block" disabled>
+                                            <i class="fas fa-check"></i> Completed
+                                        </button>
+                                    @else
+                                        <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}" 
+                                           class="btn btn-primary btn-block">
+                                            Take Pre-Test
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    Post-Test
+                                </div>
+                                <div class="card-body">
+                                    <p>Ujian setelah menyelesaikan program magang untuk mengukur perkembangan Anda.</p>
+                                    @if($mahasiswaMagang->posttest)
+                                        <button class="btn btn-success btn-block" disabled>
+                                            <i class="fas fa-check"></i> Completed
+                                        </button>
+                                    @elseif(!$mahasiswaMagang->pretest)
+                                        <button class="btn btn-secondary btn-block" disabled>
+                                            Complete Pre-Test First
+                                        </button>
+                                    @else
+                                        <a href="{{ route('frontend.test-magangs.take', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}" 
+                                           class="btn btn-info btn-block">
+                                            Take Post-Test
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End pretest/posttest buttons section -->
 
         </div>
     </div>

@@ -38,24 +38,13 @@ class MahasiswaMagangController extends Controller
                 $deleteGate    = 'mahasiswa_magang_delete';
                 $crudRoutePart = 'mahasiswa-magangs';
 
-                $actions = view('partials.datatablesActions', compact(
+                $actions = view('partials.magangActions', compact(
                     'viewGate',
                     'editGate',
                     'deleteGate',
                     'crudRoutePart',
                     'row'
                 ))->render();
-
-                // Add approve/reject buttons for pending applications
-                if ($row->approve === 'PENDING') {
-                    $actions .= '<button class="btn btn-xs btn-success approve-btn ml-1" data-id="' . $row->id . '">Approve</button>';
-                    $actions .= '<button class="btn btn-xs btn-danger reject-btn ml-1" data-id="' . $row->id . '">Reject</button>';
-                }
-                
-                // Add verify button for completed applications that need verification
-                if ($row->approve === 'APPROVED' && $row->verified === 'PENDING') {
-                    $actions .= '<button class="btn btn-xs btn-primary verify-btn ml-1" data-id="' . $row->id . '">Verify</button>';
-                }
                 
                 return $actions;
             });
@@ -128,6 +117,19 @@ class MahasiswaMagangController extends Controller
     {
         $mahasiswaMagang = MahasiswaMagang::create($request->all());
 
+        // New document uploads
+        if ($request->input('proposal_magang', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))->toMediaCollection('proposal_magang');
+        }
+
+        if ($request->input('surat_tugas', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))->toMediaCollection('surat_tugas');
+        }
+
+        if ($request->input('berkas_instansi', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))->toMediaCollection('berkas_instansi');
+        }
+
         foreach ($request->input('laporan_akhir', []) as $file) {
             $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('laporan_akhir');
         }
@@ -195,6 +197,42 @@ class MahasiswaMagangController extends Controller
     public function update(UpdateMahasiswaMagangRequest $request, MahasiswaMagang $mahasiswaMagang)
     {
         $mahasiswaMagang->update($request->all());
+
+        // Handle proposal_magang file
+        if ($request->input('proposal_magang', false)) {
+            if (! $mahasiswaMagang->proposal_magang || $request->input('proposal_magang') !== $mahasiswaMagang->proposal_magang->file_name) {
+                if ($mahasiswaMagang->proposal_magang) {
+                    $mahasiswaMagang->proposal_magang->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))->toMediaCollection('proposal_magang');
+            }
+        } elseif ($mahasiswaMagang->proposal_magang) {
+            $mahasiswaMagang->proposal_magang->delete();
+        }
+
+        // Handle surat_tugas file
+        if ($request->input('surat_tugas', false)) {
+            if (! $mahasiswaMagang->surat_tugas || $request->input('surat_tugas') !== $mahasiswaMagang->surat_tugas->file_name) {
+                if ($mahasiswaMagang->surat_tugas) {
+                    $mahasiswaMagang->surat_tugas->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))->toMediaCollection('surat_tugas');
+            }
+        } elseif ($mahasiswaMagang->surat_tugas) {
+            $mahasiswaMagang->surat_tugas->delete();
+        }
+
+        // Handle berkas_instansi file
+        if ($request->input('berkas_instansi', false)) {
+            if (! $mahasiswaMagang->berkas_instansi || $request->input('berkas_instansi') !== $mahasiswaMagang->berkas_instansi->file_name) {
+                if ($mahasiswaMagang->berkas_instansi) {
+                    $mahasiswaMagang->berkas_instansi->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))->toMediaCollection('berkas_instansi');
+            }
+        } elseif ($mahasiswaMagang->berkas_instansi) {
+            $mahasiswaMagang->berkas_instansi->delete();
+        }
 
         if (count($mahasiswaMagang->laporan_akhir) > 0) {
             foreach ($mahasiswaMagang->laporan_akhir as $media) {
@@ -427,5 +465,62 @@ class MahasiswaMagangController extends Controller
         ]);
 
         return redirect()->route('admin.mahasiswa-magangs.index')->with('message', 'Application verified successfully');
+    }
+
+    /**
+     * Process verification form data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function processVerification(Request $request, $id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
+        
+        $mahasiswaMagang->update([
+            'verified' => $request->input('verified'),
+            'verification_notes' => $request->input('verification_notes'),
+            'verified_by_id' => auth()->id()
+        ]);
+
+        return redirect()->route('admin.mahasiswa-magangs.verify-documents', $mahasiswaMagang->id)
+            ->with('success', 'Verification status updated successfully.');
+    }
+
+    /**
+     * Display a page for document verification.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyDocuments($id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by', 'monitorings'])->findOrFail($id);
+        
+        return view('admin.mahasiswaMagangs.verify_documents', compact('mahasiswaMagang'));
+    }
+    
+    /**
+     * Generate a completion certificate for verified internships.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function generateCertificate($id)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagang = MahasiswaMagang::with(['mahasiswa', 'verified_by'])->findOrFail($id);
+        
+        if ($mahasiswaMagang->verified != 'APPROVED') {
+            return redirect()->back()->with('error', 'Cannot generate certificate. Internship is not yet verified.');
+        }
+        
+        return view('frontend.mahasiswaMagangs.completion_certificate', compact('mahasiswaMagang'));
     }
 }

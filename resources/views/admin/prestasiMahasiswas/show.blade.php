@@ -12,7 +12,78 @@
                 <a class="btn btn-default" href="{{ route('admin.prestasi-mahasiswas.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
+                
+                @if(!($prestasiMahasiswa->is_draft ?? false))
+                    @php
+                        $validationStatus = $prestasiMahasiswa->validation_status ?? 'pending';
+                    @endphp
+                    
+                    @if($validationStatus === 'pending')
+                        <button type="button" class="btn btn-success btn-validate" 
+                                data-id="{{ $prestasiMahasiswa->id }}" 
+                                data-name="{{ $prestasiMahasiswa->nama_kegiatan ?? 'Draft' }}">
+                            <i class="fas fa-check"></i> Validate
+                        </button>
+                        
+                        <button type="button" class="btn btn-danger btn-reject" 
+                                data-id="{{ $prestasiMahasiswa->id }}" 
+                                data-name="{{ $prestasiMahasiswa->nama_kegiatan ?? 'Draft' }}">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    @endif
+                @endif
             </div>
+            
+            <!-- Validation Status Display -->
+            @if(!($prestasiMahasiswa->is_draft ?? false))
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> Status Validasi</h5>
+                    @php
+                        $validationStatus = $prestasiMahasiswa->validation_status ?? 'pending';
+                    @endphp
+                    
+                    @if($validationStatus === 'validated')
+                        <span class="badge badge-success badge-lg">
+                            <i class="fas fa-check-circle"></i> Validated
+                        </span>
+                        @if($prestasiMahasiswa->validation_notes)
+                            <div class="mt-2">
+                                <strong>Catatan Validasi:</strong><br>
+                                {{ $prestasiMahasiswa->validation_notes }}
+                            </div>
+                        @endif
+                        @if($prestasiMahasiswa->validated_at)
+                            <div class="mt-1 text-muted">
+                                <small>Validated at: {{ 
+                                    is_object($prestasiMahasiswa->validated_at) 
+                                        ? $prestasiMahasiswa->validated_at->format('d M Y H:i') 
+                                        : date('d M Y H:i', strtotime($prestasiMahasiswa->validated_at)) 
+                                }}</small>
+                            </div>
+                        @endif
+                    @elseif($validationStatus === 'rejected')
+                        <span class="badge badge-danger badge-lg">
+                            <i class="fas fa-times-circle"></i> Rejected
+                        </span>
+                        @if($prestasiMahasiswa->validation_notes)
+                            <div class="mt-2">
+                                <strong>Alasan Penolakan:</strong><br>
+                                <div class="alert alert-danger mt-1">
+                                    {{ $prestasiMahasiswa->validation_notes }}
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        <span class="badge badge-warning badge-lg">
+                            <i class="fas fa-clock"></i> Pending Validation
+                        </span>
+                        <div class="mt-2 text-muted">
+                            <small>Submission is waiting for admin review.</small>
+                        </div>
+                    @endif
+                </div>
+            @endif
+            
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
@@ -224,4 +295,169 @@
     </div>
 </div>
 
+<!-- Validation Confirmation Modal -->
+<div class="modal fade" id="validateModal" tabindex="-1" role="dialog" aria-labelledby="validateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validateModalLabel">
+                    <i class="fas fa-check text-success"></i> Validasi Prestasi Mahasiswa
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="validateForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <i class="fas fa-info-circle"></i> 
+                        Apakah Anda yakin ingin memvalidasi prestasi mahasiswa ini? 
+                        Status akan berubah menjadi "Tervalidasi".
+                    </div>
+                    <div class="form-group">
+                        <label for="validation_notes_approve">
+                            <i class="fas fa-comment"></i> Catatan Validasi (Opsional)
+                        </label>
+                        <textarea class="form-control" id="validation_notes_approve" name="validation_notes" rows="3" 
+                                  placeholder="Berikan catatan validasi (opsional)..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Validasi Prestasi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">
+                    <i class="fas fa-times-circle text-danger"></i> Tolak Prestasi Mahasiswa
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="rejectForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="validation_notes">
+                            <i class="fas fa-comment"></i> Alasan Penolakan <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="validation_notes" name="validation_notes" rows="4" 
+                                  placeholder="Berikan alasan mengapa prestasi ini ditolak..." required></textarea>
+                        <small class="form-text text-muted">
+                            Catatan ini akan dikirim ke mahasiswa sehingga mereka dapat memperbaiki submission mereka.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times-circle"></i> Tolak Prestasi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@section('scripts')
+@parent
+<script>
+$(function () {
+  // Handle validation
+  $(document).on('click', '.btn-validate', function() {
+    const prestasiId = $(this).data('id');
+    const prestasiName = $(this).data('name');
+    
+    $('#validateForm').attr('action', '/admin/prestasi-mahasiswas/' + prestasiId + '/approved');
+    $('#validateModalLabel').html('<i class="fas fa-check text-success"></i> Validasi Prestasi: ' + prestasiName);
+    $('#validation_notes_approve').val(''); // Clear previous notes
+    $('#validateModal').modal('show');
+  });
+
+  // Handle rejection
+  $(document).on('click', '.btn-reject', function() {
+    const prestasiId = $(this).data('id');
+    const prestasiName = $(this).data('name');
+    
+    $('#rejectForm').attr('action', '/admin/prestasi-mahasiswas/' + prestasiId + '/reject');
+    $('#rejectModalLabel').html('<i class="fas fa-times-circle text-danger"></i> Tolak Prestasi: ' + prestasiName);
+    $('#validation_notes').val(''); // Clear previous notes
+    $('#rejectModal').modal('show');
+  });
+
+  // Handle form submissions
+  $('#validateForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+      url: $(this).attr('action'),
+      method: 'POST',
+      data: $(this).serialize() + '&_method=PATCH',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+        $('#validateModal').modal('hide');
+        if (response.success) {
+          // Show success message and reload page
+          alert(response.message);
+          location.reload();
+        }
+      },
+      error: function(xhr) {
+        $('#validateModal').modal('hide');
+        alert('Gagal memvalidasi prestasi. Silakan coba lagi.');
+      }
+    });
+  });
+
+  $('#rejectForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    if (!$('#validation_notes').val().trim()) {
+      alert('Alasan penolakan harus diisi!');
+      return;
+    }
+    
+    $.ajax({
+      url: $(this).attr('action'),
+      method: 'POST',
+      data: $(this).serialize() + '&_method=PATCH',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      success: function(response) {
+        $('#rejectModal').modal('hide');
+        if (response.success) {
+          // Show success message and reload page
+          alert(response.message);
+          location.reload();
+        }
+      },
+      error: function(xhr) {
+        $('#rejectModal').modal('hide');
+        alert('Gagal menolak prestasi. Silakan coba lagi.');
+      }
+    });
+  });
+});
+</script>
 @endsection
