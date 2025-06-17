@@ -344,6 +344,23 @@ class MahasiswaMagangController extends Controller
         return view('frontend.mahasiswaMagangs.apply', compact('magang'));
     }
 
+    /**
+     * Check if student can create new application after rejection
+     */
+    public function checkNewApplicationEligibility($magang_id)
+    {
+        $existingApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->where('magang_id', $magang_id)
+            ->first();
+            
+        if ($existingApplication && $existingApplication->approve !== 'REJECTED') {
+            return redirect()->back()
+                ->with('error', 'You already have an active application for this internship.');
+        }
+        
+        return null; // Eligible to create new application
+    }
+
     public function storeApplication(Request $request)
     {
         if (!auth()->check()) {
@@ -367,9 +384,15 @@ class MahasiswaMagangController extends Controller
             ->where('magang_id', $validatedData['magang_id'])
             ->first();
             
-        if ($existingApplication) {
+        // Allow new application only if previous was rejected
+        if ($existingApplication && $existingApplication->approve !== 'REJECTED') {
             return redirect()->route('magang-detail', ['slug' => Magang::find($validatedData['magang_id'])->slug])
                 ->with('error', 'You have already applied for this internship opportunity.');
+        }
+        
+        // If previous application was rejected, delete it and create new one
+        if ($existingApplication && $existingApplication->approve === 'REJECTED') {
+            $existingApplication->delete();
         }
         
         $mahasiswaMagang = new MahasiswaMagang();
@@ -382,41 +405,12 @@ class MahasiswaMagangController extends Controller
         $mahasiswaMagang->magang_id = $validatedData['magang_id'];
         
         // Handle company relationship
-        if ($request->filled('company_id')) {
-            $mahasiswaMagang->company_id = $request->input('company_id');
-            
-            // If the user hasn't modified the instansi and alamat_instansi fields from their default values,
-            // ensure we're using the company data from the database
-            $magang = Magang::with('company')->find($validatedData['magang_id']);
-            if ($magang && $magang->company) {
-                // Check if instansi wasn't modified from default
-                if ($validatedData['instansi'] == $magang->company->name) {
-                    // Use the company name from database to ensure consistency
-                    $mahasiswaMagang->instansi = $magang->company->name;
-                } else {
-                    // User modified the instansi field
-                    $mahasiswaMagang->instansi = $validatedData['instansi'];
-                }
-                
-                // Check if alamat_instansi wasn't modified from default
-                if ($validatedData['alamat_instansi'] == $magang->company->location) {
-                    // Use the company location from database to ensure consistency
-                    $mahasiswaMagang->alamat_instansi = $magang->company->location;
-                } else {
-                    // User modified the alamat_instansi field
-                    $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
-                }
-            } else {
-                // Fallback if company data not found
-                $mahasiswaMagang->instansi = $validatedData['instansi'];
-                $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
-            }
-        } else {
-            // No company_id, just use the user-provided values
-            $mahasiswaMagang->instansi = $validatedData['instansi'];
-            $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
+        if ($validatedData['company_id']) {
+            $mahasiswaMagang->company_id = $validatedData['company_id'];
         }
         
+        $mahasiswaMagang->instansi = $validatedData['instansi'];
+        $mahasiswaMagang->alamat_instansi = $validatedData['alamat_instansi'];
         $mahasiswaMagang->approve = 'PENDING';
         $mahasiswaMagang->verified = 'PENDING';
         $mahasiswaMagang->save();
@@ -430,6 +424,73 @@ class MahasiswaMagangController extends Controller
         
         return redirect()->route('magang-detail', ['slug' => $magang->slug])
             ->with('success', 'Your application has been submitted successfully. You can check the status in your dashboard.');
+    }
+
+    /**
+     * Check monitoring report requirements
+     */
+    public function checkMonitoringRequirements($mahasiswaMagang)
+    {
+        $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
+        
+        $requirements = [
+            'current_count' => $monitoringCount,
+            'minimum_required' => 5,
+            'is_sufficient' => $monitoringCount >= 5,
+            'warning_message' => $monitoringCount < 5 ? 
+                "Warning: You need at least 5 monitoring reports. Current: {$monitoringCount}/5" : null
+        ];
+        
+        return $requirements;
+    }
+
+    /**
+     * Check if posttest is available based on 1-month rule
+     */
+    public function checkPosttestAvailability($mahasiswaMagang)
+    {
+        if (!$mahasiswaMagang->pretest) {
+            return [
+                'available' => false,
+                'reason' => 'Complete pretest first'
+            ];
+        }
+        
+        // Use pretest_completed_at if available, otherwise fall back to test record
+        $pretestDate = $mahasiswaMagang->pretest_completed_at;
+        
+        if (!$pretestDate) {
+            // Fallback to test record if timestamp not available
+            $pretestRecord = \App\Models\TestMagang::where('magang_id', $mahasiswaMagang->id)
+                ->where('mahasiswa_id', $mahasiswaMagang->mahasiswa_id)
+                ->where('type', 'PRETEST')
+                ->first();
+                
+            if (!$pretestRecord) {
+                return [
+                    'available' => false,
+                    'reason' => 'Pretest record not found'
+                ];
+            }
+            
+            $pretestDate = $pretestRecord->created_at;
+        }
+        
+        $oneMonthLater = $pretestDate->copy()->addMonth();
+        $now = now();
+        
+        if ($now->gte($oneMonthLater)) {
+            return [
+                'available' => true,
+                'reason' => null
+            ];
+        } else {
+            $daysRemaining = $now->diffInDays($oneMonthLater);
+            return [
+                'available' => false,
+                'reason' => "Posttest will be available in {$daysRemaining} days (1 month after pretest)"
+            ];
+        }
     }
 
     /**
@@ -552,7 +613,7 @@ class MahasiswaMagangController extends Controller
     }
     
     /**
-     * Show final documents upload form
+     * Show final document upload form
      */
     public function uploadFinalDocuments(MahasiswaMagang $mahasiswaMagang)
     {
@@ -565,6 +626,13 @@ class MahasiswaMagangController extends Controller
         if ($mahasiswaMagang->approve !== 'APPROVED') {
             return redirect()->route('frontend.mahasiswa-magangs.index')
                 ->with('error', 'Only approved internships can upload final documents.');
+        }
+        
+        // Check monitoring requirements (minimum 5 reports)
+        $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
+        if ($monitoringCount < 5) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', "You need at least 5 monitoring reports before uploading final documents. Current: {$monitoringCount}/5");
         }
 
         return view('frontend.mahasiswaMagangs.upload_final_documents', compact('mahasiswaMagang'));
@@ -584,6 +652,13 @@ class MahasiswaMagangController extends Controller
         if ($mahasiswaMagang->approve !== 'APPROVED') {
             return redirect()->route('frontend.mahasiswa-magangs.index')
                 ->with('error', 'Only approved internships can upload final documents.');
+        }
+        
+        // Check monitoring requirements (minimum 5 reports)
+        $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
+        if ($monitoringCount < 5) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', "You need at least 5 monitoring reports before uploading final documents. Current: {$monitoringCount}/5");
         }
 
         // Handle multiple file uploads

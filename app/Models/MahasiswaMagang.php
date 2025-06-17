@@ -23,6 +23,8 @@ class MahasiswaMagang extends Model implements HasMedia
     ];
 
     protected $dates = [
+        'pretest_completed_at',
+        'posttest_completed_at',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -79,7 +81,9 @@ class MahasiswaMagang extends Model implements HasMedia
         'approval_notes',
         'approved_by_id',
         'pretest',
+        'pretest_completed_at',
         'posttest',
+        'posttest_completed_at',
         'dosen_pembimbing',
         'verified',
         'verification_notes',

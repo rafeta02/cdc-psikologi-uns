@@ -229,21 +229,22 @@
 <script>
     // Set up Dropzones for each file field
     const dropzoneFields = [
-        'laporan_akhir', 
-        'presensi', 
-        'sertifikat',
-        'form_penilaian_pembimbing_lapangan',
-        'form_penilaian_dosen_pembimbing',
-        'berita_acara_seminar',
-        'presensi_kehadiran_seminar',
-        'notulen_pertanyaan',
-        'tanda_bukti_penyerahan_laporan',
-        'berkas_magang'
+        { name: 'laporan_akhir', multiple: true }, 
+        { name: 'presensi', multiple: true }, 
+        { name: 'sertifikat', multiple: true },
+        { name: 'form_penilaian_pembimbing_lapangan', multiple: false },
+        { name: 'form_penilaian_dosen_pembimbing', multiple: false },
+        { name: 'berita_acara_seminar', multiple: false },
+        { name: 'presensi_kehadiran_seminar', multiple: true },
+        { name: 'notulen_pertanyaan', multiple: false },
+        { name: 'tanda_bukti_penyerahan_laporan', multiple: false },
+        { name: 'berkas_magang', multiple: true }
     ];
 
-    dropzoneFields.forEach(field => {
+    dropzoneFields.forEach(fieldConfig => {
+        const field = fieldConfig.name;
+        const multipleFiles = fieldConfig.multiple;
         const uploadMap = {};
-        const multipleFiles = ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang'].includes(field);
         const inputName = multipleFiles ? `${field}[]` : field;
         
         const dropzone = new Dropzone(`#${field}-dropzone`, {
@@ -268,9 +269,36 @@
             },
             init: function () {
                 @if(isset($mahasiswaMagang))
-                    @if(multipleFiles)
-                        @if(count($mahasiswaMagang->$field) > 0)
-                            var files = {!! json_encode($mahasiswaMagang->$field) !!};
+                    // Handle multiple files fields
+                    if (multipleFiles) {
+                        var files = null;
+                        @if(in_array('laporan_akhir', ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang']))
+                            if (field === 'laporan_akhir' && {!! count($mahasiswaMagang->laporan_akhir ?? []) !!} > 0) {
+                                files = {!! json_encode($mahasiswaMagang->laporan_akhir ?? []) !!};
+                            }
+                        @endif
+                        @if(in_array('presensi', ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang']))
+                            if (field === 'presensi' && {!! count($mahasiswaMagang->presensi ?? []) !!} > 0) {
+                                files = {!! json_encode($mahasiswaMagang->presensi ?? []) !!};
+                            }
+                        @endif
+                        @if(in_array('sertifikat', ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang']))
+                            if (field === 'sertifikat' && {!! count($mahasiswaMagang->sertifikat ?? []) !!} > 0) {
+                                files = {!! json_encode($mahasiswaMagang->sertifikat ?? []) !!};
+                            }
+                        @endif
+                        @if(in_array('presensi_kehadiran_seminar', ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang']))
+                            if (field === 'presensi_kehadiran_seminar' && {!! count($mahasiswaMagang->presensi_kehadiran_seminar ?? []) !!} > 0) {
+                                files = {!! json_encode($mahasiswaMagang->presensi_kehadiran_seminar ?? []) !!};
+                            }
+                        @endif
+                        @if(in_array('berkas_magang', ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang']))
+                            if (field === 'berkas_magang' && {!! count($mahasiswaMagang->berkas_magang ?? []) !!} > 0) {
+                                files = {!! json_encode($mahasiswaMagang->berkas_magang ?? []) !!};
+                            }
+                        @endif
+                        
+                        if (files) {
                             for (var i in files) {
                                 var file = files[i];
                                 this.options.addedfile.call(this, file);
@@ -278,16 +306,33 @@
                                 file.previewElement.classList.add('dz-complete');
                                 $('form').append(`<input type="hidden" name="${inputName}" value="${file.file_name}">`);
                             }
-                        @endif
-                    @else
-                        @if($mahasiswaMagang->$field)
-                            var file = {!! json_encode($mahasiswaMagang->$field) !!};
+                        }
+                    } else {
+                        // Handle single file fields
+                        var file = null;
+                        if (field === 'form_penilaian_pembimbing_lapangan' && {!! $mahasiswaMagang->form_penilaian_pembimbing_lapangan ? 'true' : 'false' !!}) {
+                            file = {!! json_encode($mahasiswaMagang->form_penilaian_pembimbing_lapangan ?? null) !!};
+                        }
+                        if (field === 'form_penilaian_dosen_pembimbing' && {!! $mahasiswaMagang->form_penilaian_dosen_pembimbing ? 'true' : 'false' !!}) {
+                            file = {!! json_encode($mahasiswaMagang->form_penilaian_dosen_pembimbing ?? null) !!};
+                        }
+                        if (field === 'berita_acara_seminar' && {!! $mahasiswaMagang->berita_acara_seminar ? 'true' : 'false' !!}) {
+                            file = {!! json_encode($mahasiswaMagang->berita_acara_seminar ?? null) !!};
+                        }
+                        if (field === 'notulen_pertanyaan' && {!! $mahasiswaMagang->notulen_pertanyaan ? 'true' : 'false' !!}) {
+                            file = {!! json_encode($mahasiswaMagang->notulen_pertanyaan ?? null) !!};
+                        }
+                        if (field === 'tanda_bukti_penyerahan_laporan' && {!! $mahasiswaMagang->tanda_bukti_penyerahan_laporan ? 'true' : 'false' !!}) {
+                            file = {!! json_encode($mahasiswaMagang->tanda_bukti_penyerahan_laporan ?? null) !!};
+                        }
+                        
+                        if (file) {
                             this.options.addedfile.call(this, file);
                             this.options.thumbnail.call(this, file, file.preview ?? file.url);
                             file.previewElement.classList.add('dz-complete');
                             $('form').append(`<input type="hidden" name="${inputName}" value="${file.file_name}">`);
-                        @endif
-                    @endif
+                        }
+                    }
                 @endif
             },
             error: function (file, response) {

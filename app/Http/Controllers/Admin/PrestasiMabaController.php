@@ -51,6 +51,10 @@ class PrestasiMabaController extends Controller
                 ));
             });
 
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name .'<br>('.$row->user->identity_number.')' : '';
+            });
+
             $table->editColumn('tingkat', function ($row) {
                 return $row->tingkat ? PrestasiMaba::TINGKAT_RADIO[$row->tingkat] : '';
             });
@@ -74,7 +78,7 @@ class PrestasiMabaController extends Controller
                 return $row->tempat_penyelenggara ? $row->tempat_penyelenggara : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'kategori']);
+            $table->rawColumns(['actions', 'placeholder', 'kategori', 'user_name']);
 
             return $table->make(true);
         }

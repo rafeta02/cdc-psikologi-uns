@@ -90,7 +90,12 @@ class MahasiswaMagangController extends Controller
                 return $row->verified ? MahasiswaMagang::VERIFIED_SELECT[$row->verified] : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'mahasiswa', 'magang', 'berkas_magang']);
+            // Add current phase indicator
+            $table->addColumn('current_phase', function ($row) {
+                return $this->determineCurrentPhase($row);
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'mahasiswa', 'magang', 'berkas_magang', 'current_phase']);
 
             return $table->make(true);
         }
@@ -522,5 +527,176 @@ class MahasiswaMagangController extends Controller
         }
         
         return view('frontend.mahasiswaMagangs.completion_certificate', compact('mahasiswaMagang'));
+    }
+
+    /**
+     * Admin dashboard showing student phases overview
+     */
+    public function dashboard()
+    {
+        abort_if(Gate::denies('mahasiswa_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $mahasiswaMagangs = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by'])->get();
+        
+        // Phase statistics
+        $stats = [
+            'pending_applications' => 0,
+            'rejected_applications' => 0,
+            'awaiting_pretest' => 0,
+            'in_internship' => 0,
+            'ready_for_posttest' => 0,
+            'awaiting_verification' => 0,
+            'completed' => 0,
+            'total' => $mahasiswaMagangs->count()
+        ];
+        
+        // Categorize students by phase
+        $studentsByPhase = [
+            'Phase 1: Application Review' => collect(),
+            'Application Rejected' => collect(),
+            'Phase 2: Pre-test Required' => collect(),
+            'Phase 3: Internship Period' => collect(),
+            'Phase 3: Ready for Post-test' => collect(),
+            'Phase 4: Document Verification' => collect(),
+            'Phase 4: Document Revision Required' => collect(),
+            'Completed Successfully' => collect(),
+        ];
+        
+        foreach ($mahasiswaMagangs as $magang) {
+            $phaseInfo = $this->getPhaseInfo($magang);
+            $stats[$phaseInfo['stat_key']]++;
+            
+            if (isset($studentsByPhase[$phaseInfo['phase']])) {
+                $studentsByPhase[$phaseInfo['phase']]->push($magang);
+            }
+        }
+        
+        return view('admin.mahasiswaMagangs.dashboard', compact('stats', 'studentsByPhase'));
+    }
+
+    private function getPhaseInfo($row)
+    {
+        // Phase 1: Application Review
+        if ($row->approve === 'PENDING') {
+            return ['phase' => 'Phase 1: Application Review', 'stat_key' => 'pending_applications'];
+        }
+        
+        if ($row->approve === 'REJECTED') {
+            return ['phase' => 'Application Rejected', 'stat_key' => 'rejected_applications'];
+        }
+        
+        // Phase 2: Pre-test & Document Submission
+        if ($row->approve === 'APPROVED' && !$row->pretest) {
+            return ['phase' => 'Phase 2: Pre-test Required', 'stat_key' => 'awaiting_pretest'];
+        }
+        
+        // Phase 3: Internship Period (Monitoring)
+        if ($row->approve === 'APPROVED' && $row->pretest && !$row->posttest) {
+            // Check monitoring requirements
+            $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $row->id)->count();
+            
+            if ($monitoringCount < 5) {
+                return ['phase' => 'Phase 3: Internship Period', 'stat_key' => 'in_internship'];
+            } else {
+                // Check if 1 month has passed since pretest
+                $pretestDate = $row->pretest_completed_at;
+                if (!$pretestDate) {
+                    // Fallback to test record if timestamp not available
+                    $pretestRecord = \App\Models\TestMagang::where('magang_id', $row->id)
+                        ->where('type', 'PRETEST')
+                        ->first();
+                    if ($pretestRecord) {
+                        $pretestDate = $pretestRecord->created_at;
+                    }
+                }
+                
+                if ($pretestDate && now()->gte($pretestDate->copy()->addMonth())) {
+                    return ['phase' => 'Phase 3: Ready for Post-test', 'stat_key' => 'ready_for_posttest'];
+                } else {
+                    return ['phase' => 'Phase 3: Internship Period', 'stat_key' => 'in_internship'];
+                }
+            }
+        }
+        
+        // Phase 4: Completion Phase
+        if ($row->approve === 'APPROVED' && $row->pretest && $row->posttest) {
+            if ($row->verified === 'PENDING') {
+                return ['phase' => 'Phase 4: Document Verification', 'stat_key' => 'awaiting_verification'];
+            } elseif ($row->verified === 'REJECTED') {
+                return ['phase' => 'Phase 4: Document Revision Required', 'stat_key' => 'awaiting_verification'];
+            } elseif ($row->verified === 'APPROVED') {
+                return ['phase' => 'Completed Successfully', 'stat_key' => 'completed'];
+            }
+        }
+        
+        // Default fallback
+        return ['phase' => 'Status Unknown', 'stat_key' => 'pending_applications'];
+    }
+
+    private function determineCurrentPhase($row)
+    {
+        // Phase 1: Application Review
+        if ($row->approve === 'PENDING') {
+            return '<span class="badge badge-warning"><i class="fas fa-clock"></i> Phase 1: Application Review</span>';
+        }
+        
+        if ($row->approve === 'REJECTED') {
+            return '<span class="badge badge-danger"><i class="fas fa-times"></i> Application Rejected</span>';
+        }
+        
+        // Phase 2: Pre-test & Document Submission
+        if ($row->approve === 'APPROVED' && !$row->pretest) {
+            return '<span class="badge badge-info"><i class="fas fa-file-alt"></i> Phase 2: Pre-test Required</span>';
+        }
+        
+        // Phase 3: Internship Period (Monitoring)
+        if ($row->approve === 'APPROVED' && $row->pretest && !$row->posttest) {
+            // Check monitoring requirements
+            $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $row->id)->count();
+            
+            if ($monitoringCount < 5) {
+                return '<span class="badge badge-primary"><i class="fas fa-chart-line"></i> Phase 3: Internship Period (' . $monitoringCount . '/5 reports)</span>';
+            } else {
+                // Check if 1 month has passed since pretest
+                $pretestDate = $row->pretest_completed_at;
+                if (!$pretestDate) {
+                    // Fallback to test record if timestamp not available
+                    $pretestRecord = \App\Models\TestMagang::where('magang_id', $row->id)
+                        ->where('type', 'PRETEST')
+                        ->first();
+                    if ($pretestRecord) {
+                        $pretestDate = $pretestRecord->created_at;
+                    }
+                }
+                
+                if ($pretestDate) {
+                    $oneMonthLater = $pretestDate->copy()->addMonth();
+                    $now = now();
+                    
+                    if ($now->gte($oneMonthLater)) {
+                        return '<span class="badge badge-success"><i class="fas fa-clipboard-check"></i> Phase 3: Ready for Post-test</span>';
+                    } else {
+                        $daysRemaining = $now->diffInDays($oneMonthLater);
+                        return '<span class="badge badge-primary"><i class="fas fa-hourglass-half"></i> Phase 3: Post-test in ' . $daysRemaining . ' days</span>';
+                    }
+                } else {
+                    return '<span class="badge badge-primary"><i class="fas fa-chart-line"></i> Phase 3: Internship Period</span>';
+                }
+            }
+        }
+        
+        // Phase 4: Completion Phase
+        if ($row->approve === 'APPROVED' && $row->pretest && $row->posttest) {
+            if ($row->verified === 'PENDING') {
+                return '<span class="badge badge-warning"><i class="fas fa-file-check"></i> Phase 4: Document Verification</span>';
+            } elseif ($row->verified === 'REJECTED') {
+                return '<span class="badge badge-warning"><i class="fas fa-redo"></i> Phase 4: Document Revision Required</span>';
+            } elseif ($row->verified === 'APPROVED') {
+                return '<span class="badge badge-success"><i class="fas fa-graduation-cap"></i> Completed Successfully</span>';
+            }
+        }
+        
+        // Default fallback
+        return '<span class="badge badge-secondary"><i class="fas fa-question"></i> Status Unknown</span>';
     }
 }

@@ -238,6 +238,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('magangs', 'MagangController');
 
     // Mahasiswa Magang
+    Route::get('mahasiswa-magangs/dashboard', 'MahasiswaMagangController@dashboard')->name('mahasiswa-magangs.dashboard');
     Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
     Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
     Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');

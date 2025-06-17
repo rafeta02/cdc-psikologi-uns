@@ -21,6 +21,9 @@
             <a class="btn btn-success" href="{{ route('admin.mahasiswa-magangs.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.mahasiswaMagang.title_singular') }}
             </a>
+            <a class="btn btn-info ml-2" href="{{ route('admin.mahasiswa-magangs.dashboard') }}">
+                <i class="fas fa-tachometer-alt"></i> Phase Dashboard
+            </a>
         </div>
     </div>
 @endcan
@@ -65,6 +68,9 @@
                     </th>
                     <th>
                         {{ trans('cruds.mahasiswaMagang.fields.verified') }}
+                    </th>
+                    <th>
+                        Current Phase
                     </th>
                     <th>
                         &nbsp;
@@ -132,6 +138,7 @@
 { data: 'dosen_pembimbing', name: 'dosen_pembimbing' },
 { data: 'berkas_magang', name: 'berkas_magang', sortable: false, searchable: false },
 { data: 'verified', name: 'verified' },
+{ data: 'current_phase', name: 'current_phase', sortable: false, searchable: false },
 { 
     data: 'actions', 
     name: '{{ trans('global.actions') }}',

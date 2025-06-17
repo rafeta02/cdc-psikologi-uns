@@ -28,6 +28,8 @@ class PrestasiMabaExport implements FromQuery, WithMapping, WithHeadings
     public function map($prestasiMaba): array
     {
         return [
+            $prestasiMaba->user->name,
+            $prestasiMaba->user->identity_number ?? '-',
             $prestasiMaba->nama_kegiatan,
             $prestasiMaba->tingkat ? PrestasiMaba::TINGKAT_RADIO[$prestasiMaba->tingkat] : '',
             $prestasiMaba->kategori->name ?? '',
@@ -45,6 +47,8 @@ class PrestasiMabaExport implements FromQuery, WithMapping, WithHeadings
     public function headings(): array
     {
         return [
+            'Nama Mahasiswa',
+            'NIM Mahasiswa',
             'Nama Kegiatan',
             'Tingkat',
             'Kategori',

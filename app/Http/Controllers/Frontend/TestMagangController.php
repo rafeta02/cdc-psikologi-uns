@@ -93,13 +93,12 @@ class TestMagangController extends Controller
 
     public function takeTest($magang_id, $type)
     {
-
         // Check if this is a valid magang application
-        // $magangApp = MahasiswaMagang::where('id', $magang_id)
-        //     ->where('mahasiswa_id', auth()->id())
-        //     ->first();
+        $magangApp = MahasiswaMagang::where('id', $magang_id)
+            ->where('mahasiswa_id', auth()->id())
+            ->first();
         
-        // abort_if(!$magangApp, Response::HTTP_FORBIDDEN, 'You do not have permission to take this test');
+        abort_if(!$magangApp, Response::HTTP_FORBIDDEN, 'You do not have permission to take this test');
         
         // Check if user already took this test
         $existingTest = TestMagang::where('magang_id', $magang_id)
@@ -107,10 +106,53 @@ class TestMagangController extends Controller
             ->where('type', $type)
             ->first();
         
-        // if ($existingTest) {
-        //     return redirect()->route('frontend.mahasiswa-magangs.index')
-        //         ->with('error', 'You have already taken this test');
-        // }
+        if ($existingTest) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You have already taken this test');
+        }
+        
+        // Additional validation for POSTTEST
+        if ($type == 'POSTTEST') {
+            // Check if pretest was completed
+            if (!$magangApp->pretest) {
+                return redirect()->route('frontend.mahasiswa-magangs.index')
+                    ->with('error', 'You must complete the pretest first before taking the posttest');
+            }
+            
+            // Check if 1 month has passed since pretest
+            $pretestDate = $magangApp->pretest_completed_at;
+            
+            if (!$pretestDate) {
+                // Fallback to test record if timestamp not available
+                $pretestRecord = TestMagang::where('magang_id', $magang_id)
+                    ->where('mahasiswa_id', auth()->id())
+                    ->where('type', 'PRETEST')
+                    ->first();
+                    
+                if (!$pretestRecord) {
+                    return redirect()->route('frontend.mahasiswa-magangs.index')
+                        ->with('error', 'Pretest record not found. Please contact administrator.');
+                }
+                
+                $pretestDate = $pretestRecord->created_at;
+            }
+            
+            $oneMonthLater = $pretestDate->copy()->addMonth();
+            $now = now();
+            
+            if ($now->lt($oneMonthLater)) {
+                $daysRemaining = $now->diffInDays($oneMonthLater);
+                return redirect()->route('frontend.mahasiswa-magangs.index')
+                    ->with('error', "Posttest will be available in {$daysRemaining} days. You must wait 1 month after completing the pretest.");
+            }
+            
+            // Check monitoring requirements (minimum 5 reports)
+            $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $magang_id)->count();
+            if ($monitoringCount < 5) {
+                return redirect()->route('frontend.mahasiswa-magangs.index')
+                    ->with('error', "You need at least 5 monitoring reports before taking the posttest. Current: {$monitoringCount}/5");
+            }
+        }
         
         // Load the appropriate test view
         if ($type == 'PRETEST') {
@@ -184,8 +226,10 @@ class TestMagangController extends Controller
         $magangApp = MahasiswaMagang::find($request->magang_id);
         if ($request->type == 'PRETEST') {
             $magangApp->pretest = true;
+            $magangApp->pretest_completed_at = now();
         } else {
             $magangApp->posttest = true;
+            $magangApp->posttest_completed_at = now();
         }
         $magangApp->save();
         
