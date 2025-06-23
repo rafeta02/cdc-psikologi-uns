@@ -239,6 +239,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Mahasiswa Magang
     Route::get('mahasiswa-magangs/dashboard', 'MahasiswaMagangController@dashboard')->name('mahasiswa-magangs.dashboard');
+    Route::get('mahasiswa-magangs/export', 'MahasiswaMagangController@export')->name('mahasiswa-magangs.export');
     Route::delete('mahasiswa-magangs/destroy', 'MahasiswaMagangController@massDestroy')->name('mahasiswa-magangs.massDestroy');
     Route::post('mahasiswa-magangs/media', 'MahasiswaMagangController@storeMedia')->name('mahasiswa-magangs.storeMedia');
     Route::post('mahasiswa-magangs/ckmedia', 'MahasiswaMagangController@storeCKEditorImages')->name('mahasiswa-magangs.storeCKEditorImages');
@@ -289,8 +290,8 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('magang/store-application', 'MahasiswaMagangController@storeApplication')->name('magang.store-application');
     
     // Test Magang Frontend Routes (moved here from outside)
-    Route::get('mahasiswa-magang/{magang_id}/test/{type}', 'TestMagangController@takeTest')->name('test-magangs.take');
-    Route::post('mahasiswa-magang/store-test', 'TestMagangController@storeTest')->name('test-magangs.storeTest');
+    Route::get('mahasiswa-magang/{magang_id}/test/{type}', 'TestMagangController@takeTest')->name('mahasiswa-magangs.take-test');
+    Route::post('mahasiswa-magang/store-test', 'TestMagangController@storeTest')->name('mahasiswa-magangs.store-test');
 
     // Tracer Alumni
     Route::delete('tracer-alumnus/destroy', 'TracerAlumniController@massDestroy')->name('tracer-alumnus.massDestroy');
@@ -340,6 +341,7 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::post('internship-applications/{mahasiswaMagang}/store-documents', 'MahasiswaMagangController@storeDocuments')->name('mahasiswa-magangs.store-documents');
     Route::get('internship-applications/{mahasiswaMagang}/upload-final-documents', 'MahasiswaMagangController@uploadFinalDocuments')->name('mahasiswa-magangs.upload-final-documents');
     Route::post('internship-applications/{mahasiswaMagang}/store-final-documents', 'MahasiswaMagangController@storeFinalDocuments')->name('mahasiswa-magangs.store-final-documents');
+    Route::get('internship-applications/{mahasiswaMagang}/generate-certificate', 'MahasiswaMagangController@generateCertificate')->name('mahasiswa-magangs.generate-certificate');
     Route::resource('internship-applications', 'MahasiswaMagangController', ['names' => 'mahasiswa-magangs']);
 
     // Test Magang

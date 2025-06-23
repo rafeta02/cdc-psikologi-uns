@@ -16,6 +16,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use Alert;
+use App\Exports\MahasiswaMagangExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class MahasiswaMagangController extends Controller
 {
@@ -396,6 +399,34 @@ class MahasiswaMagangController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * Export MahasiswaMagang data to Excel
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function export(Request $request)
+    {
+        abort_if(Gate::denies('mahasiswa_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $dateField = $request->input('date_field', 'created_at');
+
+        // Generate filename with date range if provided
+        $filename = 'mahasiswa_magang';
+        if ($startDate && $endDate) {
+            $filename .= '_' . Carbon::parse($startDate)->format('Y-m-d') . '_to_' . Carbon::parse($endDate)->format('Y-m-d');
+        } elseif ($startDate) {
+            $filename .= '_from_' . Carbon::parse($startDate)->format('Y-m-d');
+        } elseif ($endDate) {
+            $filename .= '_until_' . Carbon::parse($endDate)->format('Y-m-d');
+        }
+        $filename .= '_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new MahasiswaMagangExport($startDate, $endDate, $dateField), $filename);
+    }
+
     public function storeCKEditorImages(Request $request)
     {
         abort_if(Gate::denies('mahasiswa_magang_create') && Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -610,8 +641,16 @@ class MahasiswaMagangController extends Controller
                     }
                 }
                 
-                if ($pretestDate && now()->gte($pretestDate->copy()->addMonth())) {
-                    return ['phase' => 'Phase 3: Ready for Post-test', 'stat_key' => 'ready_for_posttest'];
+                // Ensure $pretestDate is a Carbon instance before calling copy()
+                if ($pretestDate) {
+                    if (is_string($pretestDate)) {
+                        $pretestDate = \Carbon\Carbon::parse($pretestDate);
+                    }
+                    if ($pretestDate instanceof \Carbon\Carbon && now()->gte($pretestDate->copy()->addMonth())) {
+                        return ['phase' => 'Phase 3: Ready for Post-test', 'stat_key' => 'ready_for_posttest'];
+                    } else {
+                        return ['phase' => 'Phase 3: Internship Period', 'stat_key' => 'in_internship'];
+                    }
                 } else {
                     return ['phase' => 'Phase 3: Internship Period', 'stat_key' => 'in_internship'];
                 }
@@ -670,14 +709,23 @@ class MahasiswaMagangController extends Controller
                 }
                 
                 if ($pretestDate) {
-                    $oneMonthLater = $pretestDate->copy()->addMonth();
-                    $now = now();
+                    // Ensure $pretestDate is a Carbon instance before calling copy()
+                    if (is_string($pretestDate)) {
+                        $pretestDate = \Carbon\Carbon::parse($pretestDate);
+                    }
                     
-                    if ($now->gte($oneMonthLater)) {
-                        return '<span class="badge badge-success"><i class="fas fa-clipboard-check"></i> Phase 3: Ready for Post-test</span>';
+                    if ($pretestDate instanceof \Carbon\Carbon) {
+                        $oneMonthLater = $pretestDate->copy()->addMonth();
+                        $now = now();
+                        
+                        if ($now->gte($oneMonthLater)) {
+                            return '<span class="badge badge-success"><i class="fas fa-clipboard-check"></i> Phase 3: Ready for Post-test</span>';
+                        } else {
+                            $daysRemaining = $now->diffInDays($oneMonthLater);
+                            return '<span class="badge badge-primary"><i class="fas fa-hourglass-half"></i> Phase 3: Post-test in ' . $daysRemaining . ' days</span>';
+                        }
                     } else {
-                        $daysRemaining = $now->diffInDays($oneMonthLater);
-                        return '<span class="badge badge-primary"><i class="fas fa-hourglass-half"></i> Phase 3: Post-test in ' . $daysRemaining . ' days</span>';
+                        return '<span class="badge badge-primary"><i class="fas fa-chart-line"></i> Phase 3: Internship Period</span>';
                     }
                 } else {
                     return '<span class="badge badge-primary"><i class="fas fa-chart-line"></i> Phase 3: Internship Period</span>';

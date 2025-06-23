@@ -56,52 +56,60 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="nim">NIM <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim') }}" required>
+                                    <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim', auth()->user()->identity_number ?? '') }}" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}" required>
+                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', auth()->user()->name ?? '') }}" required>
                                 </div>
                             </div>
                             
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="semester">Semester <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="semester" name="semester" value="{{ old('semester') }}" min="1" max="12" required>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                     <label for="semester">Semester <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="semester" name="semester" value="{{ old('semester') }}" min="1" max="12" required>
+                                </div>
                             </div>
                             
-                            <div class="col-lg-6 form-group">
-                                <label for="type">Type <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="type" name="type" required>
-                                    <option value="">Select Type</option>
-                                    @foreach(App\Models\MahasiswaMagang::TYPE_SELECT as $key => $label)
-                                        <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="type">Type <span class="text-danger">*</span></label>
+                                    <select class="form-control select2" id="type" name="type" required>
+                                        <option value="">Select Type</option>
+                                        @foreach(App\Models\MahasiswaMagang::TYPE_SELECT as $key => $label)
+                                            <option value="{{ $key }}" {{ (old('type') ?? (isset($magang->type) && $magang->type == 'MBKM' ? 'MBKM' : 'KMM')) == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             
-                            <div class="col-lg-6 form-group">
-                                <label for="bidang">Bidang <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="bidang" name="bidang" required>
-                                    <option value="">Select Bidang</option>
-                                    @foreach(App\Models\MahasiswaMagang::BIDANG_SELECT as $key => $label)
-                                        <option value="{{ $key }}" {{ old('bidang') == $key ? 'selected' : '' }}>{{ $label }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="bidang">Bidang <span class="text-danger">*</span></label>
+                                    <select class="form-control select2" id="bidang" name="bidang" required>
+                                        <option value="">Select Bidang</option>
+                                        @foreach(App\Models\MahasiswaMagang::BIDANG_SELECT as $key => $label)
+                                            <option value="{{ $key }}" {{ old('bidang') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             
-                            <div class="col-lg-6 form-group">
-                                <label for="instansi">Instansi <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="instansi" name="instansi" value="{{ old('instansi') ?? $magang->company->name ?? '' }}" required>
-                                <small class="form-text text-muted">You can enter your own institution name</small>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="instansi">Instansi <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="instansi" name="instansi" value="{{ old('instansi') ?? $magang->company->name ?? '' }}" readonly required>
+                                </div>
                             </div>
                             
-                            <div class="col-lg-12 form-group">
-                                <label for="alamat_instansi">Alamat Instansi <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" required>{{ old('alamat_instansi') ?? $magang->company->location ?? '' }}</textarea>
-                                <small class="form-text text-muted">You can enter your own institution address</small>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                     <label for="alamat_instansi">Alamat Instansi <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" required>{{ old('alamat_instansi') ?? $magang->company->address ?? '' }}</textarea>
+                                    <small class="form-text text-muted">You can enter your own institution address</small>
+                                </div>
                             </div>
                         </div>
                         

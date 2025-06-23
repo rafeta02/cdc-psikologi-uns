@@ -3,15 +3,6 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @can('test_magang_create')
-                <div style="margin-bottom: 10px;" class="row">
-                    <div class="col-lg-12">
-                        <a class="btn btn-success" href="{{ route('frontend.test-magangs.create') }}">
-                            {{ trans('global.add') }} {{ trans('cruds.testMagang.title_singular') }}
-                        </a>
-                    </div>
-                </div>
-            @endcan
             <div class="card">
                 <div class="card-header">
                     {{ trans('cruds.testMagang.title_singular') }} {{ trans('global.list') }}
@@ -22,9 +13,6 @@
                         <table class="table table-bordered table-striped table-hover datatable datatable-TestMagang">
                             <thead>
                                 <tr>
-                                    <th>
-                                        {{ trans('cruds.testMagang.fields.id') }}
-                                    </th>
                                     <th>
                                         {{ trans('cruds.testMagang.fields.mahasiswa') }}
                                     </th>
@@ -38,7 +26,7 @@
                                         {{ trans('cruds.testMagang.fields.result') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.testMagang.fields.created_at') }}
+                                        Test Taken
                                     </th>
                                     <th>
                                         &nbsp;
@@ -48,27 +36,24 @@
                             <tbody>
                                 @foreach($testMagangs as $key => $testMagang)
                                     <tr data-entry-id="{{ $testMagang->id }}">
-                                        <td>
-                                            {{ $testMagang->id ?? '' }}
-                                        </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $testMagang->mahasiswa->name ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $testMagang->magang->instansi ?? '' }}
                                         </td>
-                                        <td>
+                                        <td  class="text-center">
                                             {{ $testMagang->type ?? '' }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <span class="badge {{ $testMagang->result >= 4 ? 'bg-success' : ($testMagang->result >= 3 ? 'bg-primary' : 'bg-warning') }}">
                                                 {{ number_format($testMagang->result, 2) }}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $testMagang->created_at->format('d M Y H:i') ?? '' }}
                                         </td>
-                                        <td>
+                                        <td  class="text-center">
                                             @can('test_magang_show')
                                                 <a class="btn btn-xs btn-primary" href="{{ route('frontend.test-magangs.show', $testMagang->id) }}">
                                                     {{ trans('global.view') }}

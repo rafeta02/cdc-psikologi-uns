@@ -43,121 +43,98 @@
                         <input type="hidden" name="verified" value="PENDING">
                         
                         <div class="row">
-                            <div class="col-lg-6 form-group">
-                                <label for="nim">NIM <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim') }}" required>
-                                @if($errors->has('nim'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('nim') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}" required>
-                                @if($errors->has('nama'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('nama') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="semester">Semester <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="semester" name="semester" value="{{ old('semester') }}" min="1" max="12" required>
-                                @if($errors->has('semester'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('semester') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="type">Type <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="type" name="type" required>
-                                    <option value="">Select Type</option>
-                                    @foreach(App\Models\MahasiswaMagang::TYPE_SELECT as $key => $label)
-                                        <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('type'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('type') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="bidang">Bidang <span class="text-danger">*</span></label>
-                                <select class="form-control select2" id="bidang" name="bidang" required>
-                                    <option value="">Select Bidang</option>
-                                    @foreach(App\Models\MahasiswaMagang::BIDANG_SELECT as $key => $label)
-                                        <option value="{{ $key }}" {{ old('bidang') == $key ? 'selected' : '' }}>{{ $label }}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('bidang'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('bidang') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="col-lg-6 form-group">
-                                <label for="magang_id">Program Magang <span class="text-danger">*</span></label>
-                                <select class="form-control select2" name="magang_id" id="magang_id" required>
-                                    <option value="">{{ trans('global.pleaseSelect') }}</option>
-                                    @foreach($magangs as $id => $entry)
-                                        <option value="{{ $id }}" {{ old('magang_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                                    @endforeach
-                                </select>
-                                @if($errors->has('magang_id'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('magang_id') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-6 form-group">
-                                <label for="instansi">Instansi <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="instansi" name="instansi" value="{{ old('instansi') }}" required>
-                                @if($errors->has('instansi'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('instansi') }}
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="col-lg-12 form-group">
-                                <label for="alamat_instansi">Alamat Instansi <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" required>{{ old('alamat_instansi') }}</textarea>
-                                @if($errors->has('alamat_instansi'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('alamat_instansi') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="col-lg-12 form-group">
-                                <label for="dosen_pembimbing">Dosen Pembimbing</label>
-                                <input type="text" class="form-control" id="dosen_pembimbing" name="dosen_pembimbing" value="{{ old('dosen_pembimbing') }}">
-                                @if($errors->has('dosen_pembimbing'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('dosen_pembimbing') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="col-lg-12 form-group">
-                                <label for="berkas_magang">Upload Berkas Magang <span class="text-danger">*</span></label>
-                                <div class="needsclick dropzone" id="berkas_magang-dropzone">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="nim">NIM <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nim" name="nim" value="{{ old('nim', auth()->user()->identity_number ?? '') }}" required>
+                                    @if($errors->has('nim'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('nim') }}
+                                        </div>
+                                    @endif
                                 </div>
-                                <small class="form-text text-muted">Upload proposal magang dan berkas pendukung lainnya</small>
-                                @if($errors->has('berkas_magang'))
-                                    <div class="text-danger">
-                                        {{ $errors->first('berkas_magang') }}
-                                    </div>
-                                @endif
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama', auth()->user()->name ?? '') }}" required>
+                                    @if($errors->has('nama'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('nama') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="semester">Semester <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="semester" name="semester" value="{{ old('semester') }}" min="1" max="12" required>
+                                    @if($errors->has('semester'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('semester') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="type">Type <span class="text-danger">*</span></label>
+                                    <select class="form-control select2" id="type" name="type" required>
+                                        <option value="">Select Type</option>
+                                        @foreach(App\Models\MahasiswaMagang::TYPE_SELECT as $key => $label)
+                                            <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('type'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('type') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="bidang">Bidang <span class="text-danger">*</span></label>
+                                    <select class="form-control select2" id="bidang" name="bidang" required>
+                                        <option value="">Select Bidang</option>
+                                        @foreach(App\Models\MahasiswaMagang::BIDANG_SELECT as $key => $label)
+                                            <option value="{{ $key }}" {{ old('bidang') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('bidang'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('bidang') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="instansi">Instansi <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="instansi" name="instansi" value="{{ old('instansi') }}" required>
+                                    @if($errors->has('instansi'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('instansi') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="alamat_instansi">Alamat Instansi <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" required>{{ old('alamat_instansi') }}</textarea>
+                                    @if($errors->has('alamat_instansi'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('alamat_instansi') }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         

@@ -49,7 +49,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
                                         <h5 class="card-title mb-2 text-dark fw-bold">{{ $prestasiMaba->nama_kegiatan }}</h5>
-                                        <div class="d-flex align-items-center text-muted mb-3">
+                                        <div class="d-flex align-items-center justify-content-center text-muted mb-3">
                                             <i class="fas fa-calendar me-2"></i>
                                             <span class="small">
                                                 @if($prestasiMaba->tanggal_awal)
@@ -121,22 +121,31 @@
 
                                 <!-- Action Buttons -->
                                 <hr class="my-3">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a class="btn btn-outline-primary btn-sm" href="{{ route('frontend.prestasi-mabas.show', $prestasiMaba->id) }}">
-                                        <i class="fas fa-eye me-1"></i> Lihat
-                                    </a>
-                                    
-                                    <a class="btn btn-outline-success btn-sm" href="{{ route('frontend.prestasi-mabas.edit', $prestasiMaba->id) }}">
-                                        <i class="fas fa-edit me-1"></i> Edit
-                                    </a>
-                                    
-                                    <form action="{{ route('frontend.prestasi-mabas.printBukti') }}" method="POST" style="display: inline-block;">
-                                        <input type="hidden" name="id" value="{{ $prestasiMaba->id }}">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-outline-warning btn-sm">
-                                            <i class="fas fa-print me-1"></i> Print
+                                <div class="d-flex justify-content-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="actionDropdown-{{ $prestasiMaba->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions
                                         </button>
-                                    </form>
+                                        <div class="dropdown-menu" aria-labelledby="actionDropdown-{{ $prestasiMaba->id }}">
+                                            <a class="dropdown-item" href="{{ route('frontend.prestasi-mabas.show', $prestasiMaba->id) }}">
+                                                <i class="fas fa-eye text-primary"></i> Lihat Detail
+                                            </a>
+                                            
+                                            <a class="dropdown-item" href="{{ route('frontend.prestasi-mabas.edit', $prestasiMaba->id) }}">
+                                                <i class="fas fa-edit text-info"></i> Edit Data
+                                            </a>
+                                            
+                                            <div class="dropdown-divider"></div>
+                                            
+                                            <form action="{{ route('frontend.prestasi-mabas.printBukti') }}" method="POST" style="display: inline;">
+                                                <input type="hidden" name="id" value="{{ $prestasiMaba->id }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left;">
+                                                    <i class="fas fa-print text-warning"></i> Print Bukti
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -176,4 +185,61 @@ $(function () {
     );
 });
 </script>
+
+<style>
+/* Dropdown styling to match mahasiswaMagangs */
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: none;
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    padding: 8px 16px;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0,123,255,0.1);
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+}
+
+.dropdown-divider {
+    margin: 4px 0;
+}
+
+.dropdown-item.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: transparent;
+}
+
+/* Card hover effects */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Button styling */
+.btn.dropdown-toggle {
+    border-radius: 6px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+}
+
+.btn.dropdown-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
 @endsection

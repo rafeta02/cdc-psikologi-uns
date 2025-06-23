@@ -72,7 +72,7 @@ class MonitoringMagangController extends Controller
             }
         }
 
-        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'selectedMagang', 'selectedMahasiswa'));
+        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'selectedMagang', 'selectedMahasiswa', 'mahasiswaMagang'));
     }
 
     public function store(StoreMonitoringMagangRequest $request)

@@ -62,7 +62,7 @@
                         @endif
                         <div class="form-group">
                             <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
-                            <input class="form-control" type="text" name="pembimbing" id="pembimbing" value="{{ old('pembimbing', '') }}">
+                            <input class="form-control" type="text" name="pembimbing" id="pembimbing" value="{{ old('pembimbing', isset($mahasiswaMagang) ? $mahasiswaMagang->dosen_pembimbing : '') }}">
                             @if($errors->has('pembimbing'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('pembimbing') }}

@@ -191,15 +191,22 @@
                                     }
                                         
                                     if ($pretestDate) {
-                                        $oneMonthLater = $pretestDate->copy()->addMonth();
-                                        $now = now();
+                                        // Ensure $pretestDate is a Carbon instance before calling copy()
+                                        if (is_string($pretestDate)) {
+                                            $pretestDate = \Carbon\Carbon::parse($pretestDate);
+                                        }
                                         
-                                        if ($now->gte($oneMonthLater)) {
-                                            $postTestAvailable = true;
-                                            $postTestReason = null;
-                                        } else {
-                                            $daysRemaining = $now->diffInDays($oneMonthLater);
-                                            $postTestReason = "Posttest available in {$daysRemaining} days (1 month after pretest)";
+                                        if ($pretestDate instanceof \Carbon\Carbon) {
+                                            $oneMonthLater = $pretestDate->copy()->addMonth();
+                                            $now = now();
+                                            
+                                            if ($now->gte($oneMonthLater)) {
+                                                $postTestAvailable = true;
+                                                $postTestReason = null;
+                                            } else {
+                                                $daysRemaining = $now->diffInDays($oneMonthLater);
+                                                $postTestReason = "Posttest available in {$daysRemaining} days (1 month after pretest)";
+                                            }
                                         }
                                     }
                                 }
@@ -353,14 +360,14 @@
                                                         
                                                         <!-- Test Actions -->
                                                         @if($mahasiswaMagang->approve === 'APPROVED' && !$mahasiswaMagang->pretest && $mahasiswaMagang->mahasiswa_id === auth()->id())
-                                                            <a class="dropdown-item" href="/mahasiswa-magang/{{ $mahasiswaMagang->id }}/test/PRETEST">
+                                                            <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}">
                                                                 <i class="fas fa-clipboard-list text-info"></i> Take Pre-Test
                                                             </a>
                                                         @endif
 
                                                         @if($mahasiswaMagang->approve === 'APPROVED' && $mahasiswaMagang->pretest && !$mahasiswaMagang->posttest && $mahasiswaMagang->mahasiswa_id === auth()->id())
                                                             @if($postTestAvailable)
-                                                                <a class="dropdown-item" href="/mahasiswa-magang/{{ $mahasiswaMagang->id }}/test/POSTTEST">
+                                                                <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}">
                                                                     <i class="fas fa-clipboard-check text-success"></i> Take Post-Test
                                                                 </a>
                                                             @else
@@ -398,13 +405,13 @@
                                                             @endif
                                                         @endif
                                                         
-                                                        <!-- Certificate Download -->
-                                                        @if($mahasiswaMagang->verified === 'APPROVED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item" href="#">
-                                                                <i class="fas fa-certificate text-success"></i> Download Certificate
-                                                            </a>
-                                                        @endif
+                                                                                                <!-- Certificate Download -->
+                                        @if($mahasiswaMagang->verified === 'APPROVED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.generate-certificate', $mahasiswaMagang->id) }}" target="_blank">
+                                                <i class="fas fa-certificate text-success"></i> Download Certificate
+                                            </a>
+                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

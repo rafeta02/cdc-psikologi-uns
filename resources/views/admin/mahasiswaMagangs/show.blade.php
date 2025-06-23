@@ -16,11 +16,11 @@
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
-                        <th>
+                        <th width="30%">
                             {{ trans('cruds.mahasiswaMagang.fields.mahasiswa') }}
                         </th>
                         <td>
-                            {{ $mahasiswaMagang->mahasiswa->name ?? '' }}
+                            {{ $mahasiswaMagang->user->name ?? '' }}
                         </td>
                     </tr>
                     <tr>

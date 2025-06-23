@@ -14,6 +14,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class MahasiswaMagangController extends Controller
 {
@@ -104,13 +105,14 @@ class MahasiswaMagangController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $mahasiswaMagang->id]);
         }
 
+        Alert::success('Pendaftaran Magang Berhasil di Submit. Silahkan menunggu validasi dari admin.');
+
         return redirect()->route('frontend.mahasiswa-magangs.index');
     }
 
     public function edit(MahasiswaMagang $mahasiswaMagang)
     {
         abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
         $mahasiswas = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $magangs = Magang::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -292,10 +294,11 @@ class MahasiswaMagangController extends Controller
         return redirect()->route('frontend.mahasiswa-magangs.index');
     }
 
-    public function show(MahasiswaMagang $mahasiswaMagang)
+    public function show($id)
     {
         abort_if(Gate::denies('mahasiswa_magang_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
         $mahasiswaMagang->load('mahasiswa', 'magang', 'approved_by', 'verified_by');
 
         return view('frontend.mahasiswaMagangs.show', compact('mahasiswaMagang'));
@@ -304,7 +307,6 @@ class MahasiswaMagangController extends Controller
     public function destroy(MahasiswaMagang $mahasiswaMagang)
     {
         abort_if(Gate::denies('mahasiswa_magang_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
         $mahasiswaMagang->delete();
 
         return back();
@@ -422,6 +424,8 @@ class MahasiswaMagangController extends Controller
             $magang->save();
         }
         
+        Alert::success('Pendaftaran Magang Berhasil di Submit. Silahkan menunggu validasi dari admin.');
+        
         return redirect()->route('magang-detail', ['slug' => $magang->slug])
             ->with('success', 'Your application has been submitted successfully. You can check the status in your dashboard.');
     }
@@ -435,10 +439,10 @@ class MahasiswaMagangController extends Controller
         
         $requirements = [
             'current_count' => $monitoringCount,
-            'minimum_required' => 5,
-            'is_sufficient' => $monitoringCount >= 5,
-            'warning_message' => $monitoringCount < 5 ? 
-                "Warning: You need at least 5 monitoring reports. Current: {$monitoringCount}/5" : null
+            'minimum_required' => 4,
+            'is_sufficient' => $monitoringCount >= 4,
+            'warning_message' => $monitoringCount < 4 ? 
+                "Warning: You need at least 4 monitoring reports. Current: {$monitoringCount}/4" : null
         ];
         
         return $requirements;
@@ -474,6 +478,16 @@ class MahasiswaMagangController extends Controller
             }
             
             $pretestDate = $pretestRecord->created_at;
+        }
+        
+        // Ensure $pretestDate is a Carbon instance
+        if (is_string($pretestDate)) {
+            $pretestDate = \Carbon\Carbon::parse($pretestDate);
+        } elseif (!($pretestDate instanceof \Carbon\Carbon)) {
+            return [
+                'available' => false,
+                'reason' => 'Invalid pretest date'
+            ];
         }
         
         $oneMonthLater = $pretestDate->copy()->addMonth();
@@ -608,6 +622,8 @@ class MahasiswaMagangController extends Controller
                 ->toMediaCollection('berkas_instansi');
         }
 
+        Alert::sucess('Documents uploaded successfully');
+
         return redirect()->route('frontend.mahasiswa-magangs.upload-documents', $mahasiswaMagang->id)
             ->with('success', 'Documents uploaded successfully');
     }
@@ -704,5 +720,27 @@ class MahasiswaMagangController extends Controller
 
         return redirect()->route('frontend.mahasiswa-magangs.upload-final-documents', $mahasiswaMagang->id)
             ->with('success', 'Final documents uploaded successfully');
+    }
+
+    /**
+     * Generate and display completion certificate
+     */
+    public function generateCertificate(MahasiswaMagang $mahasiswaMagang)
+    {
+        // Check if user owns this application
+        if ($mahasiswaMagang->mahasiswa_id != auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        // Check if the internship is verified and approved
+        if ($mahasiswaMagang->verified != 'APPROVED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Cannot generate certificate. Internship is not yet verified.');
+        }
+        
+        // Load related data for the certificate
+        $mahasiswaMagang->load(['mahasiswa', 'verified_by']);
+        
+        return view('frontend.mahasiswaMagangs.completion_certificate', compact('mahasiswaMagang'));
     }
 }

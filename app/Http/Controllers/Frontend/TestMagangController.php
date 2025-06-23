@@ -137,6 +137,14 @@ class TestMagangController extends Controller
                 $pretestDate = $pretestRecord->created_at;
             }
             
+            // Ensure $pretestDate is a Carbon instance
+            if (is_string($pretestDate)) {
+                $pretestDate = \Carbon\Carbon::parse($pretestDate);
+            } elseif (!($pretestDate instanceof \Carbon\Carbon)) {
+                return redirect()->route('frontend.mahasiswa-magangs.index')
+                    ->with('error', 'Invalid pretest date. Please contact administrator.');
+            }
+            
             $oneMonthLater = $pretestDate->copy()->addMonth();
             $now = now();
             

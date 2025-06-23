@@ -24,13 +24,13 @@
         }
         .certificate-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #013880;
             padding-bottom: 20px;
         }
         .certificate-logo {
-            max-width: 120px;
-            margin-bottom: 20px;
+            max-height: 160px;
+            margin-bottom: 0px;
         }
         h1 {
             font-size: 28px;
@@ -47,6 +47,7 @@
         .certificate-body {
             text-align: center;
             margin: 30px 0;
+            margin-bottom: 100px;
         }
         .student-name {
             font-size: 24px;
@@ -130,28 +131,28 @@
         <div class="certificate-id">ID: CDC-PSI-{{ $mahasiswaMagang->id }}-{{ date('Ymd') }}</div>
         
         <div class="certificate-header">
-            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="certificate-logo">
-            <h1>Career Development Center</h1>
-            <h2>Faculty of Psychology, Universitas Sebelas Maret</h2>
+            <img src="{{ asset('jobcy/images/logo-cert.png') }}" alt="Logo" class="certificate-logo">
+            {{-- <h1>Career Development Center</h1>
+            <h2>Faculty of Psychology, Universitas Sebelas Maret</h2> --}}
         </div>
         
         <div class="certificate-body">
             <h2>CERTIFICATE OF COMPLETION</h2>
             <p>This is to certify that</p>
-            <p class="student-name">{{ $mahasiswaMagang->nama }}</p>
+            <p class="student-name">"{{ $mahasiswaMagang->nama }}"</p>
             <p>NIM: {{ $mahasiswaMagang->nim }}</p>
-            <p class="certificate-text">
-                has successfully completed the internship program at <strong>{{ $mahasiswaMagang->instansi }}</strong>
-                for the <strong>{{ App\Models\MahasiswaMagang::TYPE_SELECT[$mahasiswaMagang->type] }}</strong> program
-                in the field of <strong>{{ App\Models\MahasiswaMagang::BIDANG_SELECT[$mahasiswaMagang->bidang] }}</strong>.
-                All required documents have been submitted and verified.
-            </p>
-            
-            @if($mahasiswaMagang->verification_notes)
+            {{-- <div class="certificate-text">
+                <p><em>"Kegiatan Magang Mahasiswa telah diselesaikan"</em></p>
+            </div> --}}
             <div class="verification-note">
-                <p><em>"{{ $mahasiswaMagang->verification_notes }}"</em></p>
+                <p>
+                    <em>
+                        has successfully completed the internship program at <strong>"{{ $mahasiswaMagang->instansi }}"</strong>
+                        for the <strong>{{ App\Models\MahasiswaMagang::TYPE_SELECT[$mahasiswaMagang->type] }}</strong> program.
+                        All required documents have been submitted and verified.
+                    </em>
+                </p>
             </div>
-            @endif
         </div>
         
         <div class="certificate-footer">
@@ -159,7 +160,7 @@
                 <div class="signature-line"></div>
                 <p>
                     <strong>
-                        {{ $mahasiswaMagang->verified_by->name ?? 'Head of Career Development Center' }}<br>
+                        Head of Career Development Center<br>
                         CDC Faculty of Psychology UNS
                     </strong>
                 </p>
@@ -170,9 +171,9 @@
             <!-- Placeholder for official stamp -->
         </div>
         
-        <div class="qr-code">
+        {{-- <div class="qr-code">
             <!-- Placeholder for QR code -->
-        </div>
+        </div> --}}
         
         <div class="timestamp">
             Issued on: {{ date('F j, Y') }}

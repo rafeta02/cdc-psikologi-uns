@@ -170,7 +170,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form id="testForm" method="POST" action="{{ route('frontend.test-magangs.storeTest') }}">
+                    <form id="testForm" method="POST" action="{{ route('frontend.mahasiswa-magangs.store-test') }}">
                         @csrf
                         <input type="hidden" name="type" value="{{ $type }}">
                         <input type="hidden" name="magang_id" value="{{ $magang_id }}">
