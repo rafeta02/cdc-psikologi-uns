@@ -24,7 +24,10 @@ class MahasiswaMagangController extends Controller
     {
         abort_if(Gate::denies('mahasiswa_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $mahasiswaMagangs = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by', 'media'])->get();
+        // SECURITY FIX: Only show current user's applications
+        $mahasiswaMagangs = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by', 'media'])
+            ->where('mahasiswa_id', auth()->id())
+            ->get();
 
         return view('frontend.mahasiswaMagangs.index', compact('mahasiswaMagangs'));
     }
@@ -46,7 +49,11 @@ class MahasiswaMagangController extends Controller
 
     public function store(StoreMahasiswaMagangRequest $request)
     {
-        $mahasiswaMagang = MahasiswaMagang::create($request->all());
+        // SECURITY FIX: Ensure mahasiswa_id is set to current user
+        $data = $request->all();
+        $data['mahasiswa_id'] = auth()->id();
+        
+        $mahasiswaMagang = MahasiswaMagang::create($data);
 
         // New document uploads
         if ($request->input('proposal_magang', false)) {
@@ -113,6 +120,12 @@ class MahasiswaMagangController extends Controller
     public function edit(MahasiswaMagang $mahasiswaMagang)
     {
         abort_if(Gate::denies('mahasiswa_magang_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        // SECURITY FIX: Only allow editing own applications
+        if ($mahasiswaMagang->mahasiswa_id !== auth()->id()) {
+            abort(Response::HTTP_FORBIDDEN, 'You can only edit your own applications');
+        }
+
         $mahasiswas = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $magangs = Magang::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -128,6 +141,11 @@ class MahasiswaMagangController extends Controller
 
     public function update(UpdateMahasiswaMagangRequest $request, MahasiswaMagang $mahasiswaMagang)
     {
+        // SECURITY FIX: Only allow updating own applications
+        if ($mahasiswaMagang->mahasiswa_id !== auth()->id()) {
+            abort(Response::HTTP_FORBIDDEN, 'You can only update your own applications');
+        }
+
         $mahasiswaMagang->update($request->all());
 
         // Handle proposal_magang file
@@ -298,7 +316,10 @@ class MahasiswaMagangController extends Controller
     {
         abort_if(Gate::denies('mahasiswa_magang_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $mahasiswaMagang = MahasiswaMagang::findOrFail($id);
+        // SECURITY FIX: Only allow viewing own applications
+        $mahasiswaMagang = MahasiswaMagang::where('id', $id)
+            ->where('mahasiswa_id', auth()->id())
+            ->firstOrFail();
         $mahasiswaMagang->load('mahasiswa', 'magang', 'approved_by', 'verified_by');
 
         return view('frontend.mahasiswaMagangs.show', compact('mahasiswaMagang'));
@@ -307,6 +328,12 @@ class MahasiswaMagangController extends Controller
     public function destroy(MahasiswaMagang $mahasiswaMagang)
     {
         abort_if(Gate::denies('mahasiswa_magang_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        // SECURITY FIX: Only allow deleting own applications
+        if ($mahasiswaMagang->mahasiswa_id !== auth()->id()) {
+            abort(Response::HTTP_FORBIDDEN, 'You can only delete your own applications');
+        }
+
         $mahasiswaMagang->delete();
 
         return back();
@@ -314,7 +341,10 @@ class MahasiswaMagangController extends Controller
 
     public function massDestroy(MassDestroyMahasiswaMagangRequest $request)
     {
-        $mahasiswaMagangs = MahasiswaMagang::find(request('ids'));
+        // SECURITY FIX: Only allow deleting own applications
+        $mahasiswaMagangs = MahasiswaMagang::whereIn('id', request('ids'))
+            ->where('mahasiswa_id', auth()->id())
+            ->get();
 
         foreach ($mahasiswaMagangs as $mahasiswaMagang) {
             $mahasiswaMagang->delete();

@@ -377,6 +377,12 @@
                     Assessment Tests
                 </div>
                 <div class="card-body">
+                    @if($mahasiswaMagang->approve !== 'APPROVED')
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Tests will be available after your application is approved by admin.
+                        </div>
+                    @endif
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -388,6 +394,10 @@
                                     @if($mahasiswaMagang->pretest)
                                         <button class="btn btn-success btn-block" disabled>
                                             <i class="fas fa-check"></i> Completed
+                                        </button>
+                                    @elseif($mahasiswaMagang->approve !== 'APPROVED')
+                                        <button class="btn btn-secondary btn-block" disabled title="Application must be approved first">
+                                            <i class="fas fa-lock mr-1"></i> Pre-Test (Locked)
                                         </button>
                                     @else
                                         <a href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}" 

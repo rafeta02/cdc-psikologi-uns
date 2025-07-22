@@ -100,6 +100,12 @@ class TestMagangController extends Controller
         
         abort_if(!$magangApp, Response::HTTP_FORBIDDEN, 'You do not have permission to take this test');
         
+        // SECURITY FIX: Check if application is approved
+        if ($magangApp->approve !== 'APPROVED') {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'Your application must be approved before you can take tests');
+        }
+        
         // Check if user already took this test
         $existingTest = TestMagang::where('magang_id', $magang_id)
             ->where('mahasiswa_id', auth()->id())
