@@ -42,7 +42,9 @@ class MahasiswasTableSeeder2 extends Seeder
         ];
 
         foreach ($users as $userData) {
-            User::create($userData);
+            User::withoutEvents(function () use ($userData) {
+                return User::create($userData);
+            });
         }
 
         // Get created users
