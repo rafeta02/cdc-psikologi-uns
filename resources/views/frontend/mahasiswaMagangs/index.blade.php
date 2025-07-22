@@ -273,7 +273,7 @@
                                                     <span class="badge badge-{{ $mahasiswaMagang->verified == 'APPROVED' ? 'success' : ($mahasiswaMagang->verified == 'REJECTED' ? 'danger' : 'warning') }}">
                                                         {{ App\Models\MahasiswaMagang::VERIFIED_SELECT[$mahasiswaMagang->verified] ?? '' }}
                                                     </span>
-                                                    @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                    @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                                         <button type="button" class="btn btn-sm btn-link ml-2 p-0" data-toggle="modal" data-target="#verificationNotesModal-{{ $mahasiswaMagang->id }}">
                                                             <i class="fas fa-comment"></i> View Notes
                                                         </button>
@@ -344,13 +344,13 @@
                                                             </a>
                                                         @endcan
 
-                                                        @if($mahasiswaMagang->approve === 'REJECTED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                        @if($mahasiswaMagang->approve === 'REJECTED' && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                                             <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.resubmit', $mahasiswaMagang->id) }}">
                                                                 <i class="fas fa-redo text-warning"></i> Resubmit Files
                                                             </a>
                                                         @endif
 
-                                                        @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                        @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                                             <button type="button" class="dropdown-item" data-toggle="modal" data-target="#verificationNotesModal-{{ $mahasiswaMagang->id }}">
                                                                 <i class="fas fa-comment text-info"></i> View Admin Notes
                                                             </button>
@@ -359,13 +359,13 @@
                                                         <div class="dropdown-divider"></div>
                                                         
                                                         <!-- Test Actions -->
-                                                        @if($mahasiswaMagang->approve === 'APPROVED' && !$mahasiswaMagang->pretest && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                        @if($mahasiswaMagang->approve === 'APPROVED')
                                                             <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'PRETEST']) }}">
                                                                 <i class="fas fa-clipboard-list text-info"></i> Take Pre-Test
                                                             </a>
                                                         @endif
 
-                                                        @if($mahasiswaMagang->approve === 'APPROVED' && $mahasiswaMagang->pretest && !$mahasiswaMagang->posttest && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                        @if($mahasiswaMagang->approve === 'APPROVED' && $mahasiswaMagang->pretest && !$mahasiswaMagang->posttest && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                                             @if($postTestAvailable)
                                                                 <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}">
                                                                     <i class="fas fa-clipboard-check text-success"></i> Take Post-Test
@@ -380,7 +380,7 @@
                                                         <div class="dropdown-divider"></div>
 
                                                         <!-- Monitoring Actions -->
-                                                        @if($mahasiswaMagang->approve === 'APPROVED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                                        @if($mahasiswaMagang->approve === 'APPROVED' && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                                             <a class="dropdown-item" href="{{ route('frontend.monitoring-magangs.create', ['magang_id' => $mahasiswaMagang->id]) }}">
                                                                 <i class="fas fa-file-upload text-info"></i> Upload Monitoring
                                                             </a>
@@ -406,7 +406,7 @@
                                                         @endif
                                                         
                                                                                                 <!-- Certificate Download -->
-                                        @if($mahasiswaMagang->verified === 'APPROVED' && $mahasiswaMagang->mahasiswa_id === auth()->id())
+                                        @if($mahasiswaMagang->verified === 'APPROVED' && $mahasiswaMagang->mahasiswa_id == auth()->id())
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.generate-certificate', $mahasiswaMagang->id) }}" target="_blank">
                                                 <i class="fas fa-certificate text-success"></i> Download Certificate
@@ -464,7 +464,7 @@
     @endif
 
     <!-- Verification Notes Modal -->
-    @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id === auth()->id())
+    @if($mahasiswaMagang->verification_notes && $mahasiswaMagang->mahasiswa_id == auth()->id())
     <div class="modal fade" id="verificationNotesModal-{{ $mahasiswaMagang->id }}" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
