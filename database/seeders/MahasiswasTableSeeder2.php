@@ -21,7 +21,7 @@ class MahasiswasTableSeeder2 extends Seeder
                 'password' => bcrypt('password'),
                 'verified' => 1,
                 'approved' => 1,
-                'verified_at' => '2024-07-22 03:14:16',
+                'verified_at' => '22-07-2024 03:14:16',
             ],
             [
                 'name' => 'Siti Nurhaliza',
@@ -29,7 +29,7 @@ class MahasiswasTableSeeder2 extends Seeder
                 'password' => bcrypt('password'),
                 'verified' => 1,
                 'approved' => 1,
-                'verified_at' => '2024-07-22 03:14:16',
+                'verified_at' => '22-07-2024 03:14:16',
             ],
             [
                 'name' => 'Budi Santoso',
@@ -37,7 +37,7 @@ class MahasiswasTableSeeder2 extends Seeder
                 'password' => bcrypt('password'),
                 'verified' => 1,
                 'approved' => 1,
-                'verified_at' => '2024-07-22 03:14:16',
+                'verified_at' => '22-07-2024 03:14:16',
             ]
         ];
 
