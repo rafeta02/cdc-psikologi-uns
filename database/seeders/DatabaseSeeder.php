@@ -19,58 +19,92 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
+        // Base user and permission seeders
         $this->call([
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             PermissionRoleTableSeeder::class,
             UsersTableSeeder::class,
             RoleUserTableSeeder::class,
-            // MahasiswasTableSeeder::class,
         ]);
 
-        // ArticleCategory::factory()->count(10)->create();
-        // ArticleTag::factory()->count(30)->create();
-        // Industry::factory()->count(15)->create();
-        // Position::factory()->count(20)->create();
-        // Education::factory()->count(30)->create();
-        // Department::factory()->count(25)->create();
-        // Company::factory()->count(20)->create();
+        // Independent model seeders (no foreign key dependencies)
+        $this->call([
+            ArticleCategoriesTableSeeder::class,
+            ArticleTagsTableSeeder::class,
+            DepartmentsTableSeeder::class,
+            EducationsTableSeeder::class,
+            ExperiencesTableSeeder::class,
+            IndustriesTableSeeder::class,
+            PositionsTableSeeder::class,
+            VacancyTagsTableSeeder::class,
+            KategoriPrestasisTableSeeder::class,
+            ProvincesTableSeeder::class,
+        ]);
 
+        // Dependent model seeders (with foreign key dependencies)
+        $this->call([
+            RegenciesTableSeeder::class,      // depends on Province
+            CompetencesTableSeeder::class,    // independent
+            CompaniesTableSeeder::class,      // depends on Industry, Regency
+        ]);
 
-        // Vacancy::factory()->count(50)->create();
+        // Complex model seeders (multiple dependencies)
+        $this->call([
+            CompetenceItemsTableSeeder::class, // depends on Competence
+            MahasiswasTableSeeder2::class,     // depends on User
+            PostsTableSeeder::class,           // depends on User
+            VacanciesTableSeeder::class,       // depends on Company, Experience, Position, Industry, User
+            MagangsTableSeeder::class,         // depends on Company, User
+        ]);
 
-        // $vacancies = Vacancy::all();
-        // $educations = Education::all(); // Fetch all available tags
-        // $departments = Department::all(); // Fetch all available tags
-        // $locations = Regency::all(); // Fetch all available tags
+        // Optional: Create relationships for many-to-many tables
+        $this->createPostRelationships();
+        $this->createVacancyRelationships();
+    }
 
-        // foreach ($vacancies as $vacancy) {
-        //     $vacancy->education()->attach(
-        //         $educations->random(1)->pluck('id')->toArray() // Attaching 3 random tags
-        //     );
-        //     $vacancy->departments()->attach(
-        //         $departments->random(2)->pluck('id')->toArray() // Attaching 3 random tags
-        //     );
-        //     $vacancy->locations()->attach(
-        //         $locations->random(2)->pluck('id')->toArray() // Attaching 3 random tags
-        //     );
-        // }
+    /**
+     * Create relationships for posts with categories and tags
+     */
+    private function createPostRelationships()
+    {
+        $posts = Post::all();
+        $tags = ArticleTag::all();
+        $categories = ArticleCategory::all();
 
+        foreach ($posts as $post) {
+            // Attach random tags (1-3 tags per post)
+            $randomTags = $tags->random(rand(1, 3))->pluck('id')->toArray();
+            $post->tags()->attach($randomTags);
 
-        // Post::factory()->count(50)->create();
+            // Attach random categories (1-2 categories per post)
+            $randomCategories = $categories->random(rand(1, 2))->pluck('id')->toArray();
+            $post->categories()->attach($randomCategories);
+        }
+    }
 
-        // // Assuming you want to assign tags to each post
-        // $posts = Post::all();
-        // $tags = ArticleTag::all(); // Fetch all available tags
-        // $categories = ArticleCategory::all(); // Fetch all available tags
+    /**
+     * Create relationships for vacancies with educations, departments, and locations
+     */
+    private function createVacancyRelationships()
+    {
+        $vacancies = Vacancy::all();
+        $educations = Education::all();
+        $departments = Department::all();
+        $locations = Regency::all();
 
-        // foreach ($posts as $post) {
-        //     $post->tags()->attach(
-        //         $tags->random(2)->pluck('id')->toArray() // Attaching 3 random tags
-        //     );
-        //     $post->categories()->attach(
-        //         $categories->random(1)->pluck('id')->toArray() // Attaching 3 random tags
-        //     );
-        // }
+        foreach ($vacancies as $vacancy) {
+            // Attach random educations (1-2 educations per vacancy)
+            $randomEducations = $educations->random(rand(1, 2))->pluck('id')->toArray();
+            $vacancy->education()->attach($randomEducations);
+
+            // Attach random departments (1-3 departments per vacancy)
+            $randomDepartments = $departments->random(rand(1, 3))->pluck('id')->toArray();
+            $vacancy->departments()->attach($randomDepartments);
+
+            // Attach random locations (1-2 locations per vacancy)
+            $randomLocations = $locations->random(rand(1, 2))->pluck('id')->toArray();
+            $vacancy->locations()->attach($randomLocations);
+        }
     }
 }
