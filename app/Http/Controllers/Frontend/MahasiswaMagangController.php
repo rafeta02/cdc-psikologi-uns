@@ -108,6 +108,27 @@ class MahasiswaMagangController extends Controller
             $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
         }
 
+        // Handle new document uploads
+        if ($request->input('khs', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))->toMediaCollection('khs');
+        }
+
+        if ($request->input('krs', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))->toMediaCollection('krs');
+        }
+
+        if ($request->input('form_persetujuan_dosen_pa', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))->toMediaCollection('form_persetujuan_dosen_pa');
+        }
+
+        if ($request->input('surat_persetujuan_rekognisi', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))->toMediaCollection('surat_persetujuan_rekognisi');
+        }
+
+        if ($request->input('logbook_mbkm', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))->toMediaCollection('logbook_mbkm');
+        }
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $mahasiswaMagang->id]);
         }
@@ -309,6 +330,62 @@ class MahasiswaMagangController extends Controller
             }
         }
 
+        // Handle new document updates
+        if ($request->input('khs', false)) {
+            if (! $mahasiswaMagang->khs || $request->input('khs') !== $mahasiswaMagang->khs->file_name) {
+                if ($mahasiswaMagang->khs) {
+                    $mahasiswaMagang->khs->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))->toMediaCollection('khs');
+            }
+        } elseif ($mahasiswaMagang->khs) {
+            $mahasiswaMagang->khs->delete();
+        }
+
+        if ($request->input('krs', false)) {
+            if (! $mahasiswaMagang->krs || $request->input('krs') !== $mahasiswaMagang->krs->file_name) {
+                if ($mahasiswaMagang->krs) {
+                    $mahasiswaMagang->krs->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))->toMediaCollection('krs');
+            }
+        } elseif ($mahasiswaMagang->krs) {
+            $mahasiswaMagang->krs->delete();
+        }
+
+        if ($request->input('form_persetujuan_dosen_pa', false)) {
+            if (! $mahasiswaMagang->form_persetujuan_dosen_pa || $request->input('form_persetujuan_dosen_pa') !== $mahasiswaMagang->form_persetujuan_dosen_pa->file_name) {
+                if ($mahasiswaMagang->form_persetujuan_dosen_pa) {
+                    $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))->toMediaCollection('form_persetujuan_dosen_pa');
+            }
+        } elseif ($mahasiswaMagang->form_persetujuan_dosen_pa) {
+            $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
+        }
+
+        if ($request->input('surat_persetujuan_rekognisi', false)) {
+            if (! $mahasiswaMagang->surat_persetujuan_rekognisi || $request->input('surat_persetujuan_rekognisi') !== $mahasiswaMagang->surat_persetujuan_rekognisi->file_name) {
+                if ($mahasiswaMagang->surat_persetujuan_rekognisi) {
+                    $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))->toMediaCollection('surat_persetujuan_rekognisi');
+            }
+        } elseif ($mahasiswaMagang->surat_persetujuan_rekognisi) {
+            $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
+        }
+
+        if ($request->input('logbook_mbkm', false)) {
+            if (! $mahasiswaMagang->logbook_mbkm || $request->input('logbook_mbkm') !== $mahasiswaMagang->logbook_mbkm->file_name) {
+                if ($mahasiswaMagang->logbook_mbkm) {
+                    $mahasiswaMagang->logbook_mbkm->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))->toMediaCollection('logbook_mbkm');
+            }
+        } elseif ($mahasiswaMagang->logbook_mbkm) {
+            $mahasiswaMagang->logbook_mbkm->delete();
+        }
+
         return redirect()->route('frontend.mahasiswa-magangs.index');
     }
 
@@ -469,10 +546,10 @@ class MahasiswaMagangController extends Controller
         
         $requirements = [
             'current_count' => $monitoringCount,
-            'minimum_required' => 4,
-            'is_sufficient' => $monitoringCount >= 4,
-            'warning_message' => $monitoringCount < 4 ? 
-                "Warning: You need at least 4 monitoring reports. Current: {$monitoringCount}/4" : null
+            'minimum_required' => 1,
+            'is_sufficient' => $monitoringCount >= 1,
+            'warning_message' => $monitoringCount < 1 ? 
+                "Warning: You need at least 1 monitoring report. Current: {$monitoringCount}/1" : null
         ];
         
         return $requirements;
@@ -623,6 +700,11 @@ class MahasiswaMagangController extends Controller
             'proposal_magang' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'surat_tugas' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'berkas_instansi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'khs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'krs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'form_persetujuan_dosen_pa' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'surat_persetujuan_rekognisi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'logbook_mbkm' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
         ]);
 
         // Handle proposal_magang upload
@@ -652,7 +734,48 @@ class MahasiswaMagangController extends Controller
                 ->toMediaCollection('berkas_instansi');
         }
 
-        Alert::sucess('Documents uploaded successfully');
+        // Handle new document uploads
+        if ($request->hasFile('khs')) {
+            if ($mahasiswaMagang->khs) {
+                $mahasiswaMagang->khs->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('khs'))
+                ->toMediaCollection('khs');
+        }
+
+        if ($request->hasFile('krs')) {
+            if ($mahasiswaMagang->krs) {
+                $mahasiswaMagang->krs->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('krs'))
+                ->toMediaCollection('krs');
+        }
+
+        if ($request->hasFile('form_persetujuan_dosen_pa')) {
+            if ($mahasiswaMagang->form_persetujuan_dosen_pa) {
+                $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('form_persetujuan_dosen_pa'))
+                ->toMediaCollection('form_persetujuan_dosen_pa');
+        }
+
+        if ($request->hasFile('surat_persetujuan_rekognisi')) {
+            if ($mahasiswaMagang->surat_persetujuan_rekognisi) {
+                $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('surat_persetujuan_rekognisi'))
+                ->toMediaCollection('surat_persetujuan_rekognisi');
+        }
+
+        if ($request->hasFile('logbook_mbkm')) {
+            if ($mahasiswaMagang->logbook_mbkm) {
+                $mahasiswaMagang->logbook_mbkm->delete();
+            }
+            $mahasiswaMagang->addMedia($request->file('logbook_mbkm'))
+                ->toMediaCollection('logbook_mbkm');
+        }
+
+        Alert::success('Documents uploaded successfully');
 
         return redirect()->route('frontend.mahasiswa-magangs.upload-documents', $mahasiswaMagang->id)
             ->with('success', 'Documents uploaded successfully');
@@ -674,11 +797,11 @@ class MahasiswaMagangController extends Controller
                 ->with('error', 'Only approved internships can upload final documents.');
         }
         
-        // Check monitoring requirements (minimum 5 reports)
+        // Check monitoring requirements (minimum 1 report)
         $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
-        if ($monitoringCount < 5) {
+        if ($monitoringCount < 1) {
             return redirect()->route('frontend.mahasiswa-magangs.index')
-                ->with('error', "You need at least 5 monitoring reports before uploading final documents. Current: {$monitoringCount}/5");
+                ->with('error', "You need at least 1 monitoring report before uploading final documents. Current: {$monitoringCount}/1");
         }
 
         return view('frontend.mahasiswaMagangs.upload_final_documents', compact('mahasiswaMagang'));
@@ -700,12 +823,31 @@ class MahasiswaMagangController extends Controller
                 ->with('error', 'Only approved internships can upload final documents.');
         }
         
-        // Check monitoring requirements (minimum 5 reports)
+        // Check monitoring requirements (minimum 1 report)
         $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
-        if ($monitoringCount < 5) {
+        if ($monitoringCount < 1) {
             return redirect()->route('frontend.mahasiswa-magangs.index')
-                ->with('error', "You need at least 5 monitoring reports before uploading final documents. Current: {$monitoringCount}/5");
+                ->with('error', "You need at least 1 monitoring report before uploading final documents. Current: {$monitoringCount}/1");
         }
+
+        // Validate uploaded files - allow Excel files for evaluation forms
+        $request->validate([
+            'laporan_akhir.*' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'presensi.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'sertifikat.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'form_penilaian_pembimbing_lapangan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
+            'form_penilaian_dosen_pembimbing' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
+            'berita_acara_seminar' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'presensi_kehadiran_seminar.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'notulen_pertanyaan' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'tanda_bukti_penyerahan_laporan' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'berkas_magang.*' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'khs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'krs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'form_persetujuan_dosen_pa' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'surat_persetujuan_rekognisi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'logbook_mbkm' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
+        ]);
 
         // Handle multiple file uploads
         $multipleFileFields = ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang'];
@@ -732,7 +874,12 @@ class MahasiswaMagangController extends Controller
             'form_penilaian_dosen_pembimbing',
             'berita_acara_seminar',
             'notulen_pertanyaan',
-            'tanda_bukti_penyerahan_laporan'
+            'tanda_bukti_penyerahan_laporan',
+            'khs',
+            'krs',
+            'form_persetujuan_dosen_pa',
+            'surat_persetujuan_rekognisi',
+            'logbook_mbkm'
         ];
         foreach ($singleFileFields as $field) {
             if ($request->input($field, false)) {

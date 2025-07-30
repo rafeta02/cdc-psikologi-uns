@@ -13,6 +13,7 @@ use App\Models\PrestasiMahasiswaDetail;
 use App\Models\User;
 use Gate;
 use PDF;
+use QrCode;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
@@ -241,6 +242,17 @@ class PrestasiMahasiswaController extends Controller
         $prestasiMahasiswa->load('user', 'kategori', 'pesertas');
 
         return view('frontend.prestasiMahasiswas.show', compact('prestasiMahasiswa'));
+    }
+
+    public function publicShow($id)
+    {
+        // Only show validated achievements for public viewing
+        $prestasiMahasiswa = PrestasiMahasiswa::with(['user', 'kategori', 'pesertas'])
+            ->where('id', $id)
+            ->where('validation_status', 'validated')
+            ->firstOrFail();
+
+        return view('frontend.prestasiMahasiswas.public_show', compact('prestasiMahasiswa'));
     }
 
     public function destroy(PrestasiMahasiswa $prestasiMahasiswa)

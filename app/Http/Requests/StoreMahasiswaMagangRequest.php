@@ -80,6 +80,48 @@ class StoreMahasiswaMagangRequest extends FormRequest
                 'nullable',
                 'in:' . implode(',', array_keys(MahasiswaMagang::VERIFIED_SELECT)),
             ],
+            'form_penilaian_pembimbing_lapangan' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx',
+                'max:10240',
+            ],
+            'form_penilaian_dosen_pembimbing' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx',
+                'max:10240',
+            ],
+            'khs' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx,jpg,jpeg,png',
+                'max:10240',
+            ],
+            'krs' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx,jpg,jpeg,png',
+                'max:10240',
+            ],
+            'form_persetujuan_dosen_pa' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx',
+                'max:10240',
+            ],
+            'surat_persetujuan_rekognisi' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx',
+                'max:10240',
+            ],
+            'logbook_mbkm' => [
+                'nullable',
+                'file',
+                'mimes:pdf,doc,docx,xls,xlsx',
+                'max:10240',
+            ],
         ];
     }
 } 

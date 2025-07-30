@@ -714,8 +714,22 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => 254,
                 'title' => 'contest_access',
             ],
+             [
+                'title' => 'dospem_create',
+            ],
             [
-                'id'    => 152,
+                'title' => 'dospem_edit',
+            ],
+            [
+                'title' => 'dospem_show',
+            ],
+            [
+                'title' => 'dospem_delete',
+            ],
+            [
+                'title' => 'dospem_access',
+            ],
+            [
                 'title' => 'profile_password_edit',
             ],
         ];

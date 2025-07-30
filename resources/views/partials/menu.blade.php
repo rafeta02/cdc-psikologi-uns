@@ -437,6 +437,18 @@
                         </ul>
                     </li>
                 @endcan
+                @can('dospem_access')
+                    <li class="nav-item">
+                        <a href="{{ route("admin.dospems.index") }}" class="nav-link {{ request()->is("admin/dospems") || request()->is("admin/dospems/*") ? "active" : "" }}">
+                            <i class="fa-fw nav-icon fas fa-users">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.dospem.title') }}
+                            </p>
+                        </a>
+                    </li>
+                @endcan
                 @can('magang_access')
                 <li class="nav-item">
                     <a href="{{ route("admin.magangs.index") }}" class="nav-link {{ request()->is("admin/magangs") || request()->is("admin/magangs/*") ? "active" : "" }}">

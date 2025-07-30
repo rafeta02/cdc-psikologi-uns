@@ -178,6 +178,27 @@ class MahasiswaMagangController extends Controller
             $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
         }
 
+        // Handle new document uploads
+        if ($request->input('khs', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))->toMediaCollection('khs');
+        }
+
+        if ($request->input('krs', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))->toMediaCollection('krs');
+        }
+
+        if ($request->input('form_persetujuan_dosen_pa', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))->toMediaCollection('form_persetujuan_dosen_pa');
+        }
+
+        if ($request->input('surat_persetujuan_rekognisi', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))->toMediaCollection('surat_persetujuan_rekognisi');
+        }
+
+        if ($request->input('logbook_mbkm', false)) {
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))->toMediaCollection('logbook_mbkm');
+        }
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $mahasiswaMagang->id]);
         }
@@ -365,6 +386,62 @@ class MahasiswaMagangController extends Controller
             if (count($media) === 0 || ! in_array($file, $media)) {
                 $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
             }
+        }
+
+        // Handle new document updates
+        if ($request->input('khs', false)) {
+            if (! $mahasiswaMagang->khs || $request->input('khs') !== $mahasiswaMagang->khs->file_name) {
+                if ($mahasiswaMagang->khs) {
+                    $mahasiswaMagang->khs->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))->toMediaCollection('khs');
+            }
+        } elseif ($mahasiswaMagang->khs) {
+            $mahasiswaMagang->khs->delete();
+        }
+
+        if ($request->input('krs', false)) {
+            if (! $mahasiswaMagang->krs || $request->input('krs') !== $mahasiswaMagang->krs->file_name) {
+                if ($mahasiswaMagang->krs) {
+                    $mahasiswaMagang->krs->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))->toMediaCollection('krs');
+            }
+        } elseif ($mahasiswaMagang->krs) {
+            $mahasiswaMagang->krs->delete();
+        }
+
+        if ($request->input('form_persetujuan_dosen_pa', false)) {
+            if (! $mahasiswaMagang->form_persetujuan_dosen_pa || $request->input('form_persetujuan_dosen_pa') !== $mahasiswaMagang->form_persetujuan_dosen_pa->file_name) {
+                if ($mahasiswaMagang->form_persetujuan_dosen_pa) {
+                    $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))->toMediaCollection('form_persetujuan_dosen_pa');
+            }
+        } elseif ($mahasiswaMagang->form_persetujuan_dosen_pa) {
+            $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
+        }
+
+        if ($request->input('surat_persetujuan_rekognisi', false)) {
+            if (! $mahasiswaMagang->surat_persetujuan_rekognisi || $request->input('surat_persetujuan_rekognisi') !== $mahasiswaMagang->surat_persetujuan_rekognisi->file_name) {
+                if ($mahasiswaMagang->surat_persetujuan_rekognisi) {
+                    $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))->toMediaCollection('surat_persetujuan_rekognisi');
+            }
+        } elseif ($mahasiswaMagang->surat_persetujuan_rekognisi) {
+            $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
+        }
+
+        if ($request->input('logbook_mbkm', false)) {
+            if (! $mahasiswaMagang->logbook_mbkm || $request->input('logbook_mbkm') !== $mahasiswaMagang->logbook_mbkm->file_name) {
+                if ($mahasiswaMagang->logbook_mbkm) {
+                    $mahasiswaMagang->logbook_mbkm->delete();
+                }
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))->toMediaCollection('logbook_mbkm');
+            }
+        } elseif ($mahasiswaMagang->logbook_mbkm) {
+            $mahasiswaMagang->logbook_mbkm->delete();
         }
 
         return redirect()->route('admin.mahasiswa-magangs.index');
