@@ -21,6 +21,7 @@ use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMahasiswa;
 use App\Models\PrestasiMahasiswaDetail;
 use App\Models\Contest;
+use App\Models\MahasiswaMagang;
 use SEOMeta;
 use Alert;
 use App\Charts\MonthlyUsersChart;
@@ -587,10 +588,16 @@ class HomeController extends Controller
 
     public function grafik(PieChart $pie)
     {
-        //Grafik Pie Tingkat
-        $internasional = PrestasiMahasiswa::where('tingkat', 'internasional')->count();
-        $nasional = PrestasiMahasiswa::where('tingkat', 'nasional')->count();
-        $regional = PrestasiMahasiswa::where('tingkat', 'regional')->count();
+        //Grafik Pie Tingkat - Only show validated prestasi
+        $internasional = PrestasiMahasiswa::where('tingkat', 'internasional')
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
+            ->count();
+        $nasional = PrestasiMahasiswa::where('tingkat', 'nasional')
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
+            ->count();
+        $regional = PrestasiMahasiswa::where('tingkat', 'regional')
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
+            ->count();
         $data = [$internasional, $nasional, $regional];
         $label = ['Internasional', 'Nasional', 'Regional'];
         $tingkat_chart = $pie->build(
@@ -598,12 +605,16 @@ class HomeController extends Controller
             'Capaian Prestasi Mahasiswa Fakultas Psikologi Universitas Sebelas Maret Berdasarkan Tingkat Kegiatan',
             $data, $label);
 
-        //Grafik Pie Kategori
+        //Grafik Pie Kategori - Only show validated prestasi
         $data = [];
         $label = [];
-        $kategori = KategoriPrestasi::whereHas('prestasi_mahasiswa')->get();
+        $kategori = KategoriPrestasi::whereHas('prestasi_mahasiswa', function ($query) {
+            $query->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
+        })->get();
         foreach($kategori as $item) {
-            $data[] = PrestasiMahasiswa::where('kategori_id', $item->id)->count();
+            $data[] = PrestasiMahasiswa::where('kategori_id', $item->id)
+                ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
+                ->count();
             $label[] = $item->name;
         };
 
@@ -615,6 +626,7 @@ class HomeController extends Controller
         $achievementsByYear = DB::table('prestasi_mahasiswas')
             ->selectRaw('YEAR(tanggal_akhir) as year, COUNT(*) as total')
             ->whereNotNull('tanggal_akhir')
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
             ->groupBy(DB::raw('YEAR(tanggal_akhir)'))
             ->orderBy('year')
             ->get();
@@ -656,19 +668,27 @@ class HomeController extends Controller
         if ($request->ajax()) {
             $query = PrestasiMahasiswaDetail::with('prestasi_mahasiswa');
 
+            // Only show validated prestasi mahasiswa
+            $query->whereHas('prestasi_mahasiswa', function ($query) {
+                $query->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
+            });
+
             if (!empty($request->kategori)) {
                 $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
-                    $query->where('kategori_id', $request->kategori);
+                    $query->where('kategori_id', $request->kategori)
+                          ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
                 });
             }
             if (!empty($request->keikutsertaan)) {
                 $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
-                    $query->where('keikutsertaan', $request->keikutsertaan);
+                    $query->where('keikutsertaan', $request->keikutsertaan)
+                          ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
                 });
             }
             if (!empty($request->tingkat)) {
                 $query->whereHas('prestasi_mahasiswa', function ($query) use ($request) {
-                    $query->where('tingkat', $request->tingkat);
+                    $query->where('tingkat', $request->tingkat)
+                          ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
                 });
             }
 
@@ -678,7 +698,12 @@ class HomeController extends Controller
             return view('partials.prestasi-list', compact('prestasis'))->render();
         }
 
-        $prestasis = PrestasiMahasiswaDetail::with('prestasi_mahasiswa')->latest()->paginate(7);
+        $prestasis = PrestasiMahasiswaDetail::with('prestasi_mahasiswa')
+            ->whereHas('prestasi_mahasiswa', function ($query) {
+                $query->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED);
+            })
+            ->latest()
+            ->paginate(7);
         $categories = KategoriPrestasi::pluck('name', 'id');
 
         return view('frontend.prestasi_mahasiswa', compact('prestasis', 'categories'));
@@ -819,6 +844,30 @@ class HomeController extends Controller
         ];
 
         return $colors[$type] ?? '#6c757d'; // Default gray
+    }
+
+    public function publicPrestasiShow($identifier)
+    {
+        // Try to find by UUID first, then by ID as fallback
+        $prestasiMahasiswa = PrestasiMahasiswa::with(['user', 'kategori', 'pesertas'])
+            ->where(function($query) use ($identifier) {
+                $query->where('uuid', $identifier)
+                      ->orWhere('id', $identifier);
+            })
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
+            ->firstOrFail();
+
+        return view('frontend.prestasiMahasiswas.public_show', compact('prestasiMahasiswa'));
+    }
+
+    public function verifyCertificate($id)
+    {
+        $mahasiswaMagang = MahasiswaMagang::with(['mahasiswa', 'verified_by'])
+            ->where('id', $id)
+            ->where('verified', 'APPROVED')
+            ->firstOrFail();
+
+        return view('frontend.mahasiswaMagangs.certificate_verification', compact('mahasiswaMagang'));
     }
 
 }

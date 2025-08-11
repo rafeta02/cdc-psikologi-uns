@@ -83,13 +83,13 @@ class StoreMahasiswaMagangRequest extends FormRequest
             'form_penilaian_pembimbing_lapangan' => [
                 'nullable',
                 'file',
-                'mimes:pdf,doc,docx,xls,xlsx',
+                'extensions:pdf,doc,docx,xls,xlsx',
                 'max:10240',
             ],
             'form_penilaian_dosen_pembimbing' => [
                 'nullable',
                 'file',
-                'mimes:pdf,doc,docx,xls,xlsx',
+                'extensions:pdf,doc,docx,xls,xlsx',
                 'max:10240',
             ],
             'khs' => [
@@ -119,7 +119,7 @@ class StoreMahasiswaMagangRequest extends FormRequest
             'logbook_mbkm' => [
                 'nullable',
                 'file',
-                'mimes:pdf,doc,docx,xls,xlsx',
+                'extensions:pdf,doc,docx,xls,xlsx',
                 'max:10240',
             ],
         ];

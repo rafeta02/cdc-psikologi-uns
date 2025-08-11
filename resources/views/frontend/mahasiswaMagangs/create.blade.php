@@ -136,6 +136,23 @@
                                     @endif
                                 </div>
                             </div>
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="dosen_pembimbing">Dosen Pembimbing</label>
+                                    <select class="form-control select2" id="dosen_pembimbing" name="dosen_pembimbing">
+                                        <option value="">Pilih Dosen Pembimbing</option>
+                                        @foreach($dospems as $id => $entry)
+                                            <option value="{{ $id }}" {{ old('dosen_pembimbing') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if($errors->has('dosen_pembimbing'))
+                                        <div class="text-danger">
+                                            {{ $errors->first('dosen_pembimbing') }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="form-group mt-3">

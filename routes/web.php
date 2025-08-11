@@ -25,7 +25,9 @@ Route::get('tracer-study', 'HomeController@tracerStudy')->name('tracer-study');
 Route::post('tracer-study', 'HomeController@tracerStudyStore')->name('tracer-study-store');
 Route::get('tracer-alumni', 'HomeController@tracerAlumni')->name('tracer-alumni');
 Route::post('tracer-alumni', 'HomeController@tracerAlumniStore')->name('tracer-alumni-store');
+Route::get('prestasi/{identifier}', 'HomeController@publicPrestasiShow')->name('prestasi.public-show');
 Route::get('prestasi', 'HomeController@prestasiMahasiswa')->name('prestasi');
+Route::get('certificates/verify/{id}', 'HomeController@verifyCertificate')->name('certificates.verify');
 Route::get('jadwal-lomba', 'HomeController@jadwalLomba')->name('jadwal-lomba');
 Route::get('jadwal-lomba-events', 'HomeController@jadwalLombaEvents')->name('jadwal-lomba-events');
 
@@ -272,6 +274,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('contests/parse-csv-import', 'ContestController@parseCsvImport')->name('contests.parseCsvImport');
     Route::post('contests/process-csv-import', 'ContestController@processCsvImport')->name('contests.processCsvImport');
     Route::resource('contests', 'ContestController');
+
+     // Dospem
+    Route::delete('dospems/destroy', 'DospemController@massDestroy')->name('dospems.massDestroy');
+    Route::post('dospems/media', 'DospemController@storeMedia')->name('dospems.storeMedia');
+    Route::post('dospems/ckmedia', 'DospemController@storeCKEditorImages')->name('dospems.storeCKEditorImages');
+    Route::post('dospems/parse-csv-import', 'DospemController@parseCsvImport')->name('dospems.parseCsvImport');
+    Route::post('dospems/process-csv-import', 'DospemController@processCsvImport')->name('dospems.processCsvImport');
+    Route::resource('dospems', 'DospemController');
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

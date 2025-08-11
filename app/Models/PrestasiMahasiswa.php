@@ -9,6 +9,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,6 +19,17 @@ class PrestasiMahasiswa extends Model implements HasMedia
     use SoftDeletes, InteractsWithMedia, Auditable, HasFactory, SelfOwnTrait;
 
     public $table = 'prestasi_mahasiswas';
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
 
     public const KEIKUTSERTAAN_RADIO = [
         'individu' => 'Individu',
@@ -88,6 +100,8 @@ class PrestasiMahasiswa extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'uuid',
+        'qr_code_path',
         'user_id',
         'skim',
         'tingkat',
@@ -141,6 +155,11 @@ class PrestasiMahasiswa extends Model implements HasMedia
     public function kategori()
     {
         return $this->belongsTo(KategoriPrestasi::class, 'kategori_id');
+    }
+
+    public function dospem()
+    {
+        return $this->belongsTo(Dospem::class, 'dosen_pembimbing');
     }
 
     public function getTanggalAwalAttribute($value)
@@ -222,5 +241,93 @@ class PrestasiMahasiswa extends Model implements HasMedia
         });
 
         return $files;
+    }
+
+    /**
+     * Generate and store QR code for this prestasi
+     */
+    public function generateQrCode()
+    {
+        try {
+            // Generate verification URL using UUID if available, otherwise ID
+            $identifier = $this->uuid ?? $this->id;
+            $verificationUrl = route('prestasi.public-show', $identifier);
+            
+            // Generate QR code image
+            $qrCodeImage = \QrCode::format('png')
+                ->size(200)
+                ->backgroundColor(255,255,255)
+                ->color(0,0,0)
+                ->margin(2)
+                ->generate($verificationUrl);
+            
+            // Create public directory if it doesn't exist
+            $publicQrDir = public_path('qr-codes');
+            if (!file_exists($publicQrDir)) {
+                mkdir($publicQrDir, 0755, true);
+            }
+            
+            // Generate unique filename
+            $fileName = 'prestasi_' . $identifier . '.png';
+            $filePath = $publicQrDir . '/' . $fileName;
+            
+            // Save QR code image to public directory
+            file_put_contents($filePath, $qrCodeImage);
+            
+            // Update database with QR code path
+            $this->update([
+                'qr_code_path' => 'qr-codes/' . $fileName
+            ]);
+            
+            \Log::info('QR Code generated for prestasi: ' . $this->id . ' -> ' . $this->qr_code_path);
+            
+            return $this->qr_code_path;
+            
+        } catch (\Exception $e) {
+            \Log::error('Failed to generate QR code for prestasi ' . $this->id . ': ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Get the full URL for the QR code image
+     */
+    public function getQrCodeUrl()
+    {
+        if ($this->qr_code_path && file_exists(public_path($this->qr_code_path))) {
+            return asset($this->qr_code_path);
+        }
+        return null;
+    }
+    
+    /**
+     * Get QR code as base64 data URI for PDF generation
+     */
+    public function getQrCodeBase64()
+    {
+        try {
+            // First try to get from existing file
+            if ($this->qr_code_path && file_exists(public_path($this->qr_code_path))) {
+                $imageData = file_get_contents(public_path($this->qr_code_path));
+                return 'data:image/png;base64,' . base64_encode($imageData);
+            }
+            
+            // If no file exists, generate QR code directly as base64
+            $identifier = $this->uuid ?? $this->id;
+            $verificationUrl = route('prestasi.public-show', $identifier);
+            
+            $qrCodeImage = \QrCode::format('png')
+                ->size(200)
+                ->backgroundColor(255,255,255)
+                ->color(0,0,0)
+                ->margin(2)
+                ->generate($verificationUrl);
+            
+            return 'data:image/png;base64,' . base64_encode($qrCodeImage);
+            
+        } catch (\Exception $e) {
+            \Log::error('Failed to generate QR code base64 for prestasi ' . $this->id . ': ' . $e->getMessage());
+            return null;
+        }
     }
 }

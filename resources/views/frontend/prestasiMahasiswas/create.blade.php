@@ -284,15 +284,20 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="dosen_pembimbing">Dosen Pembimbing</label>
-                                <input class="form-control {{ $errors->has('dosen_pembimbing') ? 'is-invalid' : '' }}" type="text" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', isset($prestasiMahasiswa) ? $prestasiMahasiswa->dosen_pembimbing : '') }}">
-                                @if($errors->has('dosen_pembimbing'))
-                                    <div class="invalid-feedback">
-                                        {{ $errors->first('dosen_pembimbing') }}
-                                    </div>
-                                @endif
-                            </div>
+                                        <div class="form-group">
+                <label class="font-weight-bold" for="dosen_pembimbing">Dosen Pembimbing</label>
+                <select class="form-control select2 {{ $errors->has('dosen_pembimbing') ? 'is-invalid' : '' }}" name="dosen_pembimbing" id="dosen_pembimbing">
+                    <option value="">Pilih Dosen Pembimbing</option>
+                    @foreach($dospems as $id => $entry)
+                        <option value="{{ $id }}" {{ old('dosen_pembimbing', isset($prestasiMahasiswa) ? $prestasiMahasiswa->dosen_pembimbing : '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('dosen_pembimbing'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dosen_pembimbing') }}
+                    </div>
+                @endif
+            </div>
 
                             <div class="form-group">
                                 <label class="font-weight-bold" for="url_publikasi">{{ trans('cruds.prestasiMahasiswa.fields.url_publikasi') }}</label>

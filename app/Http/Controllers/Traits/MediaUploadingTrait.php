@@ -14,6 +14,7 @@ trait MediaUploadingTrait
                 'file' => 'max:' . request()->input('size') * 1024,
             ]);
         }
+        
         // If width or height is preset - we are validating it as an image
         if (request()->has('width') || request()->has('height')) {
             $this->validate(request(), [
@@ -36,7 +37,19 @@ trait MediaUploadingTrait
 
         $file = $request->file('file');
 
-        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        // Get custom naming parameters from request
+        $collection = $request->input('collection', '');
+        $nim = $request->input('nim', 'unknown');
+        
+        if ($collection && $nim !== 'unknown') {
+            // Use custom naming format: nim_collection_uniqid.extension
+            $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+            $uniqueId = uniqid();
+            $name = $nim . '_' . $collection . '_' . $uniqueId . '.' . $extension;
+        } else {
+            // Fallback to original naming
+            $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        }
 
         $file->move($path, $name);
 

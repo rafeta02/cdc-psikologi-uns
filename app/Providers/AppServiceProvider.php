@@ -24,5 +24,10 @@ class AppServiceProvider extends ServiceProvider
             $_SERVER['HTTPS'] = 'on';
             URL::forceScheme('https');
         }
+
+        // Configure QR Code to use GD backend for better PDF compatibility
+        $this->app->bind('SimpleSoftwareIO\QrCode\Contracts\WriterInterface', function() {
+            return new \SimpleSoftwareIO\QrCode\Writer\PngWriter();
+        });
     }
 }

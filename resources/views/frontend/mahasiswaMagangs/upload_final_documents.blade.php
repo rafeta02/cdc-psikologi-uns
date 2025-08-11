@@ -25,8 +25,27 @@
                         </div>
                     @endif
 
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <strong>Congratulations!</strong> You have completed the posttest and can now upload your final documents.
+                    </div>
+
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> Please upload all required final documents for your internship.
+                        <i class="fas fa-info-circle"></i> Please upload all required final documents for your internship completion.
+                    </div>
+
+                    <!-- Progress Indicator -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6 class="text-muted">Internship Progress:</h6>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                                    90% Complete - Final Documents Stage
+                                </div>
+                            </div>
+                            <small class="text-muted mt-1 d-block">
+                                ✅ Pretest Completed | ✅ Monitoring Reports | ✅ Posttest Completed | 📋 Final Documents (Current Stage)
+                            </small>
+                        </div>
                     </div>
 
                     <form action="{{ route('frontend.mahasiswa-magangs.store-final-documents', $mahasiswaMagang->id) }}" method="POST" enctype="multipart/form-data">
@@ -252,11 +271,18 @@
             maxFilesize: 10, // MB
             maxFiles: multipleFiles ? null : 1,
             addRemoveLinks: true,
+            acceptedFiles: field === 'form_penilaian_pembimbing_lapangan' || field === 'form_penilaian_dosen_pembimbing' || field === 'logbook_mbkm' 
+                ? '.pdf,.doc,.docx,.xls,.xlsx' 
+                : field === 'khs' || field === 'krs'
+                ? '.pdf,.doc,.docx,.jpg,.jpeg,.png'
+                : '.pdf,.doc,.docx',
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             params: {
-                size: 10
+                size: 10,
+                collection: field,
+                nim: '{{ $mahasiswaMagang->nim ?? "unknown" }}'
             },
             success: function (file, response) {
                 $('form').append(`<input type="hidden" name="${inputName}" value="${response.name}">`);

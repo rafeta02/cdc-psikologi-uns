@@ -35,7 +35,11 @@
             </div>
             <div class="form-group">
                 <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
-                <input class="form-control {{ $errors->has('pembimbing') ? 'is-invalid' : '' }}" type="text" name="pembimbing" id="pembimbing" value="{{ old('pembimbing', '') }}">
+                <select class="form-control select2 {{ $errors->has('pembimbing') ? 'is-invalid' : '' }}" name="pembimbing" id="pembimbing">
+                    @foreach($dospems as $id => $entry)
+                        <option value="{{ $entry }}" {{ old('pembimbing') == $entry ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
                 @if($errors->has('pembimbing'))
                     <span class="text-danger">{{ $errors->first('pembimbing') }}</span>
                 @endif

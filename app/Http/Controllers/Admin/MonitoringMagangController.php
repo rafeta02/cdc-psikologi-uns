@@ -85,7 +85,9 @@ class MonitoringMagangController extends Controller
 
         $magangs = MahasiswaMagang::pluck('instansi', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.monitoringMagangs.create', compact('magangs', 'mahasiswas'));
+        $dospems = \App\Models\Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'dospems'));
     }
 
     public function store(StoreMonitoringMagangRequest $request)
@@ -111,9 +113,11 @@ class MonitoringMagangController extends Controller
 
         $magangs = MahasiswaMagang::pluck('instansi', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $dospems = \App\Models\Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $monitoringMagang->load('mahasiswa', 'magang');
 
-        return view('admin.monitoringMagangs.edit', compact('magangs', 'mahasiswas', 'monitoringMagang'));
+        return view('admin.monitoringMagangs.edit', compact('magangs', 'mahasiswas', 'dospems', 'monitoringMagang'));
     }
 
     public function update(UpdateMonitoringMagangRequest $request, MonitoringMagang $monitoringMagang)

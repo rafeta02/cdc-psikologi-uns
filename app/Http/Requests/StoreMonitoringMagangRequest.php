@@ -17,6 +17,16 @@ class StoreMonitoringMagangRequest extends FormRequest
     public function rules()
     {
         return [
+            'mahasiswa_id' => [
+                'required',
+                'integer',
+                'exists:users,id',
+            ],
+            'magang_id' => [
+                'required',
+                'integer',
+                'exists:mahasiswa_magangs,id',
+            ],
             'pembimbing' => [
                 'string',
                 'nullable',
@@ -26,6 +36,10 @@ class StoreMonitoringMagangRequest extends FormRequest
                 'nullable',
             ],
             'tempat' => [
+                'string',
+                'nullable',
+            ],
+            'hasil' => [
                 'string',
                 'nullable',
             ],

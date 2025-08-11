@@ -47,7 +47,7 @@
 
         <p>Terima kasih sudah mengupload dan mengisi form prestasi mahasiswa, atas perhatiannya kami ucapkan terima kasih.</p>
 
-        <table style="width: 100%;">
+        {{-- <table style="width: 100%;">
             <tbody>
                 <tr>
                     <td style="width: 50%;" align="center">
@@ -72,7 +72,7 @@
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </table> --}}
 
     </div>
 </body>

@@ -62,7 +62,11 @@
                         @endif
                         <div class="form-group">
                             <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
-                            <input class="form-control" type="text" name="pembimbing" id="pembimbing" value="{{ old('pembimbing', isset($mahasiswaMagang) ? $mahasiswaMagang->dosen_pembimbing : '') }}">
+                            <select class="form-control select2" name="pembimbing" id="pembimbing">
+                                @foreach($dospems as $id => $entry)
+                                    <option value="{{ $entry }}" {{ old('pembimbing', isset($mahasiswaMagang) ? $mahasiswaMagang->dosen_pembimbing : '') == $entry ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
                             @if($errors->has('pembimbing'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('pembimbing') }}

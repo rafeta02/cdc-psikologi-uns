@@ -39,32 +39,28 @@
 
         <p>Terima kasih sudah mengupload dan mengisi form prestasi mahasiswa, atas perhatiannya kami ucapkan terima kasih.</p>
 
-        <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td style="width: 50%;" align="center">
-                        <div class="text-center">
-                            <span></span><br>
-                            <span></span><br>
-                            <span>Pemohon</span><br>
-                            <br><br><br><br>
-                            <span><u></u></span><br>
-                            <span>NIM. </span>
-                        </div>
-                    </td>
-                    <td style="width: 50%;" align="center">
-                        <div class="text-center">
-                            <span>Surakarta, {{ \Carbon\Carbon::parse(now())->format('d F Y')}}</span><br>
-                            <span>Mengetahui</span><br>
-                            <span>Dekan Fakultas Psikologi</span><br>
-                            <br><br><br><br>
-                            <span><u>(NAMA)</u></span><br>
-                            <span>NIP. </span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- QR Code Section -->
+        <div style="text-align: center; margin: 30px 0;">
+            {{-- <p><strong>Scan QR Code untuk verifikasi online:</strong></p> --}}
+            <div style="display: inline-block; border: 2px solid #333; padding: 10px;">
+                @php
+                    // Get QR code as base64 for PDF compatibility
+                    $qrCodeBase64 = $prestasi->getQrCodeBase64();
+                @endphp
+                
+                @if($qrCodeBase64)
+                    <img src="{{ $qrCodeBase64 }}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
+                @else
+                    <div style="width: 150px; height: 150px; border: 2px dashed #999; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666; text-align: center; margin: 0 auto;">
+                        QR Code tidak dapat dibuat<br>
+                        <small>Gunakan link di bawah</small>
+                    </div>
+                @endif
+            </div>
+            {{-- <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                Atau kunjungi: {{ route('prestasi.public-show', $prestasi->uuid ?? $prestasi->id) }}
+            </p> --}}
+        </div>
 
     </div>
 </body>

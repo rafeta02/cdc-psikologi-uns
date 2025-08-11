@@ -3,113 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internship Completion Certificate</title>
+    <title>Certificate of Appreciation</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Merriweather:wght@300;400;700&display=swap');
+        
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Merriweather', serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            background: #f0f0f0;
         }
+        
         .certificate-container {
-            max-width: 800px;
+            width: 1123px;
+            height: 794px;
             margin: 20px auto;
-            padding: 40px;
-            background-color: #fff;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            border: 15px solid #013880;
             position: relative;
+            background-image: url('{{ asset('img/certificate.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
-        .certificate-header {
+        
+        .certificate-overlay {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #013880;
-            padding-bottom: 20px;
+            z-index: 10;
         }
-        .certificate-logo {
-            max-height: 160px;
-            margin-bottom: 0px;
-        }
-        h1 {
-            font-size: 28px;
-            color: #013880;
-            margin: 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        h2 {
-            font-size: 22px;
-            margin: 5px 0 20px;
-            color: #555;
-        }
-        .certificate-body {
-            text-align: center;
-            margin: 30px 0;
-            margin-bottom: 100px;
-        }
+        
         .student-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #013880;
-            margin: 20px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: #1a365d;
+            margin: 45px 0 5px 0;
             text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.9);
+            width: 600px;
         }
-        .certificate-text {
-            font-size: 16px;
-            line-height: 1.8;
-            margin: 20px 0;
-        }
-        .certificate-footer {
-            margin-top: 50px;
-            text-align: right;
-        }
-        .signature-area {
-            margin-bottom: 10px;
-        }
-        .signature-line {
-            width: 200px;
-            border-bottom: 1px solid #333;
-            margin: 50px 0 10px auto;
-        }
-        .official-stamp {
-            position: absolute;
-            bottom: 70px;
-            right: 100px;
-            opacity: 0.5;
-        }
-        .timestamp {
+        
+        .student-details {
             font-size: 14px;
-            color: #666;
-            margin-top: 20px;
-            text-align: center;
+            color: #2d3748;
+            margin: 5px 0;
+            font-weight: 500;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.9);
+            letter-spacing: 1px;
         }
-        .qr-code {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            width: 80px;
-            height: 80px;
-            background-color: #f0f0f0;
-            padding: 5px;
-        }
+        
         .certificate-id {
-            font-size: 12px;
-            color: #777;
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 30px;
+            right: 50px;
+            font-size: 12px;
+            color: #666;
+            font-weight: 400;
+            background: rgba(255,255,255,0.8);
+            padding: 5px 10px;
+            border-radius: 3px;
         }
-        .verification-note {
-            margin: 15px auto;
+        
+        .qr-code-section {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            text-align: center;
+            background: rgba(255,255,255,0.9);
             padding: 10px;
-            max-width: 80%;
-            border-left: 3px solid #013880;
-            font-style: italic;
-            color: #555;
-            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+        
+        .qr-code-section p {
+            margin: 0 0 5px 0;
+            font-size: 10px;
+            color: #666;
+            font-weight: 500;
+        }
+        
         @media print {
             body {
                 background: none;
@@ -117,8 +94,8 @@
             .certificate-container {
                 box-shadow: none;
                 margin: 0;
-                padding: 40px;
-                border: 15px solid #013880;
+                width: 100%;
+                height: 100vh;
             }
             .no-print {
                 display: none;
@@ -128,64 +105,44 @@
 </head>
 <body>
     <div class="certificate-container">
+        <!-- Certificate ID -->
         <div class="certificate-id">ID: CDC-PSI-{{ $mahasiswaMagang->id }}-{{ date('Ymd') }}</div>
         
-        <div class="certificate-header">
-            <img src="{{ asset('jobcy/images/logo-cert.png') }}" alt="Logo" class="certificate-logo">
-            {{-- <h1>Career Development Center</h1>
-            <h2>Faculty of Psychology, Universitas Sebelas Maret</h2> --}}
+        <!-- Text overlay positioned in center -->
+        <div class="certificate-overlay">
+            <div class="student-name">{{ $mahasiswaMagang->nama }}</div>
+            <div class="student-details">NIM: {{ $mahasiswaMagang->nim }}</div>
         </div>
         
-        <div class="certificate-body">
-            <h2>CERTIFICATE OF COMPLETION</h2>
-            <p>This is to certify that</p>
-            <p class="student-name">"{{ $mahasiswaMagang->nama }}"</p>
-            <p>NIM: {{ $mahasiswaMagang->nim }}</p>
-            {{-- <div class="certificate-text">
-                <p><em>"Kegiatan Magang Mahasiswa telah diselesaikan"</em></p>
-            </div> --}}
-            <div class="verification-note">
-                <p>
-                    <em>
-                        has successfully completed the internship program at <strong>"{{ $mahasiswaMagang->instansi }}"</strong>
-                        for the <strong>{{ App\Models\MahasiswaMagang::TYPE_SELECT[$mahasiswaMagang->type] }}</strong> program.
-                        All required documents have been submitted and verified.
-                    </em>
-                </p>
-            </div>
-        </div>
-        
-        <div class="certificate-footer">
-            <div class="signature-area">
-                <div class="signature-line"></div>
-                <p>
-                    <strong>
-                        Head of Career Development Center<br>
-                        CDC Faculty of Psychology UNS
-                    </strong>
-                </p>
-            </div>
-        </div>
-        
-        <div class="official-stamp">
-            <!-- Placeholder for official stamp -->
-        </div>
-        
-        {{-- <div class="qr-code">
-            <!-- Placeholder for QR code -->
+        <!-- QR Code for verification -->
+        {{-- <div class="qr-code-section">
+            @php
+                $verificationUrl = route('certificates.verify', $mahasiswaMagang->id);
+                $qrCode = null;
+                try {
+                    $qrCode = base64_encode(\QrCode::format('png')->size(80)->generate($verificationUrl));
+                } catch (\Exception $e) {
+                    // QR generation failed, will show text fallback
+                    $qrCode = null;
+                }
+            @endphp
+            
+            @if($qrCode)
+                <p>Scan to verify</p>
+                <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code" style="width: 80px; height: 80px;">
+            @else
+                <p style="font-size: 9px; line-height: 1.2; margin: 0;">Verify at:</p>
+                <p style="font-size: 8px; line-height: 1.1; margin: 0; word-break: break-all;">{{ $verificationUrl }}</p>
+            @endif
         </div> --}}
-        
-        <div class="timestamp">
-            Issued on: {{ date('F j, Y') }}
-        </div>
     </div>
     
     <div class="no-print" style="text-align: center; margin: 20px">
-        <button onclick="window.print()" style="padding: 10px 20px; background: #013880; color: white; border: none; cursor: pointer; font-size: 16px;">
-            Print Certificate
+        <button onclick="window.print()" style="padding: 12px 24px; background: linear-gradient(135deg, #1e3a5f, #2d5aa0); color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 8px; font-weight: 600; margin-right: 10px;">
+            🖨️ Print Certificate
         </button>
-        <a href="{{ route('frontend.mahasiswa-magangs.index') }}" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; margin-left: 10px; font-size: 16px;">
-            Back to Dashboard
+        <a href="{{ route('frontend.mahasiswa-magangs.index') }}" style="padding: 12px 24px; background: #6c757d; color: white; text-decoration: none; font-size: 16px; border-radius: 8px; font-weight: 600;">
+            ↩️ Back to Dashboard
         </a>
     </div>
 </body>

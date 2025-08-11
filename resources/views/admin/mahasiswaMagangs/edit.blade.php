@@ -149,7 +149,11 @@
             </div>
             <div class="form-group">
                 <label for="dosen_pembimbing">{{ trans('cruds.mahasiswaMagang.fields.dosen_pembimbing') }}</label>
-                <input class="form-control {{ $errors->has('dosen_pembimbing') ? 'is-invalid' : '' }}" type="text" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', $mahasiswaMagang->dosen_pembimbing) }}">
+                <select class="form-control select2 {{ $errors->has('dosen_pembimbing') ? 'is-invalid' : '' }}" name="dosen_pembimbing" id="dosen_pembimbing">
+                    @foreach($dospems as $id => $entry)
+                        <option value="{{ $id }}" {{ old('dosen_pembimbing', $mahasiswaMagang->dosen_pembimbing) == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
                 @if($errors->has('dosen_pembimbing'))
                     <span class="text-danger">{{ $errors->first('dosen_pembimbing') }}</span>
                 @endif

@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyMahasiswaMagangRequest;
 use App\Http\Requests\StoreMahasiswaMagangRequest;
 use App\Http\Requests\UpdateMahasiswaMagangRequest;
+use App\Models\Dospem;
 use App\Models\Magang;
 use App\Models\MahasiswaMagang;
 use App\Models\User;
@@ -27,14 +28,29 @@ class MahasiswaMagangController extends Controller
         // SECURITY FIX: Only show current user's applications
         $mahasiswaMagangs = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by', 'media'])
             ->where('mahasiswa_id', auth()->id())
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('frontend.mahasiswaMagangs.index', compact('mahasiswaMagangs'));
+        // Get application status for current user
+        $applicationStatus = MahasiswaMagang::getUserApplicationStatusMessage();
+        $canApply = MahasiswaMagang::canUserApply();
+
+        return view('frontend.mahasiswaMagangs.index', compact('mahasiswaMagangs', 'applicationStatus', 'canApply'));
     }
 
     public function create()
     {
         abort_if(Gate::denies('mahasiswa_magang_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        // Check if user already has an active application
+        $activeApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->whereIn('approve', ['PENDING', 'APPROVED'])
+            ->first();
+
+        if ($activeApplication) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('warning', 'You already have an active internship application. You can only apply again after your current application is rejected.');
+        }
 
         $mahasiswas = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -44,11 +60,23 @@ class MahasiswaMagangController extends Controller
 
         $verified_bies = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('frontend.mahasiswaMagangs.create', compact('approved_bies', 'magangs', 'mahasiswas', 'verified_bies'));
+        $dospems = Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('frontend.mahasiswaMagangs.create', compact('approved_bies', 'magangs', 'mahasiswas', 'verified_bies', 'dospems'));
     }
 
     public function store(StoreMahasiswaMagangRequest $request)
     {
+        // Check if user already has an active application
+        $activeApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->whereIn('approve', ['PENDING', 'APPROVED'])
+            ->first();
+
+        if ($activeApplication) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You already have an active internship application. You can only submit a new application after your current one is rejected.');
+        }
+
         // SECURITY FIX: Ensure mahasiswa_id is set to current user
         $data = $request->all();
         $data['mahasiswa_id'] = auth()->id();
@@ -57,76 +85,112 @@ class MahasiswaMagangController extends Controller
 
         // New document uploads
         if ($request->input('proposal_magang', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))->toMediaCollection('proposal_magang');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('proposal_magang'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('proposal_magang')), 'proposal_magang'))
+                ->toMediaCollection('proposal_magang');
         }
 
         if ($request->input('surat_tugas', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))->toMediaCollection('surat_tugas');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_tugas'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('surat_tugas')), 'surat_tugas'))
+                ->toMediaCollection('surat_tugas');
         }
 
         if ($request->input('berkas_instansi', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))->toMediaCollection('berkas_instansi');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berkas_instansi'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('berkas_instansi')), 'berkas_instansi'))
+                ->toMediaCollection('berkas_instansi');
         }
 
         foreach ($request->input('laporan_akhir', []) as $file) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('laporan_akhir');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'laporan_akhir'))
+                ->toMediaCollection('laporan_akhir');
         }
 
         foreach ($request->input('presensi', []) as $file) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('presensi');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'presensi'))
+                ->toMediaCollection('presensi');
         }
 
         foreach ($request->input('sertifikat', []) as $file) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('sertifikat');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'sertifikat'))
+                ->toMediaCollection('sertifikat');
         }
 
         if ($request->input('form_penilaian_pembimbing_lapangan', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_penilaian_pembimbing_lapangan'))))->toMediaCollection('form_penilaian_pembimbing_lapangan');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_penilaian_pembimbing_lapangan'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('form_penilaian_pembimbing_lapangan')), 'form_penilaian_pembimbing_lapangan'))
+                ->toMediaCollection('form_penilaian_pembimbing_lapangan');
         }
 
         if ($request->input('form_penilaian_dosen_pembimbing', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_penilaian_dosen_pembimbing'))))->toMediaCollection('form_penilaian_dosen_pembimbing');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_penilaian_dosen_pembimbing'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('form_penilaian_dosen_pembimbing')), 'form_penilaian_dosen_pembimbing'))
+                ->toMediaCollection('form_penilaian_dosen_pembimbing');
         }
 
         if ($request->input('berita_acara_seminar', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berita_acara_seminar'))))->toMediaCollection('berita_acara_seminar');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('berita_acara_seminar'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('berita_acara_seminar')), 'berita_acara_seminar'))
+                ->toMediaCollection('berita_acara_seminar');
         }
 
         foreach ($request->input('presensi_kehadiran_seminar', []) as $file) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('presensi_kehadiran_seminar');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'presensi_kehadiran_seminar'))
+                ->toMediaCollection('presensi_kehadiran_seminar');
         }
 
         if ($request->input('notulen_pertanyaan', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('notulen_pertanyaan'))))->toMediaCollection('notulen_pertanyaan');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('notulen_pertanyaan'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('notulen_pertanyaan')), 'notulen_pertanyaan'))
+                ->toMediaCollection('notulen_pertanyaan');
         }
 
         if ($request->input('tanda_bukti_penyerahan_laporan', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('tanda_bukti_penyerahan_laporan'))))->toMediaCollection('tanda_bukti_penyerahan_laporan');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('tanda_bukti_penyerahan_laporan'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('tanda_bukti_penyerahan_laporan')), 'tanda_bukti_penyerahan_laporan'))
+                ->toMediaCollection('tanda_bukti_penyerahan_laporan');
         }
 
         foreach ($request->input('berkas_magang', []) as $file) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'berkas_magang'))
+                ->toMediaCollection('berkas_magang');
         }
 
         // Handle new document uploads
         if ($request->input('khs', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))->toMediaCollection('khs');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('khs'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('khs')), 'khs'))
+                ->toMediaCollection('khs');
         }
 
         if ($request->input('krs', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))->toMediaCollection('krs');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('krs'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('krs')), 'krs'))
+                ->toMediaCollection('krs');
         }
 
         if ($request->input('form_persetujuan_dosen_pa', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))->toMediaCollection('form_persetujuan_dosen_pa');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('form_persetujuan_dosen_pa'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('form_persetujuan_dosen_pa')), 'form_persetujuan_dosen_pa'))
+                ->toMediaCollection('form_persetujuan_dosen_pa');
         }
 
         if ($request->input('surat_persetujuan_rekognisi', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))->toMediaCollection('surat_persetujuan_rekognisi');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('surat_persetujuan_rekognisi'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('surat_persetujuan_rekognisi')), 'surat_persetujuan_rekognisi'))
+                ->toMediaCollection('surat_persetujuan_rekognisi');
         }
 
         if ($request->input('logbook_mbkm', false)) {
-            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))->toMediaCollection('logbook_mbkm');
+            $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($request->input('logbook_mbkm'))))
+                ->usingName($mahasiswaMagang->generateCustomFileName(basename($request->input('logbook_mbkm')), 'logbook_mbkm'))
+                ->toMediaCollection('logbook_mbkm');
         }
 
         if ($media = $request->input('ck-media', false)) {
@@ -155,9 +219,11 @@ class MahasiswaMagangController extends Controller
 
         $verified_bies = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $dospems = Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $mahasiswaMagang->load('mahasiswa', 'magang', 'approved_by', 'verified_by');
 
-        return view('frontend.mahasiswaMagangs.edit', compact('approved_bies', 'magangs', 'mahasiswaMagang', 'mahasiswas', 'verified_bies'));
+        return view('frontend.mahasiswaMagangs.edit', compact('approved_bies', 'magangs', 'mahasiswaMagang', 'mahasiswas', 'verified_bies', 'dospems'));
     }
 
     public function update(UpdateMahasiswaMagangRequest $request, MahasiswaMagang $mahasiswaMagang)
@@ -397,7 +463,17 @@ class MahasiswaMagangController extends Controller
         $mahasiswaMagang = MahasiswaMagang::where('id', $id)
             ->where('mahasiswa_id', auth()->id())
             ->firstOrFail();
-        $mahasiswaMagang->load('mahasiswa', 'magang', 'approved_by', 'verified_by');
+        $mahasiswaMagang->load([
+            'mahasiswa', 
+            'magang', 
+            'company',
+            'approved_by', 
+            'verified_by',
+            'dospem',
+            'monitorings' => function($query) {
+                $query->orderBy('tanggal', 'desc');
+            }
+        ]);
 
         return view('frontend.mahasiswaMagangs.show', compact('mahasiswaMagang'));
     }
@@ -448,6 +524,16 @@ class MahasiswaMagangController extends Controller
             return redirect()->route('login')->with('message', 'You must be logged in to apply for internships');
         }
 
+        // Check if user already has an active application
+        $activeApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->whereIn('approve', ['PENDING', 'APPROVED'])
+            ->first();
+
+        if ($activeApplication) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('warning', 'You already have an active internship application. You can only apply for a new internship after your current application is rejected.');
+        }
+
         $magang = Magang::where('slug', $slug)->firstOrFail();
         
         return view('frontend.mahasiswaMagangs.apply', compact('magang'));
@@ -470,10 +556,36 @@ class MahasiswaMagangController extends Controller
         return null; // Eligible to create new application
     }
 
+    /**
+     * Clean up rejected applications for the current user
+     */
+    private function cleanupRejectedApplications()
+    {
+        $rejectedApplications = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->where('approve', 'REJECTED')
+            ->get();
+            
+        foreach ($rejectedApplications as $rejectedApp) {
+            $rejectedApp->delete();
+        }
+        
+        return $rejectedApplications->count();
+    }
+
     public function storeApplication(Request $request)
     {
         if (!auth()->check()) {
             return redirect()->route('login')->with('message', 'You must be logged in to apply for internships');
+        }
+        
+        // Check if user already has ANY active application (not just for this magang)
+        $activeApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
+            ->whereIn('approve', ['PENDING', 'APPROVED'])
+            ->first();
+
+        if ($activeApplication) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You already have an active internship application. You can only submit a new application after your current one is rejected.');
         }
         
         $validatedData = $request->validate([
@@ -488,21 +600,8 @@ class MahasiswaMagangController extends Controller
             'alamat_instansi' => 'required|string|max:1000',
         ]);
         
-        // Check if user already has an application for this magang
-        $existingApplication = MahasiswaMagang::where('mahasiswa_id', auth()->id())
-            ->where('magang_id', $validatedData['magang_id'])
-            ->first();
-            
-        // Allow new application only if previous was rejected
-        if ($existingApplication && $existingApplication->approve !== 'REJECTED') {
-            return redirect()->route('magang-detail', ['slug' => Magang::find($validatedData['magang_id'])->slug])
-                ->with('error', 'You have already applied for this internship opportunity.');
-        }
-        
-        // If previous application was rejected, delete it and create new one
-        if ($existingApplication && $existingApplication->approve === 'REJECTED') {
-            $existingApplication->delete();
-        }
+        // Clean up any rejected applications
+        $cleanedUp = $this->cleanupRejectedApplications();
         
         $mahasiswaMagang = new MahasiswaMagang();
         $mahasiswaMagang->mahasiswa_id = auth()->id();
@@ -660,7 +759,9 @@ class MahasiswaMagangController extends Controller
         $media = $mahasiswaMagang->berkas_magang->pluck('file_name')->toArray();
         foreach ($request->input('berkas_magang', []) as $file) {
             if (count($media) === 0 || !in_array($file, $media)) {
-                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('berkas_magang');
+                $mahasiswaMagang->addMedia(storage_path('tmp/uploads/' . basename($file)))
+                    ->usingName($mahasiswaMagang->generateCustomFileName(basename($file), 'berkas_magang'))
+                    ->toMediaCollection('berkas_magang');
             }
         }
 
@@ -697,14 +798,14 @@ class MahasiswaMagangController extends Controller
         
         // Validate the request
         $request->validate([
-            'proposal_magang' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'surat_tugas' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'berkas_instansi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'khs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'krs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'form_persetujuan_dosen_pa' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'surat_persetujuan_rekognisi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'logbook_mbkm' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
+            'proposal_magang' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+            'surat_tugas' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+            'berkas_instansi' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+            'khs' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'krs' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+            'form_persetujuan_dosen_pa' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+            'surat_persetujuan_rekognisi' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+            'logbook_mbkm' => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx|max:10240',
         ]);
 
         // Handle proposal_magang upload
@@ -713,6 +814,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->proposal_magang->delete();
             }
             $mahasiswaMagang->addMedia($request->file('proposal_magang'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('proposal_magang')->getClientOriginalName(), 'proposal_magang'))
                 ->toMediaCollection('proposal_magang');
         }
 
@@ -722,6 +824,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->surat_tugas->delete();
             }
             $mahasiswaMagang->addMedia($request->file('surat_tugas'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('surat_tugas')->getClientOriginalName(), 'surat_tugas'))
                 ->toMediaCollection('surat_tugas');
         }
 
@@ -731,6 +834,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->berkas_instansi->delete();
             }
             $mahasiswaMagang->addMedia($request->file('berkas_instansi'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('berkas_instansi')->getClientOriginalName(), 'berkas_instansi'))
                 ->toMediaCollection('berkas_instansi');
         }
 
@@ -740,6 +844,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->khs->delete();
             }
             $mahasiswaMagang->addMedia($request->file('khs'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('khs')->getClientOriginalName(), 'khs'))
                 ->toMediaCollection('khs');
         }
 
@@ -748,6 +853,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->krs->delete();
             }
             $mahasiswaMagang->addMedia($request->file('krs'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('krs')->getClientOriginalName(), 'krs'))
                 ->toMediaCollection('krs');
         }
 
@@ -756,6 +862,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->form_persetujuan_dosen_pa->delete();
             }
             $mahasiswaMagang->addMedia($request->file('form_persetujuan_dosen_pa'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('form_persetujuan_dosen_pa')->getClientOriginalName(), 'form_persetujuan_dosen_pa'))
                 ->toMediaCollection('form_persetujuan_dosen_pa');
         }
 
@@ -764,6 +871,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->surat_persetujuan_rekognisi->delete();
             }
             $mahasiswaMagang->addMedia($request->file('surat_persetujuan_rekognisi'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('surat_persetujuan_rekognisi')->getClientOriginalName(), 'surat_persetujuan_rekognisi'))
                 ->toMediaCollection('surat_persetujuan_rekognisi');
         }
 
@@ -772,6 +880,7 @@ class MahasiswaMagangController extends Controller
                 $mahasiswaMagang->logbook_mbkm->delete();
             }
             $mahasiswaMagang->addMedia($request->file('logbook_mbkm'))
+                ->usingName($mahasiswaMagang->generateCustomFileName($request->file('logbook_mbkm')->getClientOriginalName(), 'logbook_mbkm'))
                 ->toMediaCollection('logbook_mbkm');
         }
 
@@ -795,6 +904,12 @@ class MahasiswaMagangController extends Controller
         if ($mahasiswaMagang->approve !== 'APPROVED') {
             return redirect()->route('frontend.mahasiswa-magangs.index')
                 ->with('error', 'Only approved internships can upload final documents.');
+        }
+        
+        // Check if posttest has been completed
+        if (!$mahasiswaMagang->posttest || !$mahasiswaMagang->posttest_completed_at) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You must complete the posttest before uploading final documents.');
         }
         
         // Check monitoring requirements (minimum 1 report)
@@ -823,6 +938,12 @@ class MahasiswaMagangController extends Controller
                 ->with('error', 'Only approved internships can upload final documents.');
         }
         
+        // Check if posttest has been completed
+        if (!$mahasiswaMagang->posttest || !$mahasiswaMagang->posttest_completed_at) {
+            return redirect()->route('frontend.mahasiswa-magangs.index')
+                ->with('error', 'You must complete the posttest before uploading final documents.');
+        }
+        
         // Check monitoring requirements (minimum 1 report)
         $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
         if ($monitoringCount < 1) {
@@ -831,23 +952,23 @@ class MahasiswaMagangController extends Controller
         }
 
         // Validate uploaded files - allow Excel files for evaluation forms
-        $request->validate([
-            'laporan_akhir.*' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'presensi.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'sertifikat.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'form_penilaian_pembimbing_lapangan' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-            'form_penilaian_dosen_pembimbing' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-            'berita_acara_seminar' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'presensi_kehadiran_seminar.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'notulen_pertanyaan' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'tanda_bukti_penyerahan_laporan' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'berkas_magang.*' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'khs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'krs' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'form_persetujuan_dosen_pa' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'surat_persetujuan_rekognisi' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
-            'logbook_mbkm' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-        ]);
+        // $request->validate([
+        //     'laporan_akhir.*' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'presensi.*' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        //     'sertifikat.*' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        //     'form_penilaian_pembimbing_lapangan' => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx|max:10240',
+        //     'form_penilaian_dosen_pembimbing' => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx|max:10240',
+        //     'berita_acara_seminar' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'presensi_kehadiran_seminar.*' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        //     'notulen_pertanyaan' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'tanda_bukti_penyerahan_laporan' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'berkas_magang.*' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'khs' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        //     'krs' => 'nullable|file|extensions:pdf,doc,docx,jpg,jpeg,png|max:10240',
+        //     'form_persetujuan_dosen_pa' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'surat_persetujuan_rekognisi' => 'nullable|file|extensions:pdf,doc,docx|max:10240',
+        //     'logbook_mbkm' => 'nullable|file|extensions:pdf,doc,docx,xls,xlsx|max:10240',
+        // ]);
 
         // Handle multiple file uploads
         $multipleFileFields = ['laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang'];

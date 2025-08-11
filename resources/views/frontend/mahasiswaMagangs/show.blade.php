@@ -190,6 +190,66 @@
                                 </tr>
                                 <tr>
                                     <th>
+                                        KHS (Kartu Hasil Studi)
+                                    </th>
+                                    <td>
+                                        @if($mahasiswaMagang->khs)
+                                            <a href="{{ $mahasiswaMagang->khs->getUrl() }}" target="_blank">
+                                                {{ trans('global.view_file') }}
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        KRS (Kartu Rencana Studi)
+                                    </th>
+                                    <td>
+                                        @if($mahasiswaMagang->krs)
+                                            <a href="{{ $mahasiswaMagang->krs->getUrl() }}" target="_blank">
+                                                {{ trans('global.view_file') }}
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Form Persetujuan Dosen PA
+                                    </th>
+                                    <td>
+                                        @if($mahasiswaMagang->form_persetujuan_dosen_pa)
+                                            <a href="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}" target="_blank">
+                                                {{ trans('global.view_file') }}
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Surat Persetujuan Rekognisi
+                                    </th>
+                                    <td>
+                                        @if($mahasiswaMagang->surat_persetujuan_rekognisi)
+                                            <a href="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}" target="_blank">
+                                                {{ trans('global.view_file') }}
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Logbook MBKM
+                                    </th>
+                                    <td>
+                                        @if($mahasiswaMagang->logbook_mbkm)
+                                            <a href="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}" target="_blank">
+                                                {{ trans('global.view_file') }}
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
                                         {{ trans('cruds.mahasiswaMagang.fields.form_penilaian_pembimbing_lapangan') }}
                                     </th>
                                     <td>

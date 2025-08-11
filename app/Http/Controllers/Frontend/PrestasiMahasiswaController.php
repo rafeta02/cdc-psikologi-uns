@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyPrestasiMahasiswaRequest;
 use App\Http\Requests\StorePrestasiMahasiswaRequest;
 use App\Http\Requests\UpdatePrestasiMahasiswaRequest;
+use App\Models\Dospem;
 use App\Models\KategoriPrestasi;
 use App\Models\PrestasiMahasiswa;
 use App\Models\PrestasiMahasiswaDetail;
@@ -43,6 +44,7 @@ class PrestasiMahasiswaController extends Controller
 
         $users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         $kategoris = KategoriPrestasi::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $dospems = Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         // Check if we're editing an existing record (draft or regular edit)
         $prestasiMahasiswa = null;
@@ -63,7 +65,7 @@ class PrestasiMahasiswaController extends Controller
                 ->first();
         }
 
-        return view('frontend.prestasiMahasiswas.create', compact('kategoris', 'users', 'prestasiMahasiswa'));
+        return view('frontend.prestasiMahasiswas.create', compact('kategoris', 'users', 'dospems', 'prestasiMahasiswa'));
     }
 
     public function store(StorePrestasiMahasiswaRequest $request)
@@ -249,7 +251,7 @@ class PrestasiMahasiswaController extends Controller
         // Only show validated achievements for public viewing
         $prestasiMahasiswa = PrestasiMahasiswa::with(['user', 'kategori', 'pesertas'])
             ->where('id', $id)
-            ->where('validation_status', 'validated')
+            ->where('validation_status', PrestasiMahasiswa::STATUS_VALIDATED)
             ->firstOrFail();
 
         return view('frontend.prestasiMahasiswas.public_show', compact('prestasiMahasiswa'));
@@ -290,7 +292,24 @@ class PrestasiMahasiswaController extends Controller
     public function printBukti(Request $request)
     {
         $prestasi = PrestasiMahasiswa::with('pesertas')->find($request->id);
+        // Ensure QR code is generated for this prestasi
+        if (empty($prestasi->qr_code_path)) {
+            $prestasi->generateQrCode();
+        }
+        
         $pdf = PDF::loadView('pdf.bukti', compact('prestasi'));
+        
+        // Clean up old temporary QR code files (older than 1 hour)
+        $tempDir = public_path('temp');
+        if (file_exists($tempDir)) {
+            $files = glob($tempDir . '/qr_*.png');
+            foreach ($files as $file) {
+                if (filemtime($file) < time() - 3600) { // 1 hour old
+                    unlink($file);
+                }
+            }
+        }
+        
         return $pdf->download('bukti-prestasi.pdf');
     }
 

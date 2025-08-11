@@ -20,6 +20,7 @@
         "nuovo/spreadsheet-reader": "^0.5.11",
         "overtrue/laravel-saml": "^1.1",
         "realrashid/sweet-alert": "^7.2",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-medialibrary": "^10.7",
         "yajra/laravel-datatables-oracle": "^10.3"
     },

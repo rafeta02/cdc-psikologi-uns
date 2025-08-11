@@ -56,6 +56,8 @@ class MonitoringMagangController extends Controller
 
         $magangs = MahasiswaMagang::pluck('instansi', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $dospems = \App\Models\Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         // Get magang_id from request if available
         $selectedMagang = request('magang_id');
         $mahasiswaMagang = null;
@@ -72,7 +74,7 @@ class MonitoringMagangController extends Controller
             }
         }
 
-        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'selectedMagang', 'selectedMahasiswa', 'mahasiswaMagang'));
+        return view('frontend.monitoringMagangs.create', compact('magangs', 'mahasiswas', 'dospems', 'selectedMagang', 'selectedMahasiswa', 'mahasiswaMagang'));
     }
 
     public function store(StoreMonitoringMagangRequest $request)
@@ -103,9 +105,11 @@ class MonitoringMagangController extends Controller
 
         $magangs = MahasiswaMagang::pluck('instansi', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $dospems = \App\Models\Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $monitoringMagang->load('mahasiswa', 'magang');
 
-        return view('frontend.monitoringMagangs.edit', compact('magangs', 'mahasiswas', 'monitoringMagang'));
+        return view('frontend.monitoringMagangs.edit', compact('magangs', 'mahasiswas', 'dospems', 'monitoringMagang'));
     }
 
     public function update(UpdateMonitoringMagangRequest $request, MonitoringMagang $monitoringMagang)

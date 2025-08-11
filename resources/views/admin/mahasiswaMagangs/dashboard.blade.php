@@ -175,7 +175,7 @@
                                     <div class="mt-2">
                                         <small class="text-info">
                                             <i class="fas fa-chart-line"></i> 
-                                            Monitoring Reports: {{ $monitoringCount }}/5
+                                            Monitoring Reports: {{ $monitoringCount }}/1
                                         </small>
                                         @if($student->pretest_completed_at)
                                             @php
@@ -252,7 +252,11 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="dosen_pembimbing">Supervising Lecturer (Dosen Pembimbing)</label>
-            <input type="text" name="dosen_pembimbing" id="dosen_pembimbing" class="form-control" required>
+            <select name="dosen_pembimbing" id="dosen_pembimbing" class="form-control select2" required>
+              @foreach($dospems as $id => $entry)
+                <option value="{{ $id }}">{{ $entry }}</option>
+              @endforeach
+            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -270,6 +274,13 @@
 @parent
 <script>
 $(document).ready(function() {
+    // Initialize select2
+    $('.select2').select2({
+        dropdownParent: $('#approve-modal'),
+        placeholder: 'Select Supervising Lecturer',
+        allowClear: true
+    });
+
     // Approve button click handler
     $('.approve-btn').on('click', function() {
         let id = $(this).data('id');

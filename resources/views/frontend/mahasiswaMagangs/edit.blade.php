@@ -178,7 +178,12 @@
                         </div>
                         <div class="form-group">
                             <label for="dosen_pembimbing">{{ trans('cruds.mahasiswaMagang.fields.dosen_pembimbing') }}</label>
-                            <input class="form-control" type="text" name="dosen_pembimbing" id="dosen_pembimbing" value="{{ old('dosen_pembimbing', $mahasiswaMagang->dosen_pembimbing) }}">
+                            <select class="form-control select2" name="dosen_pembimbing" id="dosen_pembimbing">
+                                <option value="">{{ trans('global.pleaseSelect') }}</option>
+                                @foreach($dospems as $id => $entry)
+                                    <option value="{{ $id }}" {{ old('dosen_pembimbing', $mahasiswaMagang->dosen_pembimbing) == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                                @endforeach
+                            </select>
                             @if($errors->has('dosen_pembimbing'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('dosen_pembimbing') }}

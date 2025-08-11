@@ -26,6 +26,9 @@
                         <li><a class="dropdown-item" href="{{ route('magang') }}">Internship/Magang</a></li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('news', ['category' => 'acara-berita']) }}" class="nav-link">News</a>
+                </li>
                 <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="newsdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Achievement
@@ -35,7 +38,7 @@
                         {{-- @foreach ($categoryMenus = categoryMenu() as $categoryMenu)
                             <li><a class="dropdown-item" href="{{ route('news', ['category' => $categoryMenu->slug]) }}">{{ $categoryMenu->name }}</a></li>
                         @endforeach --}}
-                        <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">News</a></li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('news', ['category' => 'acara-berita']) }}">News</a></li> --}}
                         {{-- <li><a class="dropdown-item" href="{{ route('news', ['category' => 'beasiswa']) }}">Beasiswa</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('prestasi') }}">Prestasi Mahasiswa</a></li>
                         <li><a class="dropdown-item" href="{{ route('jadwal-lomba') }}">Jadwal Lomba</a></li>

@@ -133,6 +133,107 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Academic Documents -->
+                            <tr>
+                                <td>KHS (Kartu Hasil Studi)</td>
+                                <td>
+                                    <span class="badge {{ $mahasiswaMagang->khs ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $mahasiswaMagang->khs ? 'Uploaded' : 'Missing' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($mahasiswaMagang->khs)
+                                        <a href="{{ $mahasiswaMagang->khs->getUrl() }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary embed-pdf-btn" data-title="KHS (Kartu Hasil Studi)" data-url="{{ $mahasiswaMagang->khs->getUrl() }}">
+                                            <i class="fa fa-file"></i> Preview
+                                        </button>
+                                    @else
+                                        <span class="text-danger">Document not uploaded</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>KRS (Kartu Rencana Studi)</td>
+                                <td>
+                                    <span class="badge {{ $mahasiswaMagang->krs ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $mahasiswaMagang->krs ? 'Uploaded' : 'Missing' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($mahasiswaMagang->krs)
+                                        <a href="{{ $mahasiswaMagang->krs->getUrl() }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary embed-pdf-btn" data-title="KRS (Kartu Rencana Studi)" data-url="{{ $mahasiswaMagang->krs->getUrl() }}">
+                                            <i class="fa fa-file"></i> Preview
+                                        </button>
+                                    @else
+                                        <span class="text-danger">Document not uploaded</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Form Persetujuan Dosen PA</td>
+                                <td>
+                                    <span class="badge {{ $mahasiswaMagang->form_persetujuan_dosen_pa ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $mahasiswaMagang->form_persetujuan_dosen_pa ? 'Uploaded' : 'Missing' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($mahasiswaMagang->form_persetujuan_dosen_pa)
+                                        <a href="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary embed-pdf-btn" data-title="Form Persetujuan Dosen PA" data-url="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}">
+                                            <i class="fa fa-file"></i> Preview
+                                        </button>
+                                    @else
+                                        <span class="text-danger">Document not uploaded</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Surat Persetujuan Rekognisi</td>
+                                <td>
+                                    <span class="badge {{ $mahasiswaMagang->surat_persetujuan_rekognisi ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $mahasiswaMagang->surat_persetujuan_rekognisi ? 'Uploaded' : 'Missing' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($mahasiswaMagang->surat_persetujuan_rekognisi)
+                                        <a href="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary embed-pdf-btn" data-title="Surat Persetujuan Rekognisi" data-url="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}">
+                                            <i class="fa fa-file"></i> Preview
+                                        </button>
+                                    @else
+                                        <span class="text-danger">Document not uploaded</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Logbook MBKM</td>
+                                <td>
+                                    <span class="badge {{ $mahasiswaMagang->logbook_mbkm ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $mahasiswaMagang->logbook_mbkm ? 'Uploaded' : 'Missing' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($mahasiswaMagang->logbook_mbkm)
+                                        <a href="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary embed-pdf-btn" data-title="Logbook MBKM" data-url="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}">
+                                            <i class="fa fa-file"></i> Preview
+                                        </button>
+                                    @else
+                                        <span class="text-danger">Document not uploaded</span>
+                                    @endif
+                                </td>
+                            </tr>
                             <tr>
                                 <td>Proposal Magang</td>
                                 <td>
@@ -409,6 +510,7 @@
                                     @endif
                                 </td>
                             </tr>
+                            
                         </tbody>
                     </table>
                 </div>

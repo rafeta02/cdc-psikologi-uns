@@ -201,8 +201,8 @@ class MahasiswaMagangExport implements FromCollection, WithHeadings, WithMapping
             // Check monitoring requirements
             $monitoringCount = $row->monitorings->count();
             
-            if ($monitoringCount < 5) {
-                return 'Phase 3: Internship Period (' . $monitoringCount . '/5 reports)';
+                    if ($monitoringCount < 1) {
+            return 'Phase 3: Internship Period (' . $monitoringCount . '/1 reports)';
             } else {
                 // Check if 1 month has passed since pretest
                 $pretestDate = $row->pretest_completed_at;

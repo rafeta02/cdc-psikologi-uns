@@ -135,8 +135,21 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
+            
+            <!-- Application Status Alert -->
+            @if(isset($applicationStatus))
+            <div class="alert alert-{{ $applicationStatus['type'] === 'success' ? 'success' : ($applicationStatus['type'] === 'warning' ? 'warning' : 'info') }} alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-{{ $applicationStatus['type'] === 'success' ? 'check-circle' : ($applicationStatus['type'] === 'warning' ? 'exclamation-triangle' : 'info-circle') }}"></i>
+                <strong>Application Status:</strong> {{ $applicationStatus['message'] }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+            
             @can('mahasiswa_magang_create')
                 <div class="action-buttons">
+                    @if($canApply ?? true)
                         <a class="btn btn-success" href="{{ route('frontend.mahasiswa-magangs.create') }}">
                         <i class="fas fa-plus-circle"></i> {{ trans('global.add') }} {{ trans('cruds.mahasiswaMagang.title_singular') }}
                         </a>
@@ -146,6 +159,17 @@
                         <a class="btn btn-info" href="{{ route('frontend.mahasiswa-magangs.create') }}">
                         <i class="fas fa-file-signature"></i> Direct Internship Application
                         </a>
+                    @else
+                        <button class="btn btn-secondary" disabled title="You already have an active application">
+                        <i class="fas fa-lock"></i> Application Restricted
+                        </button>
+                        <button class="btn btn-secondary" disabled title="You already have an active application">
+                        <i class="fas fa-lock"></i> Apply Restricted
+                        </button>
+                        <button class="btn btn-secondary" disabled title="You already have an active application">
+                        <i class="fas fa-lock"></i> Direct Application Restricted
+                        </button>
+                    @endif
                         <a class="btn btn-secondary" href="{{ route('frontend.test-magangs.index') }}">
                         <i class="fas fa-chart-bar"></i> My Test Results
                         </a>
@@ -165,10 +189,10 @@
                                 $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $mahasiswaMagang->id)->count();
                                 $monitoringRequirements = [
                                     'current_count' => $monitoringCount,
-                                    'minimum_required' => 5,
-                                    'is_sufficient' => $monitoringCount >= 5,
-                                    'warning_message' => $monitoringCount < 5 ? 
-                                        "Warning: You need at least 5 monitoring reports. Current: {$monitoringCount}/5" : null
+                                    'minimum_required' => 1,
+                                                            'is_sufficient' => $monitoringCount >= 1,
+                        'warning_message' => $monitoringCount < 1 ?
+                            "Warning: You need at least 1 monitoring report. Current: {$monitoringCount}/1" : null
                                 ];
                                 
                                 // Check posttest availability
@@ -375,6 +399,9 @@
                                                                     <i class="fas fa-clock text-muted"></i> Post-Test ({{ $postTestReason }})
                                                                 </button>
                                                             @endif
+                                                            <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.take-test', ['magang_id' => $mahasiswaMagang->id, 'type' => 'POSTTEST']) }}">
+                                                                <i class="fas fa-clipboard-check text-success"></i> Take Post-Test
+                                                            </a>
                                                         @endif
                                                         
                                                         <div class="dropdown-divider"></div>
@@ -393,14 +420,18 @@
                                                                 <i class="fas fa-file-upload text-primary"></i> Upload Required Documents
                                                             </a>
                                                             
-                                                            <!-- Final Documents - Only show if monitoring requirements met -->
-                                                            @if($monitoringRequirements['is_sufficient'])
+                                                            <!-- Final Documents - Only show if posttest completed and monitoring requirements met -->
+                                                            @if($mahasiswaMagang->posttest && $mahasiswaMagang->posttest_completed_at && $monitoringRequirements['is_sufficient'])
                                                                 <a class="dropdown-item" href="{{ route('frontend.mahasiswa-magangs.upload-final-documents', $mahasiswaMagang->id) }}">
                                                                     <i class="fas fa-file-archive text-success"></i> Upload Final Documents
                                                                 </a>
+                                                            @elseif(!$mahasiswaMagang->posttest || !$mahasiswaMagang->posttest_completed_at)
+                                                                <button class="dropdown-item disabled" title="Complete posttest first">
+                                                                    <i class="fas fa-file-archive text-muted"></i> Upload Final Documents (Complete posttest first)
+                                                                </button>
                                                             @else
-                                                                <button class="dropdown-item disabled" title="Complete minimum 5 monitoring reports first">
-                                                                    <i class="fas fa-file-archive text-muted"></i> Upload Final Documents (Need 5 monitoring reports)
+                                                                <button class="dropdown-item disabled" title="Complete minimum monitoring reports first">
+                                                                    <i class="fas fa-file-archive text-muted"></i> Upload Final Documents (Need monitoring reports)
                                                                 </button>
                                                             @endif
                                                         @endif

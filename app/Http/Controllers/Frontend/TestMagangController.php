@@ -151,7 +151,8 @@ class TestMagangController extends Controller
                     ->with('error', 'Invalid pretest date. Please contact administrator.');
             }
             
-            $oneMonthLater = $pretestDate->copy()->addMonth();
+            // $oneMonthLater = $pretestDate->copy()->addMonth();
+            $oneMonthLater = $pretestDate->copy();
             $now = now();
             
             if ($now->lt($oneMonthLater)) {
@@ -160,11 +161,11 @@ class TestMagangController extends Controller
                     ->with('error', "Posttest will be available in {$daysRemaining} days. You must wait 1 month after completing the pretest.");
             }
             
-            // Check monitoring requirements (minimum 5 reports)
+            // Check monitoring requirements (minimum 1 report)
             $monitoringCount = \App\Models\MonitoringMagang::where('magang_id', $magang_id)->count();
-            if ($monitoringCount < 5) {
+            if ($monitoringCount < 1) {
                 return redirect()->route('frontend.mahasiswa-magangs.index')
-                    ->with('error', "You need at least 5 monitoring reports before taking the posttest. Current: {$monitoringCount}/5");
+                    ->with('error', "You need at least 1 monitoring report before taking the posttest. Current: {$monitoringCount}/1");
             }
         }
         
