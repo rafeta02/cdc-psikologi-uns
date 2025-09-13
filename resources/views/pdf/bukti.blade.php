@@ -57,9 +57,9 @@
                     </div>
                 @endif
             </div>
-            {{-- <p style="font-size: 12px; color: #666; margin-top: 10px;">
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">
                 Atau kunjungi: {{ route('prestasi.public-show', $prestasi->uuid ?? $prestasi->id) }}
-            </p> --}}
+            </p>
         </div>
 
     </div>

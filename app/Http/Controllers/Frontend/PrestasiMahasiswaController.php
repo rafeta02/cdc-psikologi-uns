@@ -292,6 +292,25 @@ class PrestasiMahasiswaController extends Controller
     public function printBukti(Request $request)
     {
         $prestasi = PrestasiMahasiswa::with('pesertas')->find($request->id);
+        
+        // Check if prestasi exists
+        if (!$prestasi) {
+            return redirect()->route('frontend.prestasi-mahasiswas.index')
+                ->with('error', 'Prestasi mahasiswa tidak ditemukan.');
+        }
+        
+        // Check if user owns this prestasi
+        if ($prestasi->user_id !== auth()->id()) {
+            return redirect()->route('frontend.prestasi-mahasiswas.index')
+                ->with('error', 'Anda tidak memiliki akses untuk print bukti prestasi ini.');
+        }
+        
+        // Check if prestasi is validated by admin
+        if (($prestasi->validation_status ?? 'pending') !== 'validated') {
+            return redirect()->route('frontend.prestasi-mahasiswas.index')
+                ->with('error', 'Bukti prestasi hanya dapat di-print setelah diverifikasi oleh admin.');
+        }
+        
         // Ensure QR code is generated for this prestasi
         if (empty($prestasi->qr_code_path)) {
             $prestasi->generateQrCode();

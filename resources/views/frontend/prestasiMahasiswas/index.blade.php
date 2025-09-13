@@ -470,14 +470,21 @@
                                                         </a>
                                                     @else
                                                         <div class="dropdown-divider"></div>
-                                                        <form action="{{ route('frontend.prestasi-mahasiswas.printBukti') }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Print bukti prestasi?');">
-                                                <input type="hidden" name="id" value="{{ $prestasiMahasiswa->id }}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                            <button type="submit" class="dropdown-item">
-                                                                <i class="fas fa-print text-danger"></i> Print Bukti
-                                                            </button>
-                                            </form>
-                                            @endif
+                                                        @if(($prestasiMahasiswa->validation_status ?? 'pending') === 'validated')
+                                                            <form action="{{ route('frontend.prestasi-mahasiswas.printBukti') }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Print bukti prestasi?');">
+                                                            <input type="hidden" name="id" value="{{ $prestasiMahasiswa->id }}">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fas fa-print text-success"></i> Print Bukti
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <span class="dropdown-item text-muted" title="Bukti hanya dapat diprint setelah diverifikasi oleh admin">
+                                                                <i class="fas fa-print text-muted"></i> Print Bukti 
+                                                                <small>(Perlu Verifikasi)</small>
+                                                            </span>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             </div>
                                             <small class="text-muted">ID: {{ $prestasiMahasiswa->id }}</small>
