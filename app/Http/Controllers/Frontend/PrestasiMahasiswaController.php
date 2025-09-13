@@ -299,11 +299,6 @@ class PrestasiMahasiswaController extends Controller
                 ->with('error', 'Prestasi mahasiswa tidak ditemukan.');
         }
         
-        // Check if user owns this prestasi
-        if ($prestasi->user_id !== auth()->id()) {
-            return redirect()->route('frontend.prestasi-mahasiswas.index')
-                ->with('error', 'Anda tidak memiliki akses untuk print bukti prestasi ini.');
-        }
         
         // Check if prestasi is validated by admin
         if (($prestasi->validation_status ?? 'pending') !== 'validated') {
