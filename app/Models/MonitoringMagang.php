@@ -64,7 +64,7 @@ class MonitoringMagang extends Model implements HasMedia
 
     public function dospem()
     {
-        return $this->belongsTo(\App\Models\Dospem::class, 'pembimbing', 'nama');
+        return $this->belongsTo(Dospem::class, 'pembimbing');
     }
 
     public function getTanggalAttribute($value)
