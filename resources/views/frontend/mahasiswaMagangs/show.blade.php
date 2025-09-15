@@ -158,9 +158,17 @@
                                     </th>
                                     <td>
                                         @foreach($mahasiswaMagang->laporan_akhir as $key => $media)
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions mb-2">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $media->getUrl() }}" 
+                                                        data-name="{{ $media->name }}"
+                                                        data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endforeach
                                     </td>
                                 </tr>
@@ -170,9 +178,17 @@
                                     </th>
                                     <td>
                                         @foreach($mahasiswaMagang->presensi as $key => $media)
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions mb-2">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $media->getUrl() }}" 
+                                                        data-name="{{ $media->name }}"
+                                                        data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endforeach
                                     </td>
                                 </tr>
@@ -182,9 +198,17 @@
                                     </th>
                                     <td>
                                         @foreach($mahasiswaMagang->sertifikat as $key => $media)
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions mb-2">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $media->getUrl() }}" 
+                                                        data-name="{{ $media->name }}"
+                                                        data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endforeach
                                     </td>
                                 </tr>
@@ -194,9 +218,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->khs)
-                                            <a href="{{ $mahasiswaMagang->khs->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->khs->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->khs->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->khs->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->khs->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -206,9 +238,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->krs)
-                                            <a href="{{ $mahasiswaMagang->krs->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->krs->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->krs->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->krs->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->krs->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -218,9 +258,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->form_persetujuan_dosen_pa)
-                                            <a href="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->form_persetujuan_dosen_pa->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->form_persetujuan_dosen_pa->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -230,9 +278,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->surat_persetujuan_rekognisi)
-                                            <a href="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->surat_persetujuan_rekognisi->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->surat_persetujuan_rekognisi->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -242,9 +298,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->logbook_mbkm)
-                                            <a href="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->logbook_mbkm->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->logbook_mbkm->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->logbook_mbkm->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -254,9 +318,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->form_penilaian_pembimbing_lapangan)
-                                            <a href="{{ $mahasiswaMagang->form_penilaian_pembimbing_lapangan->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->form_penilaian_pembimbing_lapangan->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->form_penilaian_pembimbing_lapangan->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->form_penilaian_pembimbing_lapangan->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->form_penilaian_pembimbing_lapangan->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -266,9 +338,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->form_penilaian_dosen_pembimbing)
-                                            <a href="{{ $mahasiswaMagang->form_penilaian_dosen_pembimbing->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->form_penilaian_dosen_pembimbing->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->form_penilaian_dosen_pembimbing->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->form_penilaian_dosen_pembimbing->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->form_penilaian_dosen_pembimbing->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -278,9 +358,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->berita_acara_seminar)
-                                            <a href="{{ $mahasiswaMagang->berita_acara_seminar->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->berita_acara_seminar->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->berita_acara_seminar->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->berita_acara_seminar->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->berita_acara_seminar->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -290,9 +378,17 @@
                                     </th>
                                     <td>
                                         @foreach($mahasiswaMagang->presensi_kehadiran_seminar as $key => $media)
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions mb-2">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $media->getUrl() }}" 
+                                                        data-name="{{ $media->name }}"
+                                                        data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endforeach
                                     </td>
                                 </tr>
@@ -302,9 +398,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->notulen_pertanyaan)
-                                            <a href="{{ $mahasiswaMagang->notulen_pertanyaan->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->notulen_pertanyaan->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->notulen_pertanyaan->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->notulen_pertanyaan->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->notulen_pertanyaan->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -314,9 +418,17 @@
                                     </th>
                                     <td>
                                         @if($mahasiswaMagang->tanda_bukti_penyerahan_laporan)
-                                            <a href="{{ $mahasiswaMagang->tanda_bukti_penyerahan_laporan->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $mahasiswaMagang->tanda_bukti_penyerahan_laporan->getUrl() }}" 
+                                                        data-name="{{ $mahasiswaMagang->tanda_bukti_penyerahan_laporan->name }}"
+                                                        data-type="{{ pathinfo($mahasiswaMagang->tanda_bukti_penyerahan_laporan->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $mahasiswaMagang->tanda_bukti_penyerahan_laporan->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
@@ -326,9 +438,17 @@
                                     </th>
                                     <td>
                                         @foreach($mahasiswaMagang->berkas_magang as $key => $media)
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                {{ trans('global.view_file') }}
-                                            </a>
+                                            <div class="file-actions mb-2">
+                                                <button type="button" class="btn btn-sm btn-primary preview-file" 
+                                                        data-url="{{ $media->getUrl() }}" 
+                                                        data-name="{{ $media->name }}"
+                                                        data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                    <i class="fas fa-eye"></i> Preview
+                                                </button>
+                                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-secondary">
+                                                    <i class="fas fa-external-link-alt"></i> {{ trans('global.view_file') }}
+                                                </a>
+                                            </div>
                                         @endforeach
                                     </td>
                                 </tr>
@@ -394,9 +514,17 @@
                                                 <td>{{ $monitoring->dospem->nama ?? $monitoring->pembimbing ?? '' }}</td>
                                                 <td>
                                                     @foreach($monitoring->bukti as $media)
-                                                    <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-xs btn-info">
-                                                        <i class="fa fa-file"></i>
-                                                    </a>
+                                                    <div class="file-actions d-inline-block mr-1">
+                                                        <button type="button" class="btn btn-xs btn-primary preview-file" 
+                                                                data-url="{{ $media->getUrl() }}" 
+                                                                data-name="{{ $media->name }}"
+                                                                data-type="{{ pathinfo($media->file_name, PATHINFO_EXTENSION) }}">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                        <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-xs btn-info">
+                                                            <i class="fa fa-file"></i>
+                                                        </a>
+                                                    </div>
                                                     @endforeach
                                                 </td>
                                                 <td>
@@ -505,4 +633,90 @@
         </div>
     </div>
 </div>
+
+<!-- File Preview Modal -->
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filePreviewModalLabel">File Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="min-height: 500px;">
+                <div id="previewContent" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="#" id="downloadFileBtn" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-download"></i> Download File
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    // Handle preview file button clicks
+    $('.preview-file').on('click', function() {
+        var fileUrl = $(this).data('url');
+        var fileName = $(this).data('name');
+        var fileType = $(this).data('type').toLowerCase();
+        
+        // Set modal title and download link
+        $('#filePreviewModalLabel').text('Preview: ' + fileName);
+        $('#downloadFileBtn').attr('href', fileUrl);
+        
+        // Show modal
+        $('#filePreviewModal').modal('show');
+        
+        // Show loading spinner
+        $('#previewContent').html('<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+        
+        // Generate preview based on file type
+        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType)) {
+            // Image preview
+            $('#previewContent').html('<img src="' + fileUrl + '" class="img-fluid" alt="' + fileName + '" style="max-height: 70vh;">');
+        } else if (fileType === 'pdf') {
+            // PDF preview
+            $('#previewContent').html('<iframe src="' + fileUrl + '" width="100%" height="600px" style="border: none;"></iframe>');
+        } else if (['doc', 'docx'].includes(fileType)) {
+            // Word document preview using Google Docs Viewer
+            var viewerUrl = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fileUrl);
+            $('#previewContent').html('<iframe src="' + viewerUrl + '" width="100%" height="600px" style="border: none;"></iframe>');
+        } else if (['xls', 'xlsx'].includes(fileType)) {
+            // Excel preview using Google Sheets Viewer
+            var viewerUrl = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fileUrl);
+            $('#previewContent').html('<iframe src="' + viewerUrl + '" width="100%" height="600px" style="border: none;"></iframe>');
+        } else if (['ppt', 'pptx'].includes(fileType)) {
+            // PowerPoint preview using Google Docs Viewer
+            var viewerUrl = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(fileUrl);
+            $('#previewContent').html('<iframe src="' + viewerUrl + '" width="100%" height="600px" style="border: none;"></iframe>');
+        } else if (fileType === 'txt') {
+            // Text file preview
+            $.get(fileUrl, function(data) {
+                $('#previewContent').html('<pre style="text-align: left; white-space: pre-wrap; max-height: 600px; overflow-y: auto;">' + $('<div>').text(data).html() + '</pre>');
+            }).fail(function() {
+                $('#previewContent').html('<div class="alert alert-warning">Cannot preview this text file. <a href="' + fileUrl + '" target="_blank">Click here to download</a></div>');
+            });
+        } else {
+            // Unsupported file type
+            $('#previewContent').html('<div class="alert alert-info"><i class="fas fa-file"></i><br><br>Preview not available for this file type.<br><br><strong>File:</strong> ' + fileName + '<br><strong>Type:</strong> ' + fileType.toUpperCase() + '<br><br><a href="' + fileUrl + '" target="_blank" class="btn btn-primary"><i class="fas fa-download"></i> Download File</a></div>');
+        }
+    });
+    
+    // Clear modal content when closed
+    $('#filePreviewModal').on('hidden.bs.modal', function() {
+        $('#previewContent').html('<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>');
+    });
+});
+</script>
 @endsection
