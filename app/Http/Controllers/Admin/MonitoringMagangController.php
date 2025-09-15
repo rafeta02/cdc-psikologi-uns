@@ -51,7 +51,7 @@ class MonitoringMagangController extends Controller
             });
 
             $table->editColumn('pembimbing', function ($row) {
-                return $row->pembimbing ? $row->pembimbing : '';
+                return $row->dospem->nama ?? $row->pembimbing ?? '';
             });
 
             $table->editColumn('tempat', function ($row) {

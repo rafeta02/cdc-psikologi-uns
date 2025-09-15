@@ -85,7 +85,7 @@
                                             {{ $monitoringMagang->mahasiswa->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $monitoringMagang->pembimbing ?? '' }}
+                                            {{ $monitoringMagang->dospem->nama ?? $monitoringMagang->pembimbing ?? '' }}
                                         </td>
                                         <td>
                                             {{ $monitoringMagang->tanggal ?? '' }}

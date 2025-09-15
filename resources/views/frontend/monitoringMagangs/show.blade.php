@@ -39,7 +39,7 @@
                                         {{ trans('cruds.monitoringMagang.fields.pembimbing') }}
                                     </th>
                                     <td>
-                                        {{ $monitoringMagang->pembimbing }}
+                                        {{ $monitoringMagang->dospem->nama ?? $monitoringMagang->pembimbing }}
                                     </td>
                                 </tr>
                                 <tr>
