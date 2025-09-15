@@ -33,18 +33,8 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.monitoringMagang.fields.magang_helper') }}</span>
             </div>
-            <div class="form-group">
-                <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
-                <select class="form-control select2 {{ $errors->has('pembimbing') ? 'is-invalid' : '' }}" name="pembimbing" id="pembimbing">
-                    @foreach($dospems as $id => $entry)
-                        <option value="{{ $entry }}" {{ old('pembimbing') == $entry ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('pembimbing'))
-                    <span class="text-danger">{{ $errors->first('pembimbing') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.monitoringMagang.fields.pembimbing_helper') }}</span>
-            </div>
+            <!-- Pembimbing will be auto-assigned from MahasiswaMagang's dosen_pembimbing -->
+            <input type="hidden" name="pembimbing" id="pembimbing" value="">
             <div class="form-group">
                 <label for="tanggal">{{ trans('cruds.monitoringMagang.fields.tanggal') }}</label>
                 <input class="form-control date {{ $errors->has('tanggal') ? 'is-invalid' : '' }}" type="text" name="tanggal" id="tanggal" value="{{ old('tanggal') }}">
@@ -94,6 +84,30 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
+        // Auto-assign pembimbing when magang is selected
+        $('#magang_id').on('change', function() {
+            var magangId = $(this).val();
+            if (magangId) {
+                $.ajax({
+                    url: '{{ route("admin.monitoring-magangs.get-dospem") }}',
+                    type: 'GET',
+                    data: { magang_id: magangId },
+                    success: function(response) {
+                        if (response.success && response.dospem) {
+                            $('#pembimbing').val(response.dospem);
+                        } else {
+                            $('#pembimbing').val('');
+                        }
+                    },
+                    error: function() {
+                        $('#pembimbing').val('');
+                    }
+                });
+            } else {
+                $('#pembimbing').val('');
+            }
+        });
+
   function SimpleUploadAdapter(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = function(loader) {
       return {

@@ -25,7 +25,7 @@ class MonitoringMagangController extends Controller
         abort_if(Gate::denies('monitoring_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = MonitoringMagang::with(['mahasiswa', 'magang'])->select(sprintf('%s.*', (new MonitoringMagang)->table));
+            $query = MonitoringMagang::with(['mahasiswa', 'magang', 'dospem'])->select(sprintf('%s.*', (new MonitoringMagang)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -115,7 +115,7 @@ class MonitoringMagangController extends Controller
 
         $dospems = \App\Models\Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $monitoringMagang->load('mahasiswa', 'magang');
+        $monitoringMagang->load('mahasiswa', 'magang', 'dospem');
 
         return view('admin.monitoringMagangs.edit', compact('magangs', 'mahasiswas', 'dospems', 'monitoringMagang'));
     }
@@ -145,7 +145,7 @@ class MonitoringMagangController extends Controller
     {
         abort_if(Gate::denies('monitoring_magang_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $monitoringMagang->load('mahasiswa', 'magang');
+        $monitoringMagang->load('mahasiswa', 'magang', 'dospem');
 
         return view('admin.monitoringMagangs.show', compact('monitoringMagang'));
     }
@@ -180,5 +180,28 @@ class MonitoringMagangController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function getDospem(Request $request)
+    {
+        $magangId = $request->get('magang_id');
+        
+        if (!$magangId) {
+            return response()->json(['success' => false, 'message' => 'Magang ID is required']);
+        }
+
+        $mahasiswaMagang = MahasiswaMagang::find($magangId);
+        
+        if (!$mahasiswaMagang) {
+            return response()->json(['success' => false, 'message' => 'Magang not found']);
+        }
+
+        $dospem = $mahasiswaMagang->dosen_pembimbing;
+        
+        if (!$dospem) {
+            return response()->json(['success' => false, 'message' => 'No dosen pembimbing assigned to this magang']);
+        }
+
+        return response()->json(['success' => true, 'dospem' => $dospem]);
     }
 }

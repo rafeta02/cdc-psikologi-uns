@@ -62,6 +62,11 @@ class MonitoringMagang extends Model implements HasMedia
         return $this->belongsTo(MahasiswaMagang::class, 'magang_id');
     }
 
+    public function dospem()
+    {
+        return $this->belongsTo(\App\Models\Dospem::class, 'pembimbing', 'nama');
+    }
+
     public function getTanggalAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;

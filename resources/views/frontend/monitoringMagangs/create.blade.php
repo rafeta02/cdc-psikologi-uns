@@ -30,6 +30,7 @@
                         @if(isset($selectedMahasiswa) && isset($selectedMagang))
                             <input type="hidden" name="mahasiswa_id" value="{{ $selectedMahasiswa }}">
                             <input type="hidden" name="magang_id" value="{{ $selectedMagang }}">
+                            <input type="hidden" name="pembimbing" value="{{ $mahasiswaMagang->dosen_pembimbing }}">
                         @else
                             <div class="form-group">
                                 <label for="mahasiswa_id">{{ trans('cruds.monitoringMagang.fields.mahasiswa') }}</label>
@@ -60,20 +61,8 @@
                                 <span class="help-block">{{ trans('cruds.monitoringMagang.fields.magang_helper') }}</span>
                             </div>
                         @endif
-                        <div class="form-group">
-                            <label for="pembimbing">{{ trans('cruds.monitoringMagang.fields.pembimbing') }}</label>
-                            <select class="form-control select2" name="pembimbing" id="pembimbing">
-                                @foreach($dospems as $id => $entry)
-                                    <option value="{{ $entry }}" {{ old('pembimbing', isset($mahasiswaMagang) ? $mahasiswaMagang->dosen_pembimbing : '') == $entry ? 'selected' : '' }}>{{ $entry }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('pembimbing'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('pembimbing') }}
-                                </div>
-                            @endif
-                            <span class="help-block">{{ trans('cruds.monitoringMagang.fields.pembimbing_helper') }}</span>
-                        </div>
+                        <!-- Pembimbing will be auto-assigned from MahasiswaMagang's dosen_pembimbing -->
+                        <input type="hidden" name="pembimbing" id="pembimbing" value="{{ isset($mahasiswaMagang) ? $mahasiswaMagang->dosen_pembimbing : '' }}">
                         <div class="form-group">
                             <label for="tanggal">{{ trans('cruds.monitoringMagang.fields.tanggal') }}</label>
                             <input class="form-control date" type="text" name="tanggal" id="tanggal" value="{{ old('tanggal') }}">
@@ -249,5 +238,29 @@ Dropzone.options.buktiDropzone = {
          return _results
      }
 }
+
+// Auto-assign pembimbing when magang is selected
+$('#magang_id').on('change', function() {
+    var magangId = $(this).val();
+    if (magangId) {
+        $.ajax({
+            url: '{{ route("frontend.monitoring-magangs.get-dospem") }}',
+            type: 'GET',
+            data: { magang_id: magangId },
+            success: function(response) {
+                if (response.success && response.dospem) {
+                    $('#pembimbing').val(response.dospem);
+                } else {
+                    $('#pembimbing').val('');
+                }
+            },
+            error: function() {
+                $('#pembimbing').val('');
+            }
+        });
+    } else {
+        $('#pembimbing').val('');
+    }
+});
 </script>
 @endsection

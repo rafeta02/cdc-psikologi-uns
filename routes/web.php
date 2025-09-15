@@ -267,6 +267,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('monitoring-magangs/destroy', 'MonitoringMagangController@massDestroy')->name('monitoring-magangs.massDestroy');
     Route::post('monitoring-magangs/media', 'MonitoringMagangController@storeMedia')->name('monitoring-magangs.storeMedia');
     Route::post('monitoring-magangs/ckmedia', 'MonitoringMagangController@storeCKEditorImages')->name('monitoring-magangs.storeCKEditorImages');
+    Route::get('monitoring-magangs/get-dospem', 'MonitoringMagangController@getDospem')->name('monitoring-magangs.get-dospem');
     Route::resource('monitoring-magangs', 'MonitoringMagangController');
 
     // Contest
@@ -363,6 +364,7 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('monitoring-magangs/destroy', 'MonitoringMagangController@massDestroy')->name('monitoring-magangs.massDestroy');
     Route::post('monitoring-magangs/media', 'MonitoringMagangController@storeMedia')->name('monitoring-magangs.storeMedia');
     Route::post('monitoring-magangs/ckmedia', 'MonitoringMagangController@storeCKEditorImages')->name('monitoring-magangs.storeCKEditorImages');
+    Route::get('monitoring-magangs/get-dospem', 'MonitoringMagangController@getDospem')->name('monitoring-magangs.get-dospem');
     Route::resource('monitoring-magangs', 'MonitoringMagangController');
 
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
