@@ -359,7 +359,7 @@ function clearDates() {
         <div class="modal-body">
           <div class="form-group">
             <label for="dosen_pembimbing">Dosen Pembimbing</label>
-            <select name="dosen_pembimbing" id="dosen_pembimbing" class="form-control" required>
+            <select name="dosen_pembimbing" id="dosen_pembimbing" class="form-control select2" required>
               @foreach($dospems as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
               @endforeach
