@@ -283,6 +283,21 @@
     let id = $(this).data('id');
     window.location.href = '{{ route("admin.mahasiswa-magangs.verify-documents", ":id") }}'.replace(':id', id);
   });
+  
+  // Initialize Select2 for dosen pembimbing dropdown
+  $('#approve-modal').on('shown.bs.modal', function () {
+    $('#dosen_pembimbing').select2({
+      dropdownParent: $('#approve-modal'),
+      placeholder: 'Pilih Dosen Pembimbing',
+      allowClear: false,
+      width: '100%'
+    });
+  });
+  
+  // Destroy Select2 when modal is hidden to prevent conflicts
+  $('#approve-modal').on('hidden.bs.modal', function () {
+    $('#dosen_pembimbing').select2('destroy');
+  });
 });
 
 // Export modal enhancements
@@ -359,7 +374,8 @@ function clearDates() {
         <div class="modal-body">
           <div class="form-group">
             <label for="dosen_pembimbing">Dosen Pembimbing</label>
-            <select name="dosen_pembimbing" id="dosen_pembimbing" class="form-control select2" required>
+            <select name="dosen_pembimbing" id="dosen_pembimbing" class="form-control" required>
+              <option value="">-- Pilih Dosen Pembimbing --</option>
               @foreach($dospems as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
               @endforeach
