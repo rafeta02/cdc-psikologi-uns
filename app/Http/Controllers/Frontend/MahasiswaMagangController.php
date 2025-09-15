@@ -884,10 +884,32 @@ class MahasiswaMagangController extends Controller
                 ->toMediaCollection('logbook_mbkm');
         }
 
-        Alert::success('Documents uploaded successfully');
+        // Check if any documents were uploaded and reset verification status if it was rejected
+        $documentUploaded = false;
+        $uploadedFields = [
+            'proposal_magang', 'surat_tugas', 'berkas_instansi', 'khs', 'krs', 
+            'form_persetujuan_dosen_pa', 'surat_persetujuan_rekognisi', 'logbook_mbkm'
+        ];
+        
+        foreach ($uploadedFields as $field) {
+            if ($request->hasFile($field)) {
+                $documentUploaded = true;
+                break;
+            }
+        }
+        
+        // If documents were uploaded and verification status is REJECTED, reset to PENDING
+        if ($documentUploaded && $mahasiswaMagang->verified === 'REJECTED') {
+            $mahasiswaMagang->update([
+                'verified' => 'PENDING',
+                'verification_notes' => 'Status automatically reset to PENDING due to new document uploads. Previous notes: ' . ($mahasiswaMagang->verification_notes ?? 'None')
+            ]);
+        }
+
+        Alert::success('Documents uploaded successfully' . ($documentUploaded && $mahasiswaMagang->verified === 'PENDING' ? '. Verification status has been reset to PENDING for admin review.' : ''));
 
         return redirect()->route('frontend.mahasiswa-magangs.upload-documents', $mahasiswaMagang->id)
-            ->with('success', 'Documents uploaded successfully');
+            ->with('success', 'Documents uploaded successfully' . ($documentUploaded && $mahasiswaMagang->verified === 'PENDING' ? '. Verification status has been reset to PENDING for admin review.' : ''));
     }
     
     /**
@@ -1016,8 +1038,52 @@ class MahasiswaMagangController extends Controller
             }
         }
 
+        // Check if any documents were uploaded and reset verification status if it was rejected
+        $documentUploaded = false;
+        
+        // Check if any of the file collections have new documents
+        $fileCollections = [
+            'laporan_akhir', 'presensi', 'sertifikat', 'presensi_kehadiran_seminar', 'berkas_magang'
+        ];
+        
+        foreach ($fileCollections as $collection) {
+            if ($request->input($collection, false)) {
+                $documentUploaded = true;
+                break;
+            }
+        }
+        
+        // Check single file fields
+        $singleFileFields = [
+            'form_penilaian_pembimbing_lapangan',
+            'form_penilaian_dosen_pembimbing',
+            'berita_acara_seminar',
+            'notulen_pertanyaan',
+            'tanda_bukti_penyerahan_laporan',
+            'khs',
+            'krs',
+            'form_persetujuan_dosen_pa',
+            'surat_persetujuan_rekognisi',
+            'logbook_mbkm'
+        ];
+        
+        foreach ($singleFileFields as $field) {
+            if ($request->input($field, false)) {
+                $documentUploaded = true;
+                break;
+            }
+        }
+        
+        // If documents were uploaded and verification status is REJECTED, reset to PENDING
+        if ($documentUploaded && $mahasiswaMagang->verified === 'REJECTED') {
+            $mahasiswaMagang->update([
+                'verified' => 'PENDING',
+                'verification_notes' => 'Status automatically reset to PENDING due to new document uploads. Previous notes: ' . ($mahasiswaMagang->verification_notes ?? 'None')
+            ]);
+        }
+
         return redirect()->route('frontend.mahasiswa-magangs.upload-final-documents', $mahasiswaMagang->id)
-            ->with('success', 'Final documents uploaded successfully');
+            ->with('success', 'Final documents uploaded successfully' . ($documentUploaded && $mahasiswaMagang->verified === 'PENDING' ? '. Verification status has been reset to PENDING for admin review.' : ''));
     }
 
     /**

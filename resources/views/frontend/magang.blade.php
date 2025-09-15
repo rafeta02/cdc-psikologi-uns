@@ -1,6 +1,6 @@
 @extends('layouts.jobcy')
 
-@section('title', "Magang - Career Development Center Fakultas Psikologi UNS")
+@section('title', "Internship - Career Development Center Fakultas Psikologi UNS")
 
 @section('content')
     <!-- Start home -->
@@ -9,12 +9,12 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="text-center text-white">
-                        <h3 class="mb-4">Magang</h3>
+                        <h3 class="mb-4">Internship</h3>
                         <div class="page-next">
                             <nav class="d-inline-block" aria-label="breadcrumb text-center">
                                 <ol class="breadcrumb justify-content-center">
                                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Magang</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Internship</li>
                                 </ol>
                             </nav>
                         </div>

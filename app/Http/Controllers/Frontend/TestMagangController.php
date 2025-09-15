@@ -19,7 +19,9 @@ class TestMagangController extends Controller
     {
         abort_if(Gate::denies('test_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $testMagangs = TestMagang::with(['mahasiswa', 'magang'])->get();
+        $testMagangs = TestMagang::with(['mahasiswa', 'magang'])
+            ->where('mahasiswa_id', auth()->id())
+            ->get();
 
         return view('frontend.testMagangs.index', compact('testMagangs'));
     }

@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                             
-                            <div class="col-lg-6">
+                            {{-- <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="dosen_pembimbing">Dosen Pembimbing</label>
                                     <select class="form-control select2" id="dosen_pembimbing" name="dosen_pembimbing">
@@ -152,7 +152,7 @@
                                         </div>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         
                         <div class="form-group mt-3">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Auditable;
 use App\Traits\MultiTenantModelTrait;
+use App\Traits\PublicVacancyTrait;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Vacancy extends Model implements HasMedia
 {
-    use SoftDeletes, MultiTenantModelTrait, InteractsWithMedia, Auditable, HasFactory, Sluggable;
+    use SoftDeletes, MultiTenantModelTrait, PublicVacancyTrait, InteractsWithMedia, Auditable, HasFactory, Sluggable;
 
     public $table = 'vacancies';
 

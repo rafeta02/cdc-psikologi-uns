@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Auditable;
 use App\Traits\MultiTenantModelTrait;
+use App\Traits\PublicPostTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends Model implements HasMedia
 {
-    use SoftDeletes, MultiTenantModelTrait, InteractsWithMedia, Auditable, HasFactory, Sluggable;
+    use SoftDeletes, MultiTenantModelTrait, PublicPostTrait, InteractsWithMedia, Auditable, HasFactory, Sluggable;
 
     public $table = 'posts';
 

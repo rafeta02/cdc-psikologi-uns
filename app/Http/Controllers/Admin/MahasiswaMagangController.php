@@ -30,7 +30,7 @@ class MahasiswaMagangController extends Controller
         abort_if(Gate::denies('mahasiswa_magang_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by'])->select(sprintf('%s.*', (new MahasiswaMagang)->table));
+            $query = MahasiswaMagang::with(['mahasiswa', 'magang', 'approved_by', 'verified_by', 'dospem'])->select(sprintf('%s.*', (new MahasiswaMagang)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -77,7 +77,7 @@ class MahasiswaMagangController extends Controller
                 return $row->approve ? MahasiswaMagang::APPROVE_SELECT[$row->approve] : '';
             });
             $table->editColumn('dosen_pembimbing', function ($row) {
-                return $row->dosen_pembimbing ? $row->dosen_pembimbing : '';
+                return $row->dospem ? $row->dospem->nama : '';
             });
             $table->editColumn('berkas_magang', function ($row) {
                 if (! $row->berkas_magang) {
@@ -104,7 +104,9 @@ class MahasiswaMagangController extends Controller
             return $table->make(true);
         }
 
-        return view('admin.mahasiswaMagangs.index');
+        $dospems = Dospem::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+        
+        return view('admin.mahasiswaMagangs.index', compact('dospems'));
     }
 
     public function create()

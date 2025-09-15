@@ -23,7 +23,7 @@
                     <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="jobsdropdown">
                         <li><a class="dropdown-item" href="{{ route('jobs') }}">Find By Position</a></li>
                         <li><a class="dropdown-item" href="{{ route('companies') }}">Find By Company</a></li>
-                        <li><a class="dropdown-item" href="{{ route('magang') }}">Internship/Magang</a></li>
+                        <li><a class="dropdown-item" href="{{ route('magang') }}">Internship</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -43,10 +43,11 @@
                         <li><a class="dropdown-item" href="{{ route('prestasi') }}">Prestasi Mahasiswa</a></li>
                         <li><a class="dropdown-item" href="{{ route('jadwal-lomba') }}">Jadwal Lomba</a></li>
                         <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis Prestasi</a></li>
+                        <li><a class="dropdown-item" href="https://uns.id/surveiprestasi">Survei Kepuasan</a></li>
                     </ul>
                 </li><!--end dropdown-->
                 <li class="nav-item">
-                    <a href="{{ route('magang') }}" class="nav-link">Magang</a>
+                    <a href="{{ route('magang') }}" class="nav-link">Internship</a>
                 </li>
                 {{-- <li class="nav-item dropdown dropdown-hover">
                     <a class="nav-link" href="javascript:void(0)" id="mbkmdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

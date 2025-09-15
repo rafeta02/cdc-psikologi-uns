@@ -28,7 +28,7 @@ class VacancyController extends Controller
     {
         abort_if(Gate::denies('vacancy_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $vacancies = Vacancy::with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->get();
+        $vacancies = Vacancy::public()->with(['company', 'experience', 'education', 'departments', 'position', 'industry', 'location', 'created_by'])->get();
 
         return view('frontend.vacancies.index', compact('vacancies'));
     }

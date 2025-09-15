@@ -42,11 +42,11 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $positions = Position::pluck('name', 'id');
-        $recentJobs = Vacancy::latest()->take(5)->get();
-        $interns = Vacancy::where('type', 'internship')->latest()->take(5)->get();
-        $fulltimes = Vacancy::where('type', 'fulltime')->latest()->take(5)->get();
+        $recentJobs = Vacancy::public()->latest()->take(5)->get();
+        $interns = Vacancy::public()->where('type', 'internship')->latest()->take(5)->get();
+        $fulltimes = Vacancy::public()->where('type', 'fulltime')->latest()->take(5)->get();
 
-        $posts = $posts = Post::whereHas('categories', function ($query) {
+        $posts = $posts = Post::public()->whereHas('categories', function ($query) {
             $query->where('slug', 'alumni-caring');
         })->where('status', 'published')->latest()->take(3)->get();
 
@@ -56,7 +56,7 @@ class HomeController extends Controller
     public function job(Request $request)
     {
         if ($request->ajax()) {
-            $query = Vacancy::query();
+            $query = Vacancy::public();
 
             if (!empty($request->name)) {
                 $query->where('name', 'like', '%' . $request->name . '%');
@@ -117,7 +117,7 @@ class HomeController extends Controller
         }
 
         // $jobs = Vacancy::where('close_date', '>=', now())->latest()->paginate(10);
-        $jobs = Vacancy::latest()->paginate(7);
+        $jobs = Vacancy::public()->latest()->paginate(7);
         $positions = Position::pluck('name', 'id');
         $industries = Industry::pluck('name', 'id');
         $educations = Education::pluck('name', 'id');
@@ -129,9 +129,9 @@ class HomeController extends Controller
 
     public function jobDetail($slug)
     {
-        $job = Vacancy::where('slug', $slug)->first();
+        $job = Vacancy::public()->where('slug', $slug)->first();
         $company = Company::find($job->company_id);
-        $relatedJobs = Vacancy::whereNot('slug', $slug)->where('company_id', $job->company_id)->where('position_id', $job->position_id)->where('close_date', '>=', now())->latest()->take(3)->get();
+        $relatedJobs = Vacancy::public()->whereNot('slug', $slug)->where('company_id', $job->company_id)->where('position_id', $job->position_id)->where('close_date', '>=', now())->latest()->take(3)->get();
         return view('frontend.job_detail', compact('job', 'company', 'relatedJobs'));
     }
 
@@ -175,7 +175,7 @@ class HomeController extends Controller
     public function jobAjax(Request $request)
     {
         if ($request->ajax()) {
-            $query = Vacancy::query();
+            $query = Vacancy::public();
 
             if (!empty($request->name)) {
                 $query->where('name', 'like', '%' . $request->name . '%');
@@ -247,8 +247,8 @@ class HomeController extends Controller
     public function companyDetail($slug)
     {
         $company = Company::where('slug', $slug)->first();
-        $jobs = Vacancy::where('company_id', $company->id)->where('close_date', '>=', now())->orderBy('open_date', 'desc')->paginate(5);;
-        $closedjobs = Vacancy::where('company_id', $company->id)->where('close_date', '<', now())->orderBy('open_date', 'desc')->paginate(5);;
+        $jobs = Vacancy::public()->where('company_id', $company->id)->where('close_date', '>=', now())->orderBy('open_date', 'desc')->paginate(5);;
+        $closedjobs = Vacancy::public()->where('company_id', $company->id)->where('close_date', '<', now())->orderBy('open_date', 'desc')->paginate(5);;
         return view('frontend.company_detail', compact('company', 'jobs', 'closedjobs'));
     }
 
@@ -347,9 +347,9 @@ class HomeController extends Controller
     {
         $articleCategory = ArticleCategory::where('slug', $category)->first();
 
-        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+        $featured = Post::public()->where('status', 'published')->latest()->take(5)->get();
 
-        $query = Post::query();
+        $query = Post::public();
         if ($articleCategory) {
             $query->whereHas('categories', function ($query) use ($articleCategory) {
                 $query->where('id', $articleCategory->id);
@@ -362,9 +362,9 @@ class HomeController extends Controller
 
     public function acara(Request $request)
     {
-        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+        $featured = Post::public()->where('status', 'published')->latest()->take(5)->get();
 
-        $query = Post::query();
+        $query = Post::public();
         $query->whereHas('categories', function ($query) {
             $query->whereNotIn('slug', ['alumni-caring', 'beasiswa']);
         });
@@ -377,9 +377,9 @@ class HomeController extends Controller
     {
         $articleCategory = ArticleCategory::where('slug', 'beasiswa')->first();
 
-        $featured = Post::where('status', 'published')->latest()->take(5)->get();
+        $featured = Post::public()->where('status', 'published')->latest()->take(5)->get();
 
-        $query = Post::query();
+        $query = Post::public();
         if ($articleCategory) {
             $query->whereHas('categories', function ($query) use ($articleCategory) {
                 $query->where('id', $articleCategory->id);
@@ -394,11 +394,11 @@ class HomeController extends Controller
     {
         $articleCategory = ArticleCategory::where('slug', 'alumni-caring')->first();
 
-        $featured = Post::whereHas('categories', function ($query) use ($articleCategory) {
+        $featured = Post::public()->whereHas('categories', function ($query) use ($articleCategory) {
             $query->where('id', $articleCategory->id);
         })->where('status', 'published')->latest()->take(5)->get();
 
-        $posts = Post::whereHas('categories', function ($query) use ($articleCategory) {
+        $posts = Post::public()->whereHas('categories', function ($query) use ($articleCategory) {
             $query->where('id', $articleCategory->id);
         })->where('status', 'published')->latest()->paginate(10);
 
@@ -407,7 +407,7 @@ class HomeController extends Controller
 
     public function alumniCaringDetail($slug)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post = Post::public()->where('slug', $slug)->firstOrFail();
 
         $tags = $post->tags->pluck('name')->toArray(); // Get tags as an array of names
         $tagsString = implode(', ', $tags);
@@ -418,8 +418,8 @@ class HomeController extends Controller
         SEOMeta::setKeywords($tags); // Set tags as keywords
         SEOMeta::setCanonical(url()->current());
 
-        $popularPosts = Post::where('status', 'published')->latest()->take(7)->get();
-        $relatedPosts = Post::whereHas('categories', function ($query) use ($post) {
+        $popularPosts = Post::public()->where('status', 'published')->latest()->take(7)->get();
+        $relatedPosts = Post::public()->whereHas('categories', function ($query) use ($post) {
                             $query->whereIn('id', $post->categories->pluck('id')); // Same categories
                         })
                         ->where('posts.id', '!=', $post->id) // Exclude the current post
@@ -436,7 +436,7 @@ class HomeController extends Controller
         $search = $request->search;
         $tag = $request->tag;
 
-        $query = Post::query();
+        $query = Post::public();
         if (!empty($search)) {
             $query->where('title', 'like', '%' . $search . '%')->orWhere('content', 'like', '%' . $search . '%');
         }
@@ -447,7 +447,7 @@ class HomeController extends Controller
         }
         $posts = $query->where('status', 'published')->latest()->paginate(10);
 
-        $popularPosts = Post::where('status', 'published')->latest()->take(7)->get();
+        $popularPosts = Post::public()->where('status', 'published')->latest()->take(7)->get();
         $tags = ArticleTag::take(10)->get();
 
         return view('frontend.blog_search', compact('posts', 'popularPosts', 'tags'));
@@ -455,7 +455,7 @@ class HomeController extends Controller
 
     public function blogDetail($slug)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post = Post::public()->where('slug', $slug)->firstOrFail();
         if ($post->categories->contains('slug', 'alumni-caring')) {
             return redirect()->route('alumni-caring-detail', $slug);
         }
@@ -469,8 +469,8 @@ class HomeController extends Controller
         SEOMeta::setKeywords($tags); // Set tags as keywords
         SEOMeta::setCanonical(url()->current());
 
-        $popularPosts = Post::where('status', 'published')->latest()->take(7)->get();
-        $relatedPosts = Post::whereHas('categories', function ($query) use ($post) {
+        $popularPosts = Post::public()->where('status', 'published')->latest()->take(7)->get();
+        $relatedPosts = Post::public()->whereHas('categories', function ($query) use ($post) {
                             $query->whereIn('id', $post->categories->pluck('id')); // Same categories
                         })
                         ->where('posts.id', '!=', $post->id) // Exclude the current post

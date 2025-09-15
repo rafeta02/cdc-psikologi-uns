@@ -64,7 +64,7 @@
                                 </tr>
                                 <tr>
                                     <th>Academic Supervisor</th>
-                                    <td>{{ $mahasiswaMagang->dosen_pembimbing }}</td>
+                                    <td>{{ $mahasiswaMagang->dospem->nama ?? $mahasiswaMagang->dosen_pembimbing }}</td>
                                 </tr>
                                 <tr>
                                     <th>Tests Status</th>
@@ -104,6 +104,11 @@
                                 <label for="verification_notes">Verification Notes</label>
                                 <textarea class="form-control" id="verification_notes" name="verification_notes" rows="4" placeholder="Provide feedback or notes for the student">{{ $mahasiswaMagang->verification_notes ?? '' }}</textarea>
                                 <small class="form-text text-muted">These notes will be visible to the student</small>
+                                @if($mahasiswaMagang->verification_notes && str_contains($mahasiswaMagang->verification_notes, 'Status automatically reset to PENDING'))
+                                    <div class="alert alert-info mt-2">
+                                        <i class="fas fa-info-circle"></i> <strong>Auto-Reset Notice:</strong> This status was automatically reset to PENDING because the student uploaded new documents after rejection.
+                                    </div>
+                                @endif
                             </div>
                             <button type="submit" class="btn btn-primary">Update Verification Status</button>
                             
