@@ -391,7 +391,7 @@
                                             <tr>
                                                 <td>{{ $monitoring->tanggal }}</td>
                                                 <td>{{ $monitoring->tempat }}</td>
-                                                <td>{{ $monitoring->pembimbing }}</td>
+                                                <td>{{ $monitoring->dospem->nama ?? $monitoring->pembimbing ?? '' }}</td>
                                                 <td>
                                                     @foreach($monitoring->bukti as $media)
                                                     <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-xs btn-info">
