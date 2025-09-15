@@ -234,7 +234,7 @@
                                 <tr>
                                     <td>{{ $monitoring->tanggal }}</td>
                                     <td>{{ $monitoring->tempat }}</td>
-                                    <td>{{ $monitoring->pembimbing }}</td>
+                                    <td>{{ $monitoring->dospem->nama ?? $monitoring->pembimbing ?? '' }}</td>
                                     <td>
                                         <div style="max-width: 200px;">
                                             {{ Str::limit($monitoring->hasil, 100) }}
