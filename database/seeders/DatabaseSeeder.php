@@ -28,39 +28,39 @@ class DatabaseSeeder extends Seeder
             RoleUserTableSeeder::class,
         ]);
 
-        // Independent model seeders (no foreign key dependencies)
-        $this->call([
-            ArticleCategoriesTableSeeder::class,
-            ArticleTagsTableSeeder::class,
-            DepartmentsTableSeeder::class,
-            EducationsTableSeeder::class,
-            ExperiencesTableSeeder::class,
-            IndustriesTableSeeder::class,
-            PositionsTableSeeder::class,
-            VacancyTagsTableSeeder::class,
-            KategoriPrestasisTableSeeder::class,
-            ProvincesTableSeeder::class,
-        ]);
+        // // Independent model seeders (no foreign key dependencies)
+        // $this->call([
+        //     ArticleCategoriesTableSeeder::class,
+        //     ArticleTagsTableSeeder::class,
+        //     DepartmentsTableSeeder::class,
+        //     EducationsTableSeeder::class,
+        //     ExperiencesTableSeeder::class,
+        //     IndustriesTableSeeder::class,
+        //     PositionsTableSeeder::class,
+        //     VacancyTagsTableSeeder::class,
+        //     KategoriPrestasisTableSeeder::class,
+        //     ProvincesTableSeeder::class,
+        // ]);
 
-        // Dependent model seeders (with foreign key dependencies)
-        $this->call([
-            RegenciesTableSeeder::class,      // depends on Province
-            CompetencesTableSeeder::class,    // independent
-            CompaniesTableSeeder::class,      // depends on Industry, Regency
-        ]);
+        // // Dependent model seeders (with foreign key dependencies)
+        // $this->call([
+        //     RegenciesTableSeeder::class,      // depends on Province
+        //     CompetencesTableSeeder::class,    // independent
+        //     CompaniesTableSeeder::class,      // depends on Industry, Regency
+        // ]);
 
-        // Complex model seeders (multiple dependencies)
-        $this->call([
-            CompetenceItemsTableSeeder::class, // depends on Competence
-            MahasiswasTableSeeder2::class,     // depends on User
-            PostsTableSeeder::class,           // depends on User
-            VacanciesTableSeeder::class,       // depends on Company, Experience, Position, Industry, User
-            MagangsTableSeeder::class,         // depends on Company, User
-        ]);
+        // // Complex model seeders (multiple dependencies)
+        // $this->call([
+        //     CompetenceItemsTableSeeder::class, // depends on Competence
+        //     MahasiswasTableSeeder2::class,     // depends on User
+        //     PostsTableSeeder::class,           // depends on User
+        //     VacanciesTableSeeder::class,       // depends on Company, Experience, Position, Industry, User
+        //     MagangsTableSeeder::class,         // depends on Company, User
+        // ]);
 
-        // Optional: Create relationships for many-to-many tables
-        $this->createPostRelationships();
-        $this->createVacancyRelationships();
+        // // Optional: Create relationships for many-to-many tables
+        // $this->createPostRelationships();
+        // $this->createVacancyRelationships();
     }
 
     /**
