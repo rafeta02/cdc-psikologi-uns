@@ -34,7 +34,7 @@ class SsoController extends Controller
 
         if (!$user) {
             // Create new user if doesn't exist
-            $user = User::create([
+            $user = new User([
                 'email' => $parsedAttributes['email'],
                 'name' => $parsedAttributes['nama'],
                 'no_hp' => $this->formatPhoneNumber($parsedAttributes['no_hp']),
@@ -49,6 +49,10 @@ class SsoController extends Controller
                 'alamat' => $parsedAttributes['alamat'],
                 'verification_token' => null, // Prevent email notification for SSO users
             ]);
+            
+            // Set a flag to indicate this is SSO creation
+            $user->sso_creation = true;
+            $user->save();
             
             // Sync roles for new user
             $user->roles()->sync(2);

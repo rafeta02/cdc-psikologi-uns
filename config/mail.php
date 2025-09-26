@@ -84,6 +84,10 @@ return [
                 'log',
             ],
         ],
+
+        'null' => [
+            'transport' => 'null',
+        ],
     ],
 
     /*

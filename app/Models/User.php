@@ -72,6 +72,11 @@ class User extends Authenticatable
     {
         parent::__construct($attributes);
         self::created(function (self $user) {
+            // Skip email notification for SSO users
+            if (isset($user->sso_creation) && $user->sso_creation) {
+                return;
+            }
+            
             if (auth()->check()) {
                 $user->verified    = 1;
                 $user->verified_at = Carbon::now()->format(config('panel.date_format') . ' ' . config('panel.time_format'));
@@ -93,7 +98,12 @@ class User extends Authenticatable
                     $user->roles()->attach($registrationRole);
                 }
 
-                $user->notify(new VerifyUserNotification($user));
+                try {
+                    $user->notify(new VerifyUserNotification($user));
+                } catch (\Exception $e) {
+                    // Log the email error but don't block user creation
+                    \Log::error('Failed to send verification email for user ' . $user->id . ': ' . $e->getMessage());
+                }
             }
         });
     }
