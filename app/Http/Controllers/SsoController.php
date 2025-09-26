@@ -47,6 +47,7 @@ class SsoController extends Controller
                 'level' => $parsedAttributes['level'],
                 'identity_number' => $parsedAttributes['identity_numbers'],
                 'alamat' => $parsedAttributes['alamat'],
+                'verification_token' => null, // Prevent email notification for SSO users
             ]);
             
             // Sync roles for new user

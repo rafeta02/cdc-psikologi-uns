@@ -43,7 +43,7 @@
                         <li><a class="dropdown-item" href="{{ route('prestasi') }}">Prestasi Mahasiswa</a></li>
                         <li><a class="dropdown-item" href="{{ route('jadwal-lomba') }}">Jadwal Lomba</a></li>
                         <li><a class="dropdown-item" href="{{ route('infografis') }}">Infografis Prestasi</a></li>
-                        <li><a class="dropdown-item" href="https://uns.id/surveiprestasi">Survei Kepuasan</a></li>
+                        <li><a class="dropdown-item" href="https://uns.id/surveiprestasi" target="_blank">Survei Kepuasan</a></li>
                     </ul>
                 </li><!--end dropdown-->
                 <li class="nav-item">
