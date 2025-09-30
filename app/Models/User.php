@@ -70,32 +70,32 @@ class User extends Authenticatable
 
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
-        self::created(function (self $user) {
-            if (auth()->check()) {
-                $user->verified    = 1;
-                $user->verified_at = Carbon::now()->format(config('panel.date_format') . ' ' . config('panel.time_format'));
-                $user->save();
-            } elseif (! $user->verification_token) {
-                $token     = Str::random(64);
-                $usedToken = self::where('verification_token', $token)->first();
+        // parent::__construct($attributes);
+        // self::created(function (self $user) {
+        //     if (auth()->check()) {
+        //         $user->verified    = 1;
+        //         $user->verified_at = Carbon::now()->format(config('panel.date_format') . ' ' . config('panel.time_format'));
+        //         $user->save();
+        //     } elseif (! $user->verification_token) {
+        //         $token     = Str::random(64);
+        //         $usedToken = self::where('verification_token', $token)->first();
 
-                while ($usedToken) {
-                    $token     = Str::random(64);
-                    $usedToken = self::where('verification_token', $token)->first();
-                }
+        //         while ($usedToken) {
+        //             $token     = Str::random(64);
+        //             $usedToken = self::where('verification_token', $token)->first();
+        //         }
 
-                $user->verification_token = $token;
-                $user->save();
+        //         $user->verification_token = $token;
+        //         $user->save();
 
-                $registrationRole = config('panel.registration_default_role');
-                if (! $user->roles()->get()->contains($registrationRole)) {
-                    $user->roles()->attach($registrationRole);
-                }
+        //         $registrationRole = config('panel.registration_default_role');
+        //         if (! $user->roles()->get()->contains($registrationRole)) {
+        //             $user->roles()->attach($registrationRole);
+        //         }
 
-                $user->notify(new VerifyUserNotification($user));
-            }
-        });
+        //         $user->notify(new VerifyUserNotification($user));
+        //     }
+        // });
     }
 
     public function getEmailVerifiedAtAttribute($value)
