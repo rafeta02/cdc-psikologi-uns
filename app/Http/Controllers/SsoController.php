@@ -34,7 +34,7 @@ class SsoController extends Controller
 
         if (!$user) {
             // Create new user if doesn't exist
-            $user = new User([
+            $user = User::create([
                 'email' => $parsedAttributes['email'],
                 'name' => $parsedAttributes['nama'],
                 'no_hp' => $this->formatPhoneNumber($parsedAttributes['no_hp']),
